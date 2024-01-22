@@ -48,19 +48,18 @@ defineProps(["headers", "table"]);
 
 <style lang="scss" scoped>
 .table {
-    overflow: auto;
+    overflow-x: auto;
     width: 100%;
     margin-top: 30px;
 
     &-wrapper {
         border-collapse: collapse;
         border: none;
-        border: 1px solid var(--black);
         width: 100%;
+        overflow-x: auto;
     }
 
     &-line {
-        // width: 1740px;
         &:nth-child(odd) {
             background-color: rgb(240, 229, 229);
         }
@@ -83,43 +82,43 @@ defineProps(["headers", "table"]);
 
 th,
 td {
-    border-bottom: 1px solid var(--black);
+    white-space: nowrap;
 
-    &:nth-child(1) {
-        width: 50px;
-    }
+    // &:nth-child(1) {
+    //     width: 50px;
+    // }
 
-    &:nth-child(2) {
-        width: 295px;
-    }
+    // &:nth-child(2) {
+    //     width: 295px;
+    // }
 
-    &:nth-child(3) {
-        width: 115px;
-    }
+    // &:nth-child(3) {
+    //     width: 115px;
+    // }
 
-    &:nth-child(4) {
-        width: 200px;
-    }
+    // &:nth-child(4) {
+    //     width: 200px;
+    // }
 
-    &:nth-child(5) {
-        width: 90px;
-    }
+    // &:nth-child(5) {
+    //     width: 90px;
+    // }
 
-    &:nth-child(6) {
-        width: 200px;
-    }
+    // &:nth-child(6) {
+    //     width: 200px;
+    // }
 
-    &:nth-child(7) {
-        width: 155px;
-    }
+    // &:nth-child(7) {
+    //     width: 155px;
+    // }
 
-    &:nth-child(8) {
-        width: 235px;
-    }
+    // &:nth-child(8) {
+    //     width: 235px;
+    // }
 
-    &:nth-child(9) {
-        width: 245px;
-    }
+    // &:nth-child(9) {
+    //     width: 245px;
+    // }
 }
 tr {
     &:last-child {

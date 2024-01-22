@@ -131,6 +131,7 @@ svg {
 .wrapper {
     display: flex;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {

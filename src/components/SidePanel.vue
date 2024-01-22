@@ -91,6 +91,9 @@ const logoutHandler = () => {
         flex-direction: column;
         padding: 35px 40px;
         height: 100%;
+        @media (max-width: 768px) {
+            padding: 35px 20px;
+        }
         &.isOpen {
             padding: 35px 20px;
             @media (max-width: 480px) {

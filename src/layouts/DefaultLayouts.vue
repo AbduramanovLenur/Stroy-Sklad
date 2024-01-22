@@ -31,6 +31,7 @@ const { isOpen } = storeToRefs(panelStore);
         width: 100%;
         margin-left: 255px;
         transition: 0.2s;
+        overflow: auto;
 
         @media (max-width: 768px) {
             margin-left: 200px;
