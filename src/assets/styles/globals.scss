@@ -1,0 +1,145 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: var(--default-ff);
+    font-size: var(--default-fz);
+    font-weight: var(--default-fw);
+    line-height: var(--default-lh);
+    color: var(--default-color-fz);
+    background-color: var(--bc-page);
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    overflow-x: hidden;
+
+    &.loaded {
+        opacity: 1;
+    }
+
+    /* полоса прокрутки (скроллбар) */
+    // &::-webkit-scrollbar {
+    //     background-color: var(--white);
+    // }
+
+    /* ползунок скроллбара */
+    // &::-webkit-scrollbar-thumb {
+    //     border-radius: 9em;
+    //     background-color: var(--mainly-blue);
+    //     height: 135px;
+    // }
+}
+
+li {
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    text-decoration: none;
+}
+
+input,
+textarea {
+    font-family: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    &::placeholder {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+        border: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
+
+address {
+    font-style: normal;
+}
+
+a,
+button {
+    display: inline-flex;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    border: none;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+textarea {
+    resize: none;
+}
+
+svg {
+    cursor: pointer;
+
+    path {
+        cursor: pointer;
+    }
+}
+
+// main {
+//     flex: 1;
+// }
+
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1430px;
+    margin: 0 auto;
+    padding-left: var(--grid-padding);
+    padding-right: var(--grid-padding);
+}
+
+.hide {
+    display: none;
+}

@@ -1,0 +1,177 @@
+<template>
+    <section class="auth">
+        <div class="container">
+            <div class="auth__inner">
+                <div class="auth__wrapper">
+                    <div class="auth__logo">
+                        <img 
+                            src="@/assets/images/auth/logo-auth.svg" 
+                            alt="logo" 
+                            width="415" 
+                            height="80" 
+                            loading="lazy"
+                        >
+                    </div>
+                    <h2 class="auth__title">
+                        {{ $t("login") }}
+                    </h2>
+                    <form class="auth__form" @submit.prevent="authHandler">
+                        <label 
+                            v-for="input in inputs" 
+                            :key="input.id" 
+                            class="auth__label"
+                        >
+                            {{ $t(input.label) }}
+                            <input 
+                                class="auth__input" 
+                                :type="input.type" 
+                                v-model="formData[input.model]" 
+                                :name="input.name" 
+                                :placeholder="$t(input.placeholder)"
+                            >
+                        </label>
+                        <button class="auth__submit" type="submit">
+                            {{ $t("loginButton") }}
+                        </button>
+                    </form>
+                    <SwitcherLang />
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import SwitcherLang from "@/components/SwitcherLang.vue";
+
+const router = useRouter()
+
+const formData = ref({
+    login: "",
+    password: ""
+})
+
+const inputs = ref([
+    { id: 1, label: "loginLabel", type: "text", model: "login", name: "login", placeholder: "loginPlaceholder" },
+    { id: 2, label: "passwordLabel", type: "password", model: "password", name: "password", placeholder: "passwordPlaceholder" },
+]);
+
+const authHandler = () => {
+    console.log(formData.value);
+    router.push("/");
+}
+</script>
+
+<style lang="scss" scoped>
+.auth {
+    background: radial-gradient(103.88% 58.43% at 56.74% 50%, #0085FF 0%, #003465 100%);
+    color: var(--white);
+    &__inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 40px;
+        border: 3px solid rgba(88, 130, 193, 0.49);
+        background: rgba(88, 130, 193, 0.28);
+        backdrop-filter: blur(12.5px);
+        max-width: 690px;
+        width: 100%;
+        padding: 55px;
+        @media (max-width: 768px) {
+            padding: 55px 20px;
+        }
+        @media (max-width: 480px) {
+            padding: 35px 20px;
+        }
+    }
+    &__logo {
+        margin-bottom: 20px;
+    }
+    &__title {
+        font-size: 38px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        @media (max-width: 1024px) {
+            font-size: 32px;
+        }
+        @media (max-width: 480px) {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 360px) {
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 320px) {
+            font-size: 22px;
+        }
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        max-width: 500px;
+        width: 100%;
+        margin-bottom: 30px;
+    }
+    &__label {
+        width: 100%;
+        margin-bottom: 30px;
+        @media (max-width: 480px) {
+            margin-bottom: 20px;
+        }
+    }
+    &__input {
+        width: 100%;
+        height: 50px;
+        padding: 0 25px;
+        border-radius: 10px;
+        border: 1px solid var(--light);
+        color: var(--black);
+        margin-top: 5px;
+        @media (max-width: 480px) {
+            height: 40px;
+        }
+        &::placeholder {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--light);
+        }
+    }
+    &__submit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fff;
+        background-color: var(--dark-blue);
+        height: 50px;
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        @media (max-width: 480px) {
+            font-size: 18px;
+            height: 40px;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .auth {
+        &__submit {
+            transition: 0.5s;
+            &:hover {
+                background-color: var(--black);
+            }
+        }
+    }
+}
+</style>
