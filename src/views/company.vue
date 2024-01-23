@@ -5,24 +5,36 @@
                 <Title>
                     {{ $t("comapnyTitle") }}
                 </Title>
-                <Form @onSearchHandler="searchHandler" />
-                <AddButton to="/add-company" />
+                <FormSearch @onSearch="searchHandler" />
+                <AddButton
+                    @onOpenFormModal="createNewCompanyHandler"
+                />
             </div>
-            <Table :headers="headers" :table="table" />
+            <Table 
+                :headers="headers" 
+                :table="table" 
+                @onAction="actionOrganizationHandler"
+            />
         </div>
+        <FormModal
+            :title="titleModal"
+        />
     </section>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { useModalsStore } from "@/store/modalsStore.js";
 import Title from "@/components/Title.vue";
-import Form from "@/components/Form.vue";
+import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
 import Table from "@/components/Table.vue";
+import FormModal from "@/components/FormModal.vue";
 
-const searchHandler = (search) => {
-    console.log(search);
-}
+const modalsStore = useModalsStore();
+const { toggleIsOpenModalForm } = modalsStore;
+
+const titleModal = ref("");
 
 const headers = ref([
     { id: 1, label: "organizationName" },
@@ -36,9 +48,93 @@ const headers = ref([
 ]);
 
 const table = ref([
-    { id: 1, fullName: "Microsoft Academy", Inn: "123456789", region: "Навоиская область", district: "Навои", address: "Ибн-Сино 18", phone: "+998999999999", director: "Иванов Иван Иванович" },
-    { id: 2, fullName: "Admin qwerty company", Inn: "123456789", region: "Навоиская область", district: "Навои", address: "Толстово кирпич 18", phone: "+998999999999", director: "Иванов Иван Иванович" }
+    { 
+        id: 1, 
+        fullName: "Microsoft Academy", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Ибн-Сино 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    },
+    { 
+        id: 2, 
+        fullName: "Admin qwerty company", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Толстово кирпич 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    },
+    { 
+        id: 3, 
+        fullName: "Microsoft Academy", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Ибн-Сино 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    },
+    { 
+        id: 4, 
+        fullName: "Admin qwerty company", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Толстово кирпич 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    },
+    { 
+        id: 5, 
+        fullName: "Microsoft Academy", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Ибн-Сино 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    },
+    { 
+        id: 6, 
+        fullName: "Admin qwerty company", 
+        Inn: "123456789", 
+        region: "Навоиская область", 
+        district: "Навои", 
+        address: "Толстово кирпич 18", 
+        phone: "+998999999999", 
+        director: "Иванов Иван Иванович" 
+    }
 ]);
+
+const searchHandler = (search) => {
+    console.log(search);
+}
+
+const createNewCompanyHandler = () => {
+    titleModal.value = "addNewCompany";
+    toggleIsOpenModalForm();
+}
+
+const actionOrganizationHandler = ({ action, id }) => {
+    if (action === 'delete') {
+        console.log("delete");
+        console.log(id);
+        return;
+    }
+
+    console.log('edit');
+    console.log(id);
+    titleModal.value = "editCompany";
+    toggleIsOpenModalForm();
+}
+
+// const editOrganizationHandler = (idx) => {
+
+// }
 </script>
 
 <style lang="scss" scoped>

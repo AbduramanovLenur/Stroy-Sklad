@@ -35,7 +35,18 @@
                     {{ info.director }}
                 </td>
                 <td class="table-info" align="center">
-                    Удалить/Редактировать
+                    <div 
+                        class="table-edit"
+                        @click="() => $emit('onAction', { action: 'edit', id: info.id })"
+                    >
+                        <Icon name="edit" />
+                    </div>
+                    <div 
+                        class="table-delete" 
+                        @click="() => $emit('onAction', { action: 'delete', id: info.id })"
+                    >
+                        <Icon name="delete" />
+                    </div>
                 </td>
             </tr>
         </table>
@@ -43,6 +54,7 @@
 </template>
 
 <script setup>
+import Icon from "@/components/Icon.vue";
 defineProps(["headers", "table"]);
 </script>
 
@@ -68,15 +80,23 @@ defineProps(["headers", "table"]);
     &-title {
         font-size: 18px;
         font-weight: 500;
+        text-transform: uppercase;
         padding: 25px 10px;
         background-color: #00ffff;
-        font-style: italic;
     }
 
     &-info {
         font-size: 16px;
         font-weight: 400;
         padding: 15px 10px;
+        &:first-child {
+            font-weight: 600;
+        }
+        &:last-child {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
     }
 }
 

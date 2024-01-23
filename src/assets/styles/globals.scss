@@ -99,6 +99,11 @@ button {
 }
 
 select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+    border: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -143,4 +148,15 @@ svg {
 
 .hide {
     display: none;
+}
+
+.hovered {
+    transition: 0.5s;
+    @media (hover: hover) {
+        &:hover {
+            -webkit-box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
+        }
+    }
 }

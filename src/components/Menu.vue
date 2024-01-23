@@ -56,12 +56,14 @@ const { isOpen } = storeToRefs(panelStore);
         align-items: center;
         gap: 25px;
         padding: 10px 15px;
+        border-radius: 20px;
+        border: 1px solid transparent;
+        transition: 0.5s;
         @media (max-width: 768px) {
             gap: 10px;
         }
         &.router-link-active  {
-            border: 1px solid var(--white);
-            border-radius: 20px;
+            border-color: var(--white);
         }
     }
 
@@ -82,6 +84,16 @@ const { isOpen } = storeToRefs(panelStore);
         }
         &.hide {
             display: none;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .menu {
+        &-link {
+            &:hover {
+                border-color: var(--white);
+            }
         }
     }
 }

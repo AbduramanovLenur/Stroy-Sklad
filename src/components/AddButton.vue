@@ -1,18 +1,16 @@
 <template>
-    <router-link :to="to" class="add-button">
+    <button type="button" class="add-button hovered" @click="() => $emit('onOpenFormModal')">
         <span class="add-button__icon">
             <Icon name="add-company" />
         </span>
         <span class="add-button__text">
             {{ $t("addButton") }}
         </span>
-    </router-link>
+    </button>
 </template>
 
 <script setup>
 import Icon from "@/components/Icon.vue";
-
-defineProps(["to"]);
 </script>
 
 <style lang="scss" scoped>
@@ -27,7 +25,6 @@ defineProps(["to"]);
     width: 100%;
     height: 40px;
     padding: 5px 10px;
-    transition: 0.5s;
 
     @media (max-width: 1024px) {
         margin-left: auto;
@@ -48,16 +45,6 @@ defineProps(["to"]);
         color: var(--white);
         @media (max-width: 480px) {
             font-size: 14px;
-        }
-    }
-}
-
-@media (hover: hover) {
-    .add-button {
-        &:hover {
-            -webkit-box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
-            -moz-box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
-            box-shadow: 0px 0px 24px 6px rgba(0, 0, 0, 0.2);
         }
     }
 }

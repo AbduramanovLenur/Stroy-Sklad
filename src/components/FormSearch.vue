@@ -1,6 +1,11 @@
 <template>
     <form class="form" @submit.prevent="searchHandler">
-        <input v-model="search" class="form-input" type="text" :placeholder="$t('companySearchPlaceholder')">
+        <input 
+            v-model="search" 
+            class="form-input" 
+            type="text" 
+            :placeholder="$t('companySearchPlaceholder')"
+        >
         <button class="form-submit" type="submit">
             <Icon name="search" />
         </button>
@@ -11,12 +16,12 @@
 import { ref } from "vue";
 import Icon from "@/components/Icon.vue";
 
-const emit = defineEmits(["onSearchHandler"]);
+const emit = defineEmits(["onSearch"]);
 
 const search = ref("");
 
 const searchHandler = () => {
-    emit("onSearchHandler", search.value);
+    emit("onSearch", search.value);
     search.value = "";
 }
 </script>
@@ -49,6 +54,8 @@ const searchHandler = () => {
         max-width: 280px;
         width: 100%;
         height: 100%;
+        border-radius: 10px 0 0 10px;
+        border: 1px solid var(--black);
         @media (max-width: 480px) {
             font-size: 14px;
         }
@@ -62,6 +69,7 @@ const searchHandler = () => {
         max-width: 40px;
         width: 100%;
         height: 100%;
+        border-radius: 0 10px 10px 0;
     }
 }
 </style>
