@@ -10,40 +10,59 @@
                 </th>
             </tr>
             <tr class="table-line" v-for="info in table" :key="info.id">
-                <td class="table-info" align="center">
+                <td v-if="info.id" class="table-info" align="center">
                     {{ info.id }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.fullName" class="table-info" align="center">
                     {{ info.fullName }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.organization" class="table-info" align="center">
+                    {{ info.organization }}
+                </td>
+                <td v-if="info.phoneEmployees" class="table-info" align="center">
+                    {{ info.phoneEmployees }}
+                </td>
+                <td v-if="info.role" class="table-info" align="center">
+                    {{ info.role }}
+                </td>
+                <td v-if="info.status" class="table-info" align="center">
+                    <span 
+                        :class="`${info.status.toLowerCase() === 'активный' || info.status.toLowerCase() === 'faol' ? 'active' : 'no-active'}`"
+                    >
+                        {{ info.status }}
+                    </span>
+                </td>
+                <td v-if="info.organizationName" class="table-info" align="center">
+                    {{ info.organizationName }}
+                </td>
+                <td v-if="info.Inn" class="table-info" align="center">
                     {{ info.Inn }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.region" class="table-info" align="center">
                     {{ info.region }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.district" class="table-info" align="center">
                     {{ info.district }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.address" class="table-info" align="center">
                     {{ info.address }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.phone" class="table-info" align="center">
                     {{ info.phone }}
                 </td>
-                <td class="table-info" align="center">
+                <td v-if="info.director" class="table-info" align="center">
                     {{ info.director }}
                 </td>
                 <td class="table-info" align="center">
                     <div 
                         class="table-edit"
-                        @click="() => $emit('onAction', { action: 'edit', id: info.id })"
+                        @click="() => $emit('onActionEdit', info.id)"
                     >
                         <Icon name="edit" />
                     </div>
                     <div 
                         class="table-delete" 
-                        @click="() => $emit('onAction', { action: 'delete', id: info.id })"
+                        @click="() => $emit('onActionDelete', info.id)"
                     >
                         <Icon name="delete" />
                     </div>
@@ -55,6 +74,7 @@
 
 <script setup>
 import Icon from "@/components/Icon.vue";
+
 defineProps(["headers", "table"]);
 </script>
 
@@ -89,6 +109,18 @@ defineProps(["headers", "table"]);
         font-size: 16px;
         font-weight: 400;
         padding: 15px 10px;
+        span {
+            padding: 10px;
+            border-radius: 10px;
+            &.active {
+                background-color: var(--green);
+                color: var(--white);
+            }
+            &.no-active {
+                background-color: var(--red);
+                color: var(--white);
+            }
+        }
         &:first-child {
             font-weight: 600;
         }

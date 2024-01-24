@@ -17,6 +17,8 @@ defineProps({
 
 <style lang="scss" scoped>
 .button {
+    font-size: 18px;
+    font-weight: 700;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,5 +28,11 @@ defineProps({
     background-color: var(--black);
     color: var(--white);
     width: 100%;
+    &.form__submit {
+        margin-top: auto;
+        &.centered {
+            margin: auto 0;
+        }
+    }
 }
 </style>

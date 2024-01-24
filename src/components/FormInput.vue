@@ -13,13 +13,19 @@
                 <Icon :name="name" />
             </span>
         </span>
+        <span 
+            v-if="error" 
+            class="error"
+        >
+            {{ textError }}
+        </span>
     </label>
 </template>
 
 <script setup>
 import Icon from "@/components/Icon.vue";
 
-defineProps(["modelValue", "width", "name", "placeholder"]);
+defineProps(["modelValue", "width", "name", "placeholder", "error", "textError"]);
 </script>
 
 <style lang="scss" scoped>
@@ -55,5 +61,10 @@ defineProps(["modelValue", "width", "name", "placeholder"]);
     @media (max-width: 480px) {
         font-size: 14px;
     }
+}
+
+.error {
+    font-size: 13px;
+    color: var(--red);
 }
 </style>

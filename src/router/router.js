@@ -10,12 +10,7 @@ const routes = [
   {
     name: "Home",
     path: "/",
-    component: lazyLoad("index"),
-    meta: {
-      layout: DefaultLayouts,
-      requiresAuth: true,
-      role: "user",
-    },
+    redirect: "/company"
   },
   {
     name: "Auth",
@@ -38,7 +33,7 @@ const routes = [
       const role = localStorage.getItem("role");
 
       if (to.meta.role !== role) {
-        next({ name: "Home" });
+        next({ name: "Auth" });
         return;
       }
 
@@ -58,7 +53,7 @@ const routes = [
       const role = localStorage.getItem("role");
 
       if (to.meta.role !== role) {
-        next({ name: "Home" });
+        next({ name: "Auth" });
         return;
       }
 

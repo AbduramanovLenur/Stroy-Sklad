@@ -13,28 +13,86 @@
             <Table 
                 :headers="headers" 
                 :table="table" 
-                @onAction="actionOrganizationHandler"
+                @onActionEdit="editCompanyHandler"
+                @onActionDelete="deleteCompanyHandler"
             />
         </div>
-        <FormModal
-            :title="titleModal"
-        />
+        <FormModal :title="titleModal">
+            <form class="company__form" @submit.prevent="submitFormHandler">
+                <FormInput 
+                    v-for="input in inputs"
+                    :key="input.id"
+                    :width="500" 
+                    :placeholder="$t(input.placeholder)"
+                    :name="input.icon"
+                    v-model="companyForm[input.model]"
+                    :error="v$?.[input.errorKey].$error" 
+                    :textError="v$?.[input.errorKey].$errors[0]?.$message"
+                >
+                    {{ $t(input.label) }}
+                </FormInput>
+                <FormSelect 
+                    v-for="select in selects"
+                    :key="select.id"
+                    :width="500" 
+                    v-model="companyForm[select.model]" 
+                    :options="select.options"
+                    :error="v$?.[select.errorKey].$error" 
+                    :textError="v$?.[select.errorKey].$errors[0]?.$message"
+                >
+                    {{ $t(select.label) }}
+                </FormSelect>
+                <CustomButton 
+                    :className="`form__submit ${v$?.district.$errors[0]?.$message ? 'centered' : ''}`"
+                >
+                    {{ $t("formButton") }}
+                </CustomButton>
+            </form>
+        </FormModal>
     </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@/utils/i18n-validators.js";
+import { useQuery } from "@tanstack/vue-query";
 import { useModalsStore } from "@/store/modalsStore.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
 import Table from "@/components/Table.vue";
 import FormModal from "@/components/FormModal.vue";
+import FormInput from "@/components/FormInput.vue";
+import FormSelect from "@/components/FormSelect.vue";
+import CustomButton from "@/components/CustomButton.vue";
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
 
 const titleModal = ref("");
+const requestFlag = ref("");
+const requestId = ref("");
+
+const companyForm = ref({
+    name: "",
+    tin: "",
+    address: "",
+    phone: "",
+    director: "",
+    region: "",
+    district: ""
+});
+
+const rules = computed(() => ({
+    name: { required },
+    tin: { required },
+    address: { required },
+    phone: { required },
+    director: { required },
+    region: { required },
+    district: { required },
+}));
 
 const headers = ref([
     { id: 1, label: "organizationName" },
@@ -44,13 +102,13 @@ const headers = ref([
     { id: 5, label: "organizationAddress" },
     { id: 6, label: "organizationPhone" },
     { id: 7, label: "organizationDirector" },
-    { id: 8, label: "organizationEdit" },
+    { id: 8, label: "organizationAction" },
 ]);
 
 const table = ref([
     { 
         id: 1, 
-        fullName: "Microsoft Academy", 
+        organizationName: "Microsoft Academy", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -60,7 +118,7 @@ const table = ref([
     },
     { 
         id: 2, 
-        fullName: "Admin qwerty company", 
+        organizationName: "Admin qwerty company", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -70,7 +128,7 @@ const table = ref([
     },
     { 
         id: 3, 
-        fullName: "Microsoft Academy", 
+        organizationName: "Microsoft Academy", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -80,7 +138,7 @@ const table = ref([
     },
     { 
         id: 4, 
-        fullName: "Admin qwerty company", 
+        organizationName: "Admin qwerty company", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -90,7 +148,7 @@ const table = ref([
     },
     { 
         id: 5, 
-        fullName: "Microsoft Academy", 
+        organizationName: "Microsoft Academy", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -100,7 +158,7 @@ const table = ref([
     },
     { 
         id: 6, 
-        fullName: "Admin qwerty company", 
+        organizationName: "Admin qwerty company", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 
@@ -110,31 +168,116 @@ const table = ref([
     }
 ]);
 
+const inputs = ref([
+    { 
+        id: 1, 
+        model: "name", 
+        label: "nameOrganizationLabel", 
+        placeholder: "nameOrganizationPlaceholder", 
+        icon: "input-company",
+        errorKey: "name" 
+    },
+    { 
+        id: 2, 
+        model: "tin", 
+        label: "innOrganizationLabel", 
+        placeholder: "innOrganizationPlaceholder", 
+        icon: "tin",
+        errorKey: "tin" 
+    },
+    { 
+        id: 3, 
+        model: "address", 
+        label: "addressOrganizationLabel", 
+        placeholder: "addressOrganizationPlaceholder", 
+        icon: "address",
+        errorKey: "address" 
+    },
+    { 
+        id: 4, 
+        model: "phone", 
+        label: "phoneOrganizationLabel", 
+        placeholder: "phoneOrganizationPlaceholder", 
+        icon: "phone",
+        errorKey: "phone" 
+    },
+    { 
+        id: 5, 
+        model: "director", 
+        label: "directorOrganizationLabel", 
+        placeholder: "directorOrganizationPlaceholder", 
+        icon: "person",
+        errorKey: "director" 
+    }
+]);
+
+const regionSelect = ref([
+    { id: 1, option: "Навои обл." },
+    { id: 2, option: "Самарканд обл." },
+    { id: 3, option: "Ташкент обл." }
+]);
+
+const discrictSelect = ref([
+    { id: 1, option: "Навои" },
+    { id: 2, option: "Самарканд" },
+    { id: 3, option: "Ташкент" }
+]);
+
+const selects = ref([
+    { 
+        id: 1, 
+        model: "region", 
+        label: "regionOrganizationLabel", 
+        options: regionSelect,
+        errorKey: "region" 
+    },
+    { 
+        id: 2, 
+        model: "district", 
+        label: "districtOrganizationLabel", 
+        options: discrictSelect,
+        errorKey: "district" 
+    }
+]);
+
+const v$ = useVuelidate(rules, companyForm);
+
 const searchHandler = (search) => {
     console.log(search);
 }
 
 const createNewCompanyHandler = () => {
-    titleModal.value = "addNewCompany";
+    titleModal.value = "addNewCompanyTitle";
+    requestFlag.value = "create";
     toggleIsOpenModalForm();
 }
 
-const actionOrganizationHandler = ({ action, id }) => {
-    if (action === 'delete') {
-        console.log("delete");
-        console.log(id);
-        return;
+const editCompanyHandler = (idx) => {
+    titleModal.value = "editCompanyTitle";
+    requestFlag.value = "edit";
+    requestId.value = idx;
+    toggleIsOpenModalForm();
+    console.log(idx);
+}
+
+const deleteCompanyHandler = (idx) => {
+    console.log(idx);
+}
+
+const submitFormHandler = () => {
+    v$.value.$validate();
+
+    if (!v$.value.$errors.length) {
+        if (requestFlag.value === 'create') {
+            console.log('create');
+            return;
+        }
+
+        console.log('update');
     }
 
-    console.log('edit');
-    console.log(id);
-    titleModal.value = "editCompany";
-    toggleIsOpenModalForm();
+    console.log('invalid');
 }
-
-// const editOrganizationHandler = (idx) => {
-
-// }
 </script>
 
 <style lang="scss" scoped>
@@ -160,6 +303,18 @@ const actionOrganizationHandler = ({ action, id }) => {
 
         @media (max-width: 480px) {
             grid-template-columns: repeat(1, 1fr);
+        }
+    }
+    &__form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        @media (max-width: 1024px) {
+            gap: 10px;
+        }
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(1, 1fr);
+            gap: 20px;
         }
     }
 }
