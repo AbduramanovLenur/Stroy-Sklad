@@ -60,18 +60,18 @@
                     {{ info.director }}
                 </td>
                 <td class="table-info" align="center">
-                    <div 
+                    <span 
                         class="table-edit"
                         @click="() => $emit('onActionEdit', info.id)"
                     >
                         <Icon name="edit" />
-                    </div>
-                    <div 
+                    </span>
+                    <span 
                         class="table-delete" 
                         @click="() => $emit('onActionDelete', info.id)"
                     >
                         <Icon name="delete" />
-                    </div>
+                    </span>
                 </td>
             </tr>
         </table>
@@ -130,11 +130,6 @@ defineProps(["headers", "table"]);
         }
         &:first-child {
             font-weight: 600;
-        }
-        &:last-child {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
         }
     }
 }
