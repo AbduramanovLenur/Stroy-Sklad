@@ -2,10 +2,16 @@
     <div class="table" bordercolor="#000">
         <table class="table-wrapper">
             <tr class="table-line">
-                <th class="table-title" align="center">
+                <th class="table-title" align="center" style="width: 55px;">
                     №
                 </th>
-                <th class="table-title" align="center" v-for="title in headers" :key="title.id">
+                <th 
+                    class="table-title" 
+                    align="center" 
+                    v-for="title in headers" 
+                    :key="title.id" 
+                    :style="`width: ${title.width}px;`"
+                >
                     {{ $t(title.label) }}
                 </th>
             </tr>
@@ -109,6 +115,7 @@ defineProps(["headers", "table"]);
         font-size: 16px;
         font-weight: 400;
         padding: 15px 10px;
+        white-space: pre-line;
         span {
             padding: 10px;
             border-radius: 10px;
@@ -131,46 +138,8 @@ defineProps(["headers", "table"]);
         }
     }
 }
-
-th,
-td {
+th {
     white-space: nowrap;
-
-    // &:nth-child(1) {
-    //     width: 50px;
-    // }
-
-    // &:nth-child(2) {
-    //     width: 295px;
-    // }
-
-    // &:nth-child(3) {
-    //     width: 115px;
-    // }
-
-    // &:nth-child(4) {
-    //     width: 200px;
-    // }
-
-    // &:nth-child(5) {
-    //     width: 90px;
-    // }
-
-    // &:nth-child(6) {
-    //     width: 200px;
-    // }
-
-    // &:nth-child(7) {
-    //     width: 155px;
-    // }
-
-    // &:nth-child(8) {
-    //     width: 235px;
-    // }
-
-    // &:nth-child(9) {
-    //     width: 245px;
-    // }
 }
 tr {
     &:last-child {

@@ -95,14 +95,14 @@ const rules = computed(() => ({
 }));
 
 const headers = ref([
-    { id: 1, label: "organizationName" },
-    { id: 2, label: "organizationInn" },
-    { id: 3, label: "organizationRegion" },
-    { id: 4, label: "organizationDistrict" },
-    { id: 5, label: "organizationAddress" },
-    { id: 6, label: "organizationPhone" },
-    { id: 7, label: "organizationDirector" },
-    { id: 8, label: "organizationAction" },
+    { id: 1, label: "organizationName", width: 260 },
+    { id: 2, label: "organizationInn", width: 125 },
+    { id: 3, label: "organizationRegion", width: 225 },
+    { id: 4, label: "organizationDistrict", width: 110 },
+    { id: 5, label: "organizationAddress", width: 220 },
+    { id: 6, label: "organizationPhone", width: 175 },
+    { id: 7, label: "organizationDirector", width: 265 },
+    { id: 8, label: "organizationAction", width: 135 },
 ]);
 
 const table = ref([
@@ -138,7 +138,7 @@ const table = ref([
     },
     { 
         id: 4, 
-        organizationName: "Admin qwerty company", 
+        organizationName: "Admin qwerty company wlefjl klsdfj jksdfj", 
         Inn: "123456789", 
         region: "Навоиская область", 
         district: "Навои", 

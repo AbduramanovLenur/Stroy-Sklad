@@ -92,12 +92,12 @@ const rules = computed(() => ({
 }));
 
 const headers = ref([
-    { id: 1, label: "employeesFullName" },
-    { id: 2, label: "employeesOrganization" },
-    { id: 3, label: "employeesPhone" },
-    { id: 4, label: "employeesRole" },
-    { id: 5, label: "employeesState" },
-    { id: 8, label: "employeesAction" },
+    { id: 1, label: "employeesFullName", width: 300 },
+    { id: 2, label: "employeesOrganization", width: 320 },
+    { id: 3, label: "employeesPhone", width: 255 },
+    { id: 4, label: "employeesRole", width: 195 },
+    { id: 5, label: "employeesState", width: 250 },
+    { id: 8, label: "employeesAction", width: 190 },
 ]);
 
 const table = ref([
