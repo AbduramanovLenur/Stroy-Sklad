@@ -61,7 +61,11 @@
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@/utils/i18n-validators.js";
-import { useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
 import { useI18n } from "vue-i18n";
@@ -69,9 +73,10 @@ import {
     adminGetList, 
     adminGetWithId, 
     adminCreate, 
-    adminUpdateWithId, 
+    adminUpdateById, 
     adminDeleteWithId 
 } from "@/services/superadmin_crud.services.js";
+import { clearForm } from "@/utils/secondary-functions.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
@@ -82,6 +87,7 @@ import FormSelect from "@/components/FormSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
 import Spinner from "@/components/Spinner.vue";
 
+const queryClient = useQueryClient();
 const toast = useToast();
 const { t } = useI18n();
 
@@ -93,6 +99,7 @@ const requestFlag = ref("");
 const requestId = ref("");
 
 const companyForm = ref({
+    id: "",
     name: "",
     tin: "",
     address: "",
@@ -281,15 +288,25 @@ const v$ = useVuelidate(rules, companyForm);
 // });
 
 // const { mutate: createMutate } = useMutation({
-//     mutationFn: (body) => adminCreate("organization", body)
+//     mutationFn: (body) => adminCreate("organization", body),
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
+//     }
 // });
 
 // const { mutate: updateMutate } = useMutation({
-//     mutationFn: (body) => adminUpdateWithId("organization", body)
+//     mutationFn: (body) => adminUpdateById("organization", body),
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
+//         queryClient.invalidateQueries({ queryKey: ["getByIdCompany", requestId] });
+//     }
 // });
 
 // const { mutate: deleteMutate } = useMutation({
-//     mutationFn: (idx) => adminDeleteWithId("organization", idx)
+//     mutationFn: (idx) => adminDeleteWithId("organization", idx),
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
+//     }
 // });
 
 const searchHandler = (search) => {
@@ -322,14 +339,17 @@ const submitFormHandler = () => {
         if (requestFlag.value === 'create') {
             console.log('create');
             // createMutate(companyForm.value);
-            toast.success(t("updateCompanyToast"));
+            toast.success(t("createCompanyToast"));
         } else {
             console.log('update');
             // updateMutate(companyForm.value);
-            toast.success(t("createCompanyToast"));
+            toast.success(t("updateCompanyToast"));
         }
 
         toggleIsOpenModalForm();
+        companyForm.value = clearForm(companyForm.value);
+        v$.value.$reset();
+        return;
     }
 
     console.log('invalid');

@@ -72,9 +72,4 @@ defineProps(["modelValue", "width", "placeholder", "options", "error", "textErro
     padding: 10px;
     border-radius: 20px;
 }
-
-.error {
-    font-size: 13px;
-    color: var(--red);
-}
 </style>

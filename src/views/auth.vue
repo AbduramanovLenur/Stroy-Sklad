@@ -29,6 +29,12 @@
                                 :name="input.name" 
                                 :placeholder="$t(input.placeholder)"
                             >
+                            <span 
+                                v-if="v$?.[input.errorKey].$error" 
+                                class="error-white"
+                            >
+                                {{ v$?.[input.errorKey].$errors[0]?.$message }}
+                            </span>
                         </label>
                         <button class="auth__submit" type="submit">
                             {{ $t("loginButton") }}
@@ -42,8 +48,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { useVuelidate } from "@vuelidate/core";
+import { required, minLength } from "@/utils/i18n-validators.js";
 import { useRouter } from "vue-router";
+import { clearForm } from "@/utils/secondary-functions.js";
 import SwitcherLang from "@/components/SwitcherLang.vue";
 
 const router = useRouter()
@@ -53,14 +62,43 @@ const formData = ref({
     password: ""
 })
 
+const rules = computed(() => ({
+    login: { required },
+    password: { required, minLength }
+}));
+
+const v$ = useVuelidate(rules, formData);
+
 const inputs = ref([
-    { id: 1, label: "loginLabel", type: "text", model: "login", name: "login", placeholder: "loginPlaceholder" },
-    { id: 2, label: "passwordLabel", type: "password", model: "password", name: "password", placeholder: "passwordPlaceholder" },
+    { 
+        id: 1, 
+        label: "loginLabel", 
+        type: "text", 
+        model: "login", 
+        name: "login", 
+        placeholder: "loginPlaceholder",
+        errorKey: "login" 
+    },
+    { 
+        id: 2, 
+        label: "passwordLabel", 
+        type: "password", 
+        model: "password", 
+        name: "password", 
+        placeholder: "passwordPlaceholder",
+        errorKey: "password"  
+    },
 ]);
 
 const authHandler = () => {
-    console.log(formData.value);
-    router.push("/");
+    v$.value.$validate();
+
+    if (!v$.value.$errors.length) {
+        console.log(formData.value);
+        formData.value = clearForm(formData.value);
+        v$.value.$reset();
+        router.push("/");
+    }
 }
 </script>
 

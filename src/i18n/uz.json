@@ -56,7 +56,8 @@
   "employeesPasswordPlaceholder": "Parol...",
   "employeesPhonePlaceholder": "Telefon...",
   "validations": {
-    "required": "Maydonni to'ldiring"
+    "required": "Maydonni to'ldiring",
+    "minLength": "Parol kamida 8 ta belgidan iborat bo'lishi kerak"
   },
   "emptyTableTitle": "Jadval bo'sh",
   "createCompanyToast": "Kompaniya yaratilgan",
@@ -64,5 +65,6 @@
   "deleteCompanyToast": "Kompaniya o'chirildi",
   "createEmployeesToast": "Xodim yaratilgan",
   "updateEmployeesToast": "Xodim yangilandi",
-  "deleteEmployeesToast": "Xodim olib tashlandi"
+  "deleteEmployeesToast": "Xodim olib tashlandi",
+  "logoutToast": "Siz tizimdan chiqdingiz"
 }

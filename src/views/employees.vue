@@ -60,8 +60,12 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required } from "@/utils/i18n-validators.js";
-import { useQuery, useMutation } from "@tanstack/vue-query";
+import { required, minLength } from "@/utils/i18n-validators.js";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
 import { useI18n } from "vue-i18n";
@@ -69,9 +73,10 @@ import {
     adminGetList, 
     adminGetWithId, 
     adminCreate, 
-    adminUpdateWithId, 
+    adminUpdateById, 
     adminDeleteWithId 
 } from "@/services/superadmin_crud.services.js";
+import { clearForm } from "@/utils/secondary-functions.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
@@ -81,6 +86,7 @@ import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
 
+const queryClient = useQueryClient();
 const toast = useToast();
 const { t } = useI18n();
 
@@ -92,6 +98,7 @@ const requestFlag = ref("");
 const requestId = ref("");
 
 const employeesForm = ref({
+    id: "",
     fullName: "",
     login: "",
     password: "",
@@ -103,7 +110,7 @@ const employeesForm = ref({
 const rules = computed(() => ({
     fullName: { required },
     login: { required },
-    password: { required },
+    password: { required, minLength },
     phone: { required },
     organization: { required },
     role: { required },
@@ -250,21 +257,31 @@ const v$ = useVuelidate(rules, employeesForm);
 //     isSuccess: isSuccessGetEmployeesId,
 //     refetch 
 // } = await useQuery({
-//     queryKey: ["getEmployeesId", requestId],
+//     queryKey: ["getByIdEmployees", requestId],
 //     queryFn: () => adminGetWithId("user", requestId.value),
 //     enabled: false
 // });
 
 // const { mutate: createMutate } = useMutation({
-//     mutationFn: (body) => adminCreate("user", body)
+//     mutationFn: (body) => adminCreate("user", body),
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
+//     }
 // });
 
 // const { mutate: updateMutate } = useMutation({
-//     mutationFn: (body) => adminUpdateWithId("user", body)
+//     mutationFn: (body) => adminUpdateById("user", body)
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
+//         queryClient.invalidateQueries({ queryKey: ["getByIdEmployees", requestId] });
+//     }
 // });
 
 // const { mutate: deleteMutate } = useMutation({
-//     mutationFn: (idx) => adminDeleteWithId("user", idx)
+//     mutationFn: (idx) => adminDeleteWithId("user", idx),
+//     onSuccess: () => {
+//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
+//     }
 // });
 
 const searchHandler = (search) => {
@@ -296,15 +313,18 @@ const submitFormHandler = () => {
     if (!v$.value.$errors.length) {
         if (requestFlag.value === 'create') {
             console.log('create');
-            // createMutate(companyForm.value);
+            // createMutate(employeesForm.value);
             toast.success(t("createEmployeesToast"));
         } else {
             console.log('update');
-            // updateMutate(companyForm.value);
+            // updateMutate(employeesForm.value);
             toast.success(t("updateEmployeesToast"));
         }
 
         toggleIsOpenModalForm();
+        employeesForm.value = clearForm(employeesForm.value);
+        v$.value.$reset();
+        return;
     }
 
     console.log('invalid');

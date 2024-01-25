@@ -62,9 +62,4 @@ defineProps(["modelValue", "width", "name", "placeholder", "error", "textError"]
         font-size: 14px;
     }
 }
-
-.error {
-    font-size: 13px;
-    color: var(--red);
-}
 </style>

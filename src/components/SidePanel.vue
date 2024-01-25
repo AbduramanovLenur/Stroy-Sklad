@@ -35,18 +35,23 @@
 
 <script setup>
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { useI18n } from "vue-i18n";
 import { usePanelStore } from "@/store/panelStore";
 import { storeToRefs } from "pinia";
 import Menu from "@/components/Menu.vue";
 import Icon from "@/components/Icon.vue";
 
 const router = useRouter();
+const toast = useToast();
+const { t } = useI18n();
 
 const panelStore = usePanelStore();
 const { isOpen } = storeToRefs(panelStore);
 
 const logoutHandler = () => {
     router.push("/auth");
+    toast.success(t("logoutToast"))
 }
 </script>
 
