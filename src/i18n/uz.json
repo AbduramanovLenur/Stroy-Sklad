@@ -57,5 +57,12 @@
   "employeesPhonePlaceholder": "Telefon...",
   "validations": {
     "required": "Maydonni to'ldiring"
-  }
+  },
+  "emptyTableTitle": "Jadval bo'sh",
+  "createCompanyToast": "Kompaniya yaratilgan",
+  "updateCompanyToast": "Kompaniya yangilandi",
+  "deleteCompanyToast": "Kompaniya o'chirildi",
+  "createEmployeesToast": "Xodim yaratilgan",
+  "updateEmployeesToast": "Xodim yangilandi",
+  "deleteEmployeesToast": "Xodim olib tashlandi"
 }

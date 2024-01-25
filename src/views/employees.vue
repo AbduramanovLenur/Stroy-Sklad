@@ -10,12 +10,17 @@
                     @onOpenFormModal="createNewEmployeesHandler"
                 />
             </div>
-            <Table 
+            <!-- <Table 
+                v-if="isSuccessGetListEmployees && getListEmployees.length"
                 :headers="headers" 
-                :table="table" 
+                :table="getListEmployees" 
                 @onActionEdit="editEmployeesHandler"
                 @onActionDelete="deleteEmployeesHandler"
-            />
+            /> -->
+            <!-- <Spinner v-if="isLoadingGetListEmployees" /> -->
+            <!-- <div v-if="!getListEmployees.length" class="empty-table">
+                {{ $t("emptyTableTitle") }}
+            </div>  -->
         </div>
         <FormModal :title="titleModal">
             <form class="employees__form" @submit.prevent="submitFormHandler">
@@ -56,7 +61,17 @@
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@/utils/i18n-validators.js";
+import { useQuery, useMutation } from "@tanstack/vue-query";
+import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
+import { useI18n } from "vue-i18n";
+import { 
+    adminGetList, 
+    adminGetWithId, 
+    adminCreate, 
+    adminUpdateWithId, 
+    adminDeleteWithId 
+} from "@/services/superadmin_crud.services.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
@@ -65,6 +80,9 @@ import FormModal from "@/components/FormModal.vue";
 import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
+
+const toast = useToast();
+const { t } = useI18n();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
@@ -100,56 +118,56 @@ const headers = ref([
     { id: 8, label: "employeesAction", width: 190 },
 ]);
 
-const table = ref([
-    { 
-        id: 1, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Неактивный",
-    },
-    { 
-        id: 2, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Активный",
-    },
-    { 
-        id: 3, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Активный",
-    },
-    { 
-        id: 4, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Неактивный",
-    },
-    { 
-        id: 5, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Активный",
-    },
-    { 
-        id: 6, 
-        fullName: "Иванов Иван Иванович", 
-        organization: "Microsoft Academy", 
-        phoneEmployees: "+998999999999", 
-        role: "Начальник", 
-        status: "Неактивный",
-    }
-]);
+// const table = ref([
+//     { 
+//         id: 1, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Неактивный",
+//     },
+//     { 
+//         id: 2, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Активный",
+//     },
+//     { 
+//         id: 3, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Активный",
+//     },
+//     { 
+//         id: 4, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Неактивный",
+//     },
+//     { 
+//         id: 5, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Активный",
+//     },
+//     { 
+//         id: 6, 
+//         fullName: "Иванов Иван Иванович", 
+//         organization: "Microsoft Academy", 
+//         phoneEmployees: "+998999999999", 
+//         role: "Начальник", 
+//         status: "Неактивный",
+//     }
+// ]);
 
 const inputs = ref([
     { 
@@ -217,6 +235,38 @@ const selects = ref([
 
 const v$ = useVuelidate(rules, employeesForm);
 
+// const {
+//     data: getListEmployees,
+//     isLoading: isLoadingGetListEmployees,
+//     isSuccess: isSuccessGetListEmployees
+// } = await useQuery({
+//     queryKey: ["getListEmployees"],
+//     queryFn: () => adminGetList("user")
+// });
+
+// const {
+//     data: getEmployeesId,
+//     isLoading: isLoadingGetEmployeesId,
+//     isSuccess: isSuccessGetEmployeesId,
+//     refetch 
+// } = await useQuery({
+//     queryKey: ["getEmployeesId", requestId],
+//     queryFn: () => adminGetWithId("user", requestId.value),
+//     enabled: false
+// });
+
+// const { mutate: createMutate } = useMutation({
+//     mutationFn: (body) => adminCreate("user", body)
+// });
+
+// const { mutate: updateMutate } = useMutation({
+//     mutationFn: (body) => adminUpdateWithId("user", body)
+// });
+
+// const { mutate: deleteMutate } = useMutation({
+//     mutationFn: (idx) => adminDeleteWithId("user", idx)
+// });
+
 const searchHandler = (search) => {
     console.log(search);
 }
@@ -232,11 +282,12 @@ const editEmployeesHandler = (idx) => {
     requestFlag.value = "edit";
     requestId.value = idx;
     toggleIsOpenModalForm();
-    console.log(idx);
+     // refetch();
 }
 
 const deleteEmployeesHandler = (idx) => {
-    console.log(idx);
+    // deleteMutate(idx);
+    toast.success(t("deleteEmployeesToast"));
 }
 
 const submitFormHandler = () => {
@@ -245,10 +296,15 @@ const submitFormHandler = () => {
     if (!v$.value.$errors.length) {
         if (requestFlag.value === 'create') {
             console.log('create');
-            return;
+            // createMutate(companyForm.value);
+            toast.success(t("createEmployeesToast"));
+        } else {
+            console.log('update');
+            // updateMutate(companyForm.value);
+            toast.success(t("updateEmployeesToast"));
         }
 
-        console.log('update');
+        toggleIsOpenModalForm();
     }
 
     console.log('invalid');

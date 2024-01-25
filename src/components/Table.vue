@@ -19,30 +19,23 @@
                 <td v-if="info.id" class="table-info" align="center">
                     {{ info.id }}
                 </td>
-                <td v-if="info.fullName" class="table-info" align="center">
-                    {{ info.fullName }}
+                <td v-if="info.fullname" class="table-info" align="center">
+                    {{ info.fullname }}
                 </td>
-                <td v-if="info.organization" class="table-info" align="center">
+                <!-- <td v-if="info.organization" class="table-info" align="center">
                     {{ info.organization }}
-                </td>
-                <td v-if="info.phoneEmployees" class="table-info" align="center">
+                </td> -->
+                <!-- <td v-if="info.phoneEmployees" class="table-info" align="center">
                     {{ info.phoneEmployees }}
-                </td>
+                </td> -->
                 <td v-if="info.role" class="table-info" align="center">
                     {{ info.role }}
-                </td>
-                <td v-if="info.status" class="table-info" align="center">
-                    <span 
-                        :class="`${info.status.toLowerCase() === 'активный' || info.status.toLowerCase() === 'faol' ? 'active' : 'no-active'}`"
-                    >
-                        {{ info.status }}
-                    </span>
                 </td>
                 <td v-if="info.organizationName" class="table-info" align="center">
                     {{ info.organizationName }}
                 </td>
-                <td v-if="info.Inn" class="table-info" align="center">
-                    {{ info.Inn }}
+                <td v-if="info.inn" class="table-info" align="center">
+                    {{ info.inn }}
                 </td>
                 <td v-if="info.region" class="table-info" align="center">
                     {{ info.region }}
@@ -53,11 +46,18 @@
                 <td v-if="info.address" class="table-info" align="center">
                     {{ info.address }}
                 </td>
-                <td v-if="info.phone" class="table-info" align="center">
-                    {{ info.phone }}
+                <td v-if="info.phoneNumber" class="table-info" align="center">
+                    {{ info.phoneNumber }}
                 </td>
                 <td v-if="info.director" class="table-info" align="center">
                     {{ info.director }}
+                </td>
+                <td v-if="info.state" class="table-info" align="center">
+                    <span 
+                        :class="`${info.status.toLowerCase() === 'активный' || info.status.toLowerCase() === 'faol' ? 'active' : 'no-active'}`"
+                    >
+                        {{ info.state }}
+                    </span>
                 </td>
                 <td class="table-info" align="center">
                     <span 

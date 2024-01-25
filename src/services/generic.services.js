@@ -1,12 +1,15 @@
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
-const API_URL = import.meta.env.VITE_BASE_URL;
+const API_URL = import.meta.env.VITE_REQUEST_BASE_URL;
+
+const toast = useToast();
 
 export const request = async ({ url, method, body = {} }) => {
   try {
     const response = await axios({
       method: method.toLowerCase(),
-      url: `${API_URL}${url}`,
+      url: `${API_URL}/${url}`,
       body,
     });
 
@@ -14,6 +17,6 @@ export const request = async ({ url, method, body = {} }) => {
 
     return data;
   } catch (error) {
-    console.error(error);
+    toast.error(error.message);
   }
 };

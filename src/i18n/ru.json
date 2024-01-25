@@ -57,5 +57,12 @@
   "employeesPhonePlaceholder": "Телефон...",
   "validations": {
     "required": "Заполните поле"
-  }
+  },
+  "emptyTableTitle": "Таблица пуста",
+  "createCompanyToast": "Организация создана",
+  "updateCompanyToast": "Организация обновлена",
+  "deleteCompanyToast": "Организация удалена",
+  "createEmployeesToast": "Сотрудник создан",
+  "updateEmployeesToast": "Сотрудник обновлен",
+  "deleteEmployeesToast": "Сотрудник удален"
 }

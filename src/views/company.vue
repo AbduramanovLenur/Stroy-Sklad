@@ -10,12 +10,17 @@
                     @onOpenFormModal="createNewCompanyHandler"
                 />
             </div>
-            <Table 
+            <!-- <Table 
+                v-if="isSuccessGetListCompany && getListCompany.length"
                 :headers="headers" 
-                :table="table" 
+                :table="getListCompany" 
                 @onActionEdit="editCompanyHandler"
                 @onActionDelete="deleteCompanyHandler"
-            />
+            /> -->
+            <!-- <Spinner v-if="isLoadingGetListCompany" /> -->
+            <!-- <div v-if="!getListCompany.length" class="empty-table">
+                {{ $t("emptyTableTitle") }}
+            </div> -->
         </div>
         <FormModal :title="titleModal">
             <form class="company__form" @submit.prevent="submitFormHandler">
@@ -56,8 +61,17 @@
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@/utils/i18n-validators.js";
-import { useQuery } from "@tanstack/vue-query";
+import { useQuery, useMutation } from "@tanstack/vue-query";
+import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
+import { useI18n } from "vue-i18n";
+import { 
+    adminGetList, 
+    adminGetWithId, 
+    adminCreate, 
+    adminUpdateWithId, 
+    adminDeleteWithId 
+} from "@/services/superadmin_crud.services.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
@@ -66,6 +80,10 @@ import FormModal from "@/components/FormModal.vue";
 import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
+import Spinner from "@/components/Spinner.vue";
+
+const toast = useToast();
+const { t } = useI18n();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
@@ -105,68 +123,68 @@ const headers = ref([
     { id: 8, label: "organizationAction", width: 135 },
 ]);
 
-const table = ref([
-    { 
-        id: 1, 
-        organizationName: "Microsoft Academy", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Ибн-Сино 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    },
-    { 
-        id: 2, 
-        organizationName: "Admin qwerty company", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Толстово кирпич 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    },
-    { 
-        id: 3, 
-        organizationName: "Microsoft Academy", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Ибн-Сино 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    },
-    { 
-        id: 4, 
-        organizationName: "Admin qwerty company wlefjl klsdfj jksdfj", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Толстово кирпич 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    },
-    { 
-        id: 5, 
-        organizationName: "Microsoft Academy", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Ибн-Сино 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    },
-    { 
-        id: 6, 
-        organizationName: "Admin qwerty company", 
-        Inn: "123456789", 
-        region: "Навоиская область", 
-        district: "Навои", 
-        address: "Толстово кирпич 18", 
-        phone: "+998999999999", 
-        director: "Иванов Иван Иванович" 
-    }
-]);
+// const table = ref([
+//     { 
+//         id: 1, 
+//         organizationName: "Microsoft Academy", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Ибн-Сино 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     },
+//     { 
+//         id: 2, 
+//         organizationName: "Admin qwerty company", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Толстово кирпич 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     },
+//     { 
+//         id: 3, 
+//         organizationName: "Microsoft Academy", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Ибн-Сино 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     },
+//     { 
+//         id: 4, 
+//         organizationName: "Admin qwerty company wlefjl klsdfj jksdfj", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Толстово кирпич 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     },
+//     { 
+//         id: 5, 
+//         organizationName: "Microsoft Academy", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Ибн-Сино 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     },
+//     { 
+//         id: 6, 
+//         organizationName: "Admin qwerty company", 
+//         Inn: "123456789", 
+//         region: "Навоиская область", 
+//         district: "Навои", 
+//         address: "Толстово кирпич 18", 
+//         phone: "+998999999999", 
+//         director: "Иванов Иван Иванович" 
+//     }
+// ]);
 
 const inputs = ref([
     { 
@@ -242,6 +260,38 @@ const selects = ref([
 
 const v$ = useVuelidate(rules, companyForm);
 
+// const {
+//     data: getListCompany,
+//     isLoading: isLoadingGetListCompany,
+//     isSuccess: isSuccessGetListCompany
+// } = await useQuery({
+//     queryKey: ["getListCompany"],
+//     queryFn: () => adminGetList("organization")
+// });
+
+// const {
+//     data: getCompanyId,
+//     isLoading: isLoadingGetCompanyId,
+//     isSuccess: isSuccessGetCompanyId,
+//     refetch 
+// } = await useQuery({
+//     queryKey: ["getByIdCompany", requestId],
+//     queryFn: () => adminGetWithId("organization", requestId.value),
+//     enabled: false
+// });
+
+// const { mutate: createMutate } = useMutation({
+//     mutationFn: (body) => adminCreate("organization", body)
+// });
+
+// const { mutate: updateMutate } = useMutation({
+//     mutationFn: (body) => adminUpdateWithId("organization", body)
+// });
+
+// const { mutate: deleteMutate } = useMutation({
+//     mutationFn: (idx) => adminDeleteWithId("organization", idx)
+// });
+
 const searchHandler = (search) => {
     console.log(search);
 }
@@ -257,11 +307,12 @@ const editCompanyHandler = (idx) => {
     requestFlag.value = "edit";
     requestId.value = idx;
     toggleIsOpenModalForm();
-    console.log(idx);
+    // refetch();
 }
 
 const deleteCompanyHandler = (idx) => {
-    console.log(idx);
+    // deleteMutate(idx);
+    toast.success(t("deleteCompanyToast"));
 }
 
 const submitFormHandler = () => {
@@ -270,10 +321,15 @@ const submitFormHandler = () => {
     if (!v$.value.$errors.length) {
         if (requestFlag.value === 'create') {
             console.log('create');
-            return;
+            // createMutate(companyForm.value);
+            toast.success(t("updateCompanyToast"));
+        } else {
+            console.log('update');
+            // updateMutate(companyForm.value);
+            toast.success(t("createCompanyToast"));
         }
 
-        console.log('update');
+        toggleIsOpenModalForm();
     }
 
     console.log('invalid');
