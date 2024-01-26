@@ -19,13 +19,25 @@ const app = createApp(App, {
   },
 });
 
+const options = {
+  queryClientConfig: {
+    defaultOptions: { 
+      queries: { 
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 60, 
+        cacheTime: 1000 * 60 * 60 
+      } 
+    },
+  },
+}
+
 app.config.globalProperties.$axios = axios;
 
 app
   .use(router)
   .use(i18n)
   .use(createPinia())
-  .use(VueQueryPlugin)
+  .use(VueQueryPlugin, options)
   .use(Toast);
 
 app.mount("#app");

@@ -93,12 +93,15 @@ const inputs = ref([
 const authHandler = () => {
     v$.value.$validate();
 
-    if (!v$.value.$errors.length) {
-        console.log(formData.value);
-        formData.value = clearForm(formData.value);
-        v$.value.$reset();
-        router.push("/");
+    if (v$.value.$errors.length) {
+        return;
     }
+
+    console.log(formData.value);
+    localStorage.setItem("role", "superadmin");
+    formData.value = clearForm(formData.value);
+    v$.value.$reset();
+    router.push("/");
 }
 </script>
 

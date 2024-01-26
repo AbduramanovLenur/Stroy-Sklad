@@ -19,6 +19,7 @@
   "organizationAddress": "Адрес",
   "organizationPhone": "Телефон",
   "organizationDirector": "Директор",
+  "organizationState": "Состояние",
   "organizationAccounter": "Accounter",
   "organizationAction": "Действия",
   "addNewCompanyTitle": "Создание компании",
@@ -66,5 +67,7 @@
   "createEmployeesToast": "Сотрудник создан",
   "updateEmployeesToast": "Сотрудник обновлен",
   "deleteEmployeesToast": "Сотрудник удален",
-  "logoutToast": "Вы вышли из системы"
+  "logoutToast": "Вы вышли из системы",
+  "emptySelect": "Нет опций",
+  "stateOrganizationLabel": "Состояние организации"
 }

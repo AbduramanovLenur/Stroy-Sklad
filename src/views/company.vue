@@ -10,45 +10,51 @@
                     @onOpenFormModal="createNewCompanyHandler"
                 />
             </div>
-            <!-- <Table 
-                v-if="isSuccessGetListCompany && getListCompany.length"
+            <Table 
+                v-if="isSuccessCompanies && companies.length"
                 :headers="headers" 
-                :table="getListCompany" 
+                :table="companies" 
                 @onActionEdit="editCompanyHandler"
                 @onActionDelete="deleteCompanyHandler"
-            /> -->
-            <!-- <Spinner v-if="isLoadingGetListCompany" /> -->
-            <!-- <div v-if="!getListCompany.length" class="empty-table">
+            />
+            <Spinner v-if="isLoadingCompanies" />
+            <div v-if="isSuccessCompanies && !companies.length" class="empty-table">
                 {{ $t("emptyTableTitle") }}
-            </div> -->
+            </div>
         </div>
         <FormModal :title="titleModal">
             <form class="company__form" @submit.prevent="submitFormHandler">
                 <FormInput 
                     v-for="input in inputs"
                     :key="input.id"
+                    v-model="companyForm[input.model]"
                     :width="500" 
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
-                    v-model="companyForm[input.model]"
                     :error="v$?.[input.errorKey].$error" 
                     :textError="v$?.[input.errorKey].$errors[0]?.$message"
+                    :show="input.show"
+                    :requestFlag="requestFlag"
                 >
                     {{ $t(input.label) }}
                 </FormInput>
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
-                    :width="500" 
                     v-model="companyForm[select.model]" 
+                    :width="500" 
                     :options="select.options"
-                    :error="v$?.[select.errorKey].$error" 
-                    :textError="v$?.[select.errorKey].$errors[0]?.$message"
+                    :error="v$?.[select?.errorKey]?.$error" 
+                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
+                    :success="select.success"
+                    :loading="select.loading"
+                    :show="select?.show"
+                    :requestFlag="requestFlag"
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
                 <CustomButton 
-                    :className="`form__submit ${v$?.district.$errors[0]?.$message ? 'centered' : ''}`"
+                    :className="`form__submit ${v$?.districtId.$errors[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -66,9 +72,7 @@ import {
     useQuery, 
     useMutation 
 } from "@tanstack/vue-query";
-import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
-import { useI18n } from "vue-i18n";
 import { 
     adminGetList, 
     adminGetWithId, 
@@ -76,6 +80,11 @@ import {
     adminUpdateById, 
     adminDeleteWithId 
 } from "@/services/superadmin_crud.services.js";
+import { 
+    manualGetRegions,
+    manualGetDistricts,
+    manualGetStates
+} from "@/services/manual.services.js";
 import { clearForm } from "@/utils/secondary-functions.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
@@ -88,8 +97,6 @@ import CustomButton from "@/components/CustomButton.vue";
 import Spinner from "@/components/Spinner.vue";
 
 const queryClient = useQueryClient();
-const toast = useToast();
-const { t } = useI18n();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
@@ -98,117 +105,91 @@ const titleModal = ref("");
 const requestFlag = ref("");
 const requestId = ref("");
 
+const {
+    data: regions,
+    isSuccess: isSuccessRegions,
+    isLoading: isLoadingRegions,
+    refetch: refetchRegions
+} = await useQuery({
+    queryKey: ["regions"],
+    queryFn: () => manualGetRegions(),
+    enabled: false
+});
+
+const {
+    data: districts,
+    isSuccess: isSuccessDistricts,
+    isLoading: isLoadingDistricts,
+    refetch: refetchDistricts
+} = await useQuery({
+    queryKey: ["districts"],
+    queryFn: () => manualGetDistricts(),
+    enabled: false
+});
+
+const {
+    data: states,
+    isSuccess: isSuccessStates,
+    isLoading: isLoadingStates,
+    refetch: refetchStates
+} = await useQuery({
+    queryKey: ["statesCompany"],
+    queryFn: () => manualGetStates(),
+    enabled: false
+});
+
 const companyForm = ref({
     id: "",
-    name: "",
-    tin: "",
+    fullName: "",
+    inn: "",
     address: "",
-    phone: "",
+    phoneNumber: "",
     director: "",
-    region: "",
-    district: ""
+    regionId: "",
+    districtId: "",
+    stateId: ""
 });
 
 const rules = computed(() => ({
-    name: { required },
-    tin: { required },
+    fullName: { required },
+    inn: { required },
     address: { required },
-    phone: { required },
+    phoneNumber: { required },
     director: { required },
-    region: { required },
-    district: { required },
+    regionId: { required },
+    districtId: { required },
 }));
 
 const headers = ref([
-    { id: 1, label: "organizationName", width: 260 },
-    { id: 2, label: "organizationInn", width: 125 },
-    { id: 3, label: "organizationRegion", width: 225 },
-    { id: 4, label: "organizationDistrict", width: 110 },
-    { id: 5, label: "organizationAddress", width: 220 },
-    { id: 6, label: "organizationPhone", width: 175 },
-    { id: 7, label: "organizationDirector", width: 265 },
-    { id: 8, label: "organizationAction", width: 135 },
+    { id: 1, label: "organizationName", width: 220 },
+    { id: 2, label: "organizationInn", width: 115 },
+    { id: 3, label: "organizationRegion", width: 215 },
+    { id: 4, label: "organizationDistrict", width: 155 },
+    { id: 5, label: "organizationAddress", width: 200 },
+    { id: 6, label: "organizationPhone", width: 170 },
+    { id: 7, label: "organizationDirector", width: 245 },
+    { id: 7, label: "organizationState", width: 100 },
+    { id: 8, label: "organizationAction", width: 130 },
 ]);
-
-// const table = ref([
-//     { 
-//         id: 1, 
-//         organizationName: "Microsoft Academy", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Ибн-Сино 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     },
-//     { 
-//         id: 2, 
-//         organizationName: "Admin qwerty company", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Толстово кирпич 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     },
-//     { 
-//         id: 3, 
-//         organizationName: "Microsoft Academy", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Ибн-Сино 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     },
-//     { 
-//         id: 4, 
-//         organizationName: "Admin qwerty company wlefjl klsdfj jksdfj", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Толстово кирпич 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     },
-//     { 
-//         id: 5, 
-//         organizationName: "Microsoft Academy", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Ибн-Сино 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     },
-//     { 
-//         id: 6, 
-//         organizationName: "Admin qwerty company", 
-//         Inn: "123456789", 
-//         region: "Навоиская область", 
-//         district: "Навои", 
-//         address: "Толстово кирпич 18", 
-//         phone: "+998999999999", 
-//         director: "Иванов Иван Иванович" 
-//     }
-// ]);
 
 const inputs = ref([
     { 
         id: 1, 
-        model: "name", 
+        model: "fullName", 
         label: "nameOrganizationLabel", 
         placeholder: "nameOrganizationPlaceholder", 
         icon: "input-company",
-        errorKey: "name" 
+        errorKey: "fullName",
+        show: ["create", "edit"]
     },
     { 
         id: 2, 
-        model: "tin", 
+        model: "inn", 
         label: "innOrganizationLabel", 
         placeholder: "innOrganizationPlaceholder", 
         icon: "tin",
-        errorKey: "tin" 
+        errorKey: "inn",
+        show: ["create", "edit"]
     },
     { 
         id: 3, 
@@ -216,15 +197,17 @@ const inputs = ref([
         label: "addressOrganizationLabel", 
         placeholder: "addressOrganizationPlaceholder", 
         icon: "address",
-        errorKey: "address" 
+        errorKey: "address",
+        show: ["create", "edit"] 
     },
     { 
         id: 4, 
-        model: "phone", 
+        model: "phoneNumber", 
         label: "phoneOrganizationLabel", 
         placeholder: "phoneOrganizationPlaceholder", 
         icon: "phone",
-        errorKey: "phone" 
+        errorKey: "phoneNumber",
+        show: ["create", "edit"]
     },
     { 
         id: 5, 
@@ -232,127 +215,142 @@ const inputs = ref([
         label: "directorOrganizationLabel", 
         placeholder: "directorOrganizationPlaceholder", 
         icon: "person",
-        errorKey: "director" 
+        errorKey: "director",
+        show: ["create", "edit"]
     }
-]);
-
-const regionSelect = ref([
-    { id: 1, option: "Навои обл." },
-    { id: 2, option: "Самарканд обл." },
-    { id: 3, option: "Ташкент обл." }
-]);
-
-const discrictSelect = ref([
-    { id: 1, option: "Навои" },
-    { id: 2, option: "Самарканд" },
-    { id: 3, option: "Ташкент" }
 ]);
 
 const selects = ref([
     { 
         id: 1, 
-        model: "region", 
+        model: "regionId", 
         label: "regionOrganizationLabel", 
-        options: regionSelect,
-        errorKey: "region" 
+        options: regions,
+        errorKey: "regionId",
+        success: isSuccessRegions,
+        loading: isLoadingRegions,
+        show: ["create", "edit"]
     },
     { 
         id: 2, 
-        model: "district", 
+        model: "districtId", 
         label: "districtOrganizationLabel", 
-        options: discrictSelect,
-        errorKey: "district" 
+        options: districts,
+        errorKey: "districtId",
+        success: isSuccessDistricts,
+        loading: isLoadingDistricts,
+        show: ["create", "edit"]
+    },
+    { 
+        id: 3, 
+        model: "stateId", 
+        label: "stateOrganizationLabel", 
+        options: states,
+        success: isSuccessStates,
+        loading: isLoadingStates,
+        show: "update",
+        show: ["edit"]
     }
 ]);
 
 const v$ = useVuelidate(rules, companyForm);
 
-// const {
-//     data: getListCompany,
-//     isLoading: isLoadingGetListCompany,
-//     isSuccess: isSuccessGetListCompany
-// } = await useQuery({
-//     queryKey: ["getListCompany"],
-//     queryFn: () => adminGetList("organization")
-// });
+const {
+    data: companies,
+    isLoading: isLoadingCompanies,
+    isSuccess: isSuccessCompanies
+} = await useQuery({
+    queryKey: ["companies"],
+    queryFn: () => adminGetList("organization")
+});
 
-// const {
-//     data: getCompanyId,
-//     isLoading: isLoadingGetCompanyId,
-//     isSuccess: isSuccessGetCompanyId,
-//     refetch 
-// } = await useQuery({
-//     queryKey: ["getByIdCompany", requestId],
-//     queryFn: () => adminGetWithId("organization", requestId.value),
-//     enabled: false
-// });
+const {
+    refetch: refetchCompaniesById
+} = await useQuery({
+    queryKey: ["companiesById", requestId],
+    queryFn: () => adminGetWithId("organization", requestId.value),
+    select: (data) => {
+        companyForm.value.id = data.id;
+        companyForm.value.fullName = data.fullName;
+        companyForm.value.inn = data.inn;
+        companyForm.value.address = data.address;
+        companyForm.value.phoneNumber = data.phoneNumber;
+        companyForm.value.director = data.director;
+        companyForm.value.regionId = data.regionId;
+        companyForm.value.districtId = data.districtId;
+        companyForm.value.stateId = data.stateId;
+    },
+    enabled: false
+});
 
-// const { mutate: createMutate } = useMutation({
-//     mutationFn: (body) => adminCreate("organization", body),
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
-//     }
-// });
+const { mutate: createMutate } = useMutation({
+    mutationFn: (body) => adminCreate("organization", body),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["companies"] });
+    }
+});
 
-// const { mutate: updateMutate } = useMutation({
-//     mutationFn: (body) => adminUpdateById("organization", body),
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
-//         queryClient.invalidateQueries({ queryKey: ["getByIdCompany", requestId] });
-//     }
-// });
+const { mutate: updateMutate } = useMutation({
+    mutationFn: (body) => adminUpdateById("organization", body),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["companies"] });
+        queryClient.invalidateQueries({ queryKey: ["getByIdCompany", requestId] });
+    }
+});
 
-// const { mutate: deleteMutate } = useMutation({
-//     mutationFn: (idx) => adminDeleteWithId("organization", idx),
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListCompany"] });
-//     }
-// });
+const { mutate: mutateDelete } = useMutation({
+    mutationFn: (idx) => adminDeleteWithId("organization", idx),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["companies"] });
+    }
+});
 
 const searchHandler = (search) => {
     console.log(search);
 }
 
-const createNewCompanyHandler = () => {
-    titleModal.value = "addNewCompanyTitle";
-    requestFlag.value = "create";
+const isOpenFormModal = (title, flag) => {
+    titleModal.value = title;
+    requestFlag.value = flag;
+    refetchRegions();
+    refetchDistricts();
     toggleIsOpenModalForm();
+}
+
+const createNewCompanyHandler = () => {
+    isOpenFormModal("addNewCompanyTitle", "create");
 }
 
 const editCompanyHandler = (idx) => {
-    titleModal.value = "editCompanyTitle";
-    requestFlag.value = "edit";
     requestId.value = idx;
-    toggleIsOpenModalForm();
-    // refetch();
+    refetchCompaniesById();
+    refetchStates();
+    isOpenFormModal("editCompanyTitle", "edit");
 }
 
-const deleteCompanyHandler = (idx) => {
-    // deleteMutate(idx);
-    toast.success(t("deleteCompanyToast"));
+const deleteCompanyHandler = async (idx) => {
+    mutateDelete(idx);
 }
 
-const submitFormHandler = () => {
+const submitFormHandler = async () => {
     v$.value.$validate();
 
-    if (!v$.value.$errors.length) {
-        if (requestFlag.value === 'create') {
-            console.log('create');
-            // createMutate(companyForm.value);
-            toast.success(t("createCompanyToast"));
-        } else {
-            console.log('update');
-            // updateMutate(companyForm.value);
-            toast.success(t("updateCompanyToast"));
-        }
-
-        toggleIsOpenModalForm();
-        companyForm.value = clearForm(companyForm.value);
-        v$.value.$reset();
+    if (v$.value.$errors.length) {
         return;
     }
 
-    console.log('invalid');
+    if (requestFlag.value === 'create') {
+        delete companyForm.value.id;
+        delete companyForm.value.stateId;
+
+        createMutate(companyForm.value);
+    } else {
+        updateMutate(companyForm.value);
+    }
+
+    toggleIsOpenModalForm();
+    companyForm.value = clearForm(companyForm.value);
+    v$.value.$reset();
 }
 </script>
 

@@ -4,7 +4,9 @@
         <div :class="`main-panel ${isOpen ? 'extended' : ''}`">
             <Header />
             <main class="main">
-                <slot />
+                <Suspense>
+                    <slot />
+                </Suspense>
             </main>
         </div>
     </div>

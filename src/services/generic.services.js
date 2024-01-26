@@ -7,13 +7,13 @@ const toast = useToast();
 
 export const request = async ({ url, method, body = {} }) => {
   try {
-    const response = await axios({
-      method: method.toLowerCase(),
-      url: `${API_URL}/${url}`,
-      body,
-    });
+    const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
 
-    const { data } = response;
+    const { data, statusText } = response;
+
+    if (method.toLowerCase() === 'post') {
+      toast.success(statusText);
+    }
 
     return data;
   } catch (error) {

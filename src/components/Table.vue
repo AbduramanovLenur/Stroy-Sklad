@@ -22,12 +22,12 @@
                 <td v-if="info.fullname" class="table-info" align="center">
                     {{ info.fullname }}
                 </td>
-                <!-- <td v-if="info.organization" class="table-info" align="center">
-                    {{ info.organization }}
-                </td> -->
-                <!-- <td v-if="info.phoneEmployees" class="table-info" align="center">
-                    {{ info.phoneEmployees }}
-                </td> -->
+                <td v-if="info.company" class="table-info" align="center">
+                    {{ info.company }}
+                </td>
+                <td v-if="info.phone" class="table-info" align="center">
+                    {{ info.phone }}
+                </td>
                 <td v-if="info.role" class="table-info" align="center">
                     {{ info.role }}
                 </td>
@@ -53,9 +53,7 @@
                     {{ info.director }}
                 </td>
                 <td v-if="info.state" class="table-info" align="center">
-                    <span 
-                        :class="`${info.status.toLowerCase() === 'активный' || info.status.toLowerCase() === 'faol' ? 'active' : 'no-active'}`"
-                    >
+                    <span :class="`${info.stateId === 1 ? 'active' : 'no-active'}`">
                         {{ info.state }}
                     </span>
                 </td>
@@ -67,6 +65,7 @@
                         <Icon name="edit" />
                     </span>
                     <span 
+                        v-if="info.stateId === 1"
                         class="table-delete" 
                         @click="() => $emit('onActionDelete', info.id)"
                     >

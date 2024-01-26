@@ -1,5 +1,5 @@
 <template>
-    <label class="label" :style="`max-width: ${width}px;`">
+    <label v-if="show.includes(requestFlag)" class="label" :style="`max-width: ${width}px;`">
         <slot />
         <span class="label-wrapper">
             <input 
@@ -25,7 +25,16 @@
 <script setup>
 import Icon from "@/components/Icon.vue";
 
-defineProps(["modelValue", "width", "name", "placeholder", "error", "textError"]);
+defineProps([
+    "modelValue", 
+    "width", 
+    "name", 
+    "placeholder", 
+    "error", 
+    "textError", 
+    "show", 
+    "requestFlag"
+]);
 </script>
 
 <style lang="scss" scoped>

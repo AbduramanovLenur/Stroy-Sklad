@@ -1,19 +1,29 @@
 <template>
-    <label class="label" :style="`max-width: ${width}px;`">
+    <label v-if="show?.includes(requestFlag)" class="label" :style="`max-width: ${width}px;`">
         <slot />
         <span class="select-wrapper">
             <select 
+                v-if="success" 
                 class="select" 
-                :value="modelValue" 
                 @change="($event) => $emit('update:modelValue', $event.target.value)"
+                :value="modelValue"
             >
                 <option 
                     v-for="option in options" 
                     :key="option.id" 
-                    :value="option.option" 
+                    :value="option.id" 
                     class="option"
                 >
-                    {{ option.option }}
+                    {{ option.name }}
+                </option>
+            </select>
+            <select 
+                v-if="loading || !success" 
+                class="select"
+                :value="modelValue" 
+            >
+                <option>
+                    {{ $t("emptySelect") }}
                 </option>
             </select>
             <div class="select-icon">
@@ -32,7 +42,18 @@
 <script setup>
 import Icon from "@/components/Icon.vue";
 
-defineProps(["modelValue", "width", "placeholder", "options", "error", "textError"]);
+defineProps([
+    "modelValue", 
+    "width", 
+    "placeholder", 
+    "options", 
+    "error", 
+    "textError", 
+    "success", 
+    "loading",
+    "show",
+    "requestFlag"
+]);
 </script>
 
 <style lang="scss" scoped>

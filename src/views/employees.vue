@@ -10,45 +10,51 @@
                     @onOpenFormModal="createNewEmployeesHandler"
                 />
             </div>
-            <!-- <Table 
-                v-if="isSuccessGetListEmployees && getListEmployees.length"
+            <Table 
+                v-if="isSuccessEmployees && employees.length"
                 :headers="headers" 
-                :table="getListEmployees" 
+                :table="employees" 
                 @onActionEdit="editEmployeesHandler"
                 @onActionDelete="deleteEmployeesHandler"
-            /> -->
-            <!-- <Spinner v-if="isLoadingGetListEmployees" /> -->
-            <!-- <div v-if="!getListEmployees.length" class="empty-table">
+            />
+            <Spinner v-if="isLoadingEmployees" />
+            <div v-if="isSuccessEmployees && !employees.length" class="empty-table">
                 {{ $t("emptyTableTitle") }}
-            </div>  -->
+            </div> 
         </div>
         <FormModal :title="titleModal">
             <form class="employees__form" @submit.prevent="submitFormHandler">
                 <FormInput 
                     v-for="input in inputs"
                     :key="input.id"
+                    v-model="employeesForm[input.model]"
                     :width="500" 
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
-                    v-model="employeesForm[input.model]"
-                    :error="v$?.[input.errorKey].$error" 
-                    :textError="v$?.[input.errorKey].$errors[0]?.$message"
+                    :error="v$?.[input?.errorKey]?.$error" 
+                    :textError="v$?.[input?.errorKey]?.$errors[0]?.$message"
+                    :show="input.show"
+                    :requestFlag="requestFlag"
                 >
                     {{ $t(input.label) }}
                 </FormInput>
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
-                    :width="500" 
                     v-model="employeesForm[select.model]" 
+                    :width="500" 
                     :options="select.options"
-                    :error="v$?.[select.errorKey].$error" 
-                    :textError="v$?.[select.errorKey].$errors[0]?.$message"
+                    :error="v$?.[select?.errorKey]?.$error" 
+                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
+                    :success="select.success"
+                    :loading="select.loading"
+                    :show="select.show"
+                    :requestFlag="requestFlag"
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
                 <CustomButton 
-                    :className="`form__submit ${v$?.role.$errors[0]?.$message ? 'centered' : ''}`"
+                    :className="`form__submit ${v$?.roleId.$errors[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -66,9 +72,7 @@ import {
     useQuery, 
     useMutation 
 } from "@tanstack/vue-query";
-import { useToast } from "vue-toastification";
 import { useModalsStore } from "@/store/modalsStore.js";
-import { useI18n } from "vue-i18n";
 import { 
     adminGetList, 
     adminGetWithId, 
@@ -76,6 +80,11 @@ import {
     adminUpdateById, 
     adminDeleteWithId 
 } from "@/services/superadmin_crud.services.js";
+import { 
+    manualGetOrganizations,
+    manualGetRoles,
+    manualGetStates
+} from "@/services/manual.services.js";
 import { clearForm } from "@/utils/secondary-functions.js";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
@@ -85,10 +94,9 @@ import FormModal from "@/components/FormModal.vue";
 import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
 import CustomButton from "@/components/CustomButton.vue";
+import Spinner from "@/components/Spinner.vue";
 
 const queryClient = useQueryClient();
-const toast = useToast();
-const { t } = useI18n();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
@@ -97,24 +105,75 @@ const titleModal = ref("");
 const requestFlag = ref("");
 const requestId = ref("");
 
+const {
+    data: organizations,
+    isSuccess: isSuccessOrganizations,
+    isLoading: isLoadingOrganizations,
+    refetch: refetchOrganizations
+} = await useQuery({
+    queryKey: ["organizations"],
+    queryFn: () => manualGetOrganizations(),
+    enabled: false
+});
+
+const {
+    data: roles,
+    isSuccess: isSuccessRoles,
+    isLoading: isLoadingRoles,
+    refetch: refetchRoles
+} = await useQuery({
+    queryKey: ["districts"],
+    queryFn: () => manualGetRoles(),
+    enabled: false
+});
+
+const {
+    data: states,
+    isSuccess: isSuccessStates,
+    isLoading: isLoadingStates,
+    refetch: refetchStates
+} = await useQuery({
+    queryKey: ["statesEmployees"],
+    queryFn: () => manualGetStates(),
+    enabled: false
+});
+
 const employeesForm = ref({
     id: "",
     fullName: "",
-    login: "",
+    userName: "",
     password: "",
-    phone: "",
-    organization: "",
-    role: "",
+    phoneNumber: "",
+    organizationId: "",
+    roleId: "",
+    stateId: ""
 });
 
-const rules = computed(() => ({
-    fullName: { required },
-    login: { required },
-    password: { required, minLength },
-    phone: { required },
-    organization: { required },
-    role: { required },
-}));
+const rules = computed(() => {
+    switch (requestFlag.value) {
+        case "edit": {
+            return {
+                fullName: { required },
+                userName: { required },
+                phoneNumber: { required },
+                organizationId: { required },
+                roleId: { required },
+            }
+
+            break;
+        }
+        default: {
+            return {
+                fullName: { required },
+                userName: { required },
+                password: { required, minLength },
+                phoneNumber: { required },
+                organizationId: { required },
+                roleId: { required },
+            }
+        }
+    }
+});
 
 const headers = ref([
     { id: 1, label: "employeesFullName", width: 300 },
@@ -125,57 +184,6 @@ const headers = ref([
     { id: 8, label: "employeesAction", width: 190 },
 ]);
 
-// const table = ref([
-//     { 
-//         id: 1, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Неактивный",
-//     },
-//     { 
-//         id: 2, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Активный",
-//     },
-//     { 
-//         id: 3, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Активный",
-//     },
-//     { 
-//         id: 4, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Неактивный",
-//     },
-//     { 
-//         id: 5, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Активный",
-//     },
-//     { 
-//         id: 6, 
-//         fullName: "Иванов Иван Иванович", 
-//         organization: "Microsoft Academy", 
-//         phoneEmployees: "+998999999999", 
-//         role: "Начальник", 
-//         status: "Неактивный",
-//     }
-// ]);
-
 const inputs = ref([
     { 
         id: 1, 
@@ -183,15 +191,17 @@ const inputs = ref([
         label: "employeesFullNameLabel", 
         placeholder: "employeesFullNamePlaceholder", 
         icon: "person", 
-        errorKey: "fullName" 
+        errorKey: "fullName",
+        show: ["create", "edit"]
     },
     { 
         id: 2, 
-        model: "login", 
+        model: "userName", 
         label: "employeesLoginLabel", 
         placeholder: "employeesLoginPlaceholder", 
         icon: "login", 
-        errorKey: "login" 
+        errorKey: "userName",
+        show: ["create", "edit"]
     },
     { 
         id: 3, 
@@ -199,135 +209,162 @@ const inputs = ref([
         label: "employeesPasswordLabel", 
         placeholder: "employeesPasswordPlaceholder", 
         icon: "password", 
-        errorKey: "password" 
+        errorKey: "password",
+        show: ["create"]
     },
     { 
         id: 4, 
-        model: "phone", 
+        model: "phoneNumber", 
         label: "employeesPhoneLabel",
         placeholder: "employeesPhonePlaceholder", 
         icon: "phone", 
-        errorKey: "phone" 
+        errorKey: "phoneNumber",
+        show: ["create", "edit"]
     }
-]);
-
-const organizationRole = ref([
-    { id: 1, option: "Навои обл." },
-    { id: 2, option: "Самарканд обл." },
-    { id: 3, option: "Ташкент обл." }
-]);
-
-const roleSelect = ref([
-    { id: 1, option: "Навои" },
-    { id: 2, option: "Самарканд" },
-    { id: 3, option: "Ташкент" }
 ]);
 
 const selects = ref([
     { 
         id: 1, 
-        model: "organization", 
+        model: "organizationId", 
         label: "employeesOrganizationLabel", 
-        options: organizationRole, 
-        errorKey: "organization" 
+        options: organizations, 
+        errorKey: "organizationId",
+        success: isSuccessOrganizations,
+        loading: isLoadingOrganizations,
+        show: ["create", "edit"]
     },
     { 
         id: 2, 
-        model: "role", 
+        model: "roleId", 
         label: "employeesRoleLabel", 
-        options: roleSelect, 
-        errorKey: "role" 
+        options: roles, 
+        errorKey: "roleId", 
+        success: isSuccessRoles,
+        loading: isLoadingRoles,
+        show: ["create", "edit"]
+    },
+    { 
+        id: 3, 
+        model: "stateId", 
+        label: "stateOrganizationLabel", 
+        options: states,
+        success: isSuccessStates,
+        loading: isLoadingStates,
+        show: ["edit"]
     }
 ]);
 
 const v$ = useVuelidate(rules, employeesForm);
 
-// const {
-//     data: getListEmployees,
-//     isLoading: isLoadingGetListEmployees,
-//     isSuccess: isSuccessGetListEmployees
-// } = await useQuery({
-//     queryKey: ["getListEmployees"],
-//     queryFn: () => adminGetList("user")
-// });
+const {
+    data: employees,
+    isLoading: isLoadingEmployees,
+    isSuccess: isSuccessEmployees
+} = await useQuery({
+    queryKey: ["employees"],
+    queryFn: () => adminGetList("user"),
+    select: (data) => {
+        return data.map((elem) => {
+            const employee = {
+                ...elem,
+                phone: elem.phoneNumber,
+                company: elem.organizationName
+            }
 
-// const {
-//     data: getEmployeesId,
-//     isLoading: isLoadingGetEmployeesId,
-//     isSuccess: isSuccessGetEmployeesId,
-//     refetch 
-// } = await useQuery({
-//     queryKey: ["getByIdEmployees", requestId],
-//     queryFn: () => adminGetWithId("user", requestId.value),
-//     enabled: false
-// });
+            delete employee.phoneNumber;
+            delete employee.organizationName;
 
-// const { mutate: createMutate } = useMutation({
-//     mutationFn: (body) => adminCreate("user", body),
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
-//     }
-// });
+            return employee;
+        })
+    }
+});
 
-// const { mutate: updateMutate } = useMutation({
-//     mutationFn: (body) => adminUpdateById("user", body)
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
-//         queryClient.invalidateQueries({ queryKey: ["getByIdEmployees", requestId] });
-//     }
-// });
+const {
+    refetch: refetchEmployeesById
+} = await useQuery({
+    queryKey: ["employeesById", requestId],
+    queryFn: () => adminGetWithId("user", requestId.value),
+    select: (data) => {
+        employeesForm.value.id = data.id;
+        employeesForm.value.fullName = data.fullname;
+        employeesForm.value.userName = data.userName;
+        employeesForm.value.phoneNumber = data.phoneNumber;
+        employeesForm.value.organizationId = data.organizationId;
+        employeesForm.value.roleId = data.roleId;
+        employeesForm.value.stateId = data.stateId;
+    },
+    enabled: false
+});
 
-// const { mutate: deleteMutate } = useMutation({
-//     mutationFn: (idx) => adminDeleteWithId("user", idx),
-//     onSuccess: () => {
-//         queryClient.invalidateQueries({ queryKey: ["getListEmployees"] });
-//     }
-// });
+const { mutate: createMutate } = useMutation({
+    mutationFn: (body) => adminCreate("user", body),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["employees"] });
+    }
+});
+
+const { mutate: updateMutate } = useMutation({
+    mutationFn: (body) => adminUpdateById("user", body),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["employees"] });
+        queryClient.invalidateQueries({ queryKey: ["getByIdEmployees", requestId] });
+    }
+});
+
+const { mutate: deleteMutate } = useMutation({
+    mutationFn: (idx) => adminDeleteWithId("user", idx),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["employees"] });
+    }
+});
 
 const searchHandler = (search) => {
     console.log(search);
 }
 
-const createNewEmployeesHandler = () => {
-    titleModal.value = "addNewEmployeesTitle";
-    requestFlag.value = "create";
+const isOpenFormModal = (title, flag) => {
+    titleModal.value = title;
+    requestFlag.value = flag;
+    refetchOrganizations();
+    refetchRoles();
     toggleIsOpenModalForm();
+}
+
+const createNewEmployeesHandler = () => {
+    isOpenFormModal("addNewEmployeesTitle", "create");
 }
 
 const editEmployeesHandler = (idx) => {
-    titleModal.value = "editEmployeesTitle";
-    requestFlag.value = "edit";
     requestId.value = idx;
-    toggleIsOpenModalForm();
-     // refetch();
+    refetchEmployeesById();
+    refetchStates();
+    isOpenFormModal("editEmployeesTitle", "edit");
 }
 
 const deleteEmployeesHandler = (idx) => {
-    // deleteMutate(idx);
-    toast.success(t("deleteEmployeesToast"));
+    deleteMutate(idx);
 }
 
 const submitFormHandler = () => {
     v$.value.$validate();
 
-    if (!v$.value.$errors.length) {
-        if (requestFlag.value === 'create') {
-            console.log('create');
-            // createMutate(employeesForm.value);
-            toast.success(t("createEmployeesToast"));
-        } else {
-            console.log('update');
-            // updateMutate(employeesForm.value);
-            toast.success(t("updateEmployeesToast"));
-        }
-
-        toggleIsOpenModalForm();
-        employeesForm.value = clearForm(employeesForm.value);
-        v$.value.$reset();
+    if (v$.value.$errors.length) {
         return;
     }
 
-    console.log('invalid');
+    if (requestFlag.value === 'create') {
+        delete employeesForm.value.id;
+        delete employeesForm.value.stateId;
+
+        createMutate(employeesForm.value);
+    } else {
+        updateMutate(employeesForm.value);
+    }
+
+    toggleIsOpenModalForm();
+    employeesForm.value = clearForm(employeesForm.value);
+    v$.value.$reset();
 }
 </script>
 

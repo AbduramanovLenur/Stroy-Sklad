@@ -19,6 +19,7 @@
   "organizationAddress": "Manzil",
   "organizationPhone": "Telefon",
   "organizationDirector": "Direktor",
+  "organizationState": "Holati",
   "organizationAccounter": "Accounter",
   "organizationAction": "Amallar",
   "addNewCompanyTitle": "Kompaniyani yaratish",
@@ -66,5 +67,7 @@
   "createEmployeesToast": "Xodim yaratilgan",
   "updateEmployeesToast": "Xodim yangilandi",
   "deleteEmployeesToast": "Xodim olib tashlandi",
-  "logoutToast": "Siz tizimdan chiqdingiz"
+  "logoutToast": "Siz tizimdan chiqdingiz",
+  "emptySelect": "Variantlar yo'q",
+  "stateOrganizationLabel": "Kompaniyaning holati"
 }
