@@ -1,5 +1,5 @@
 <template>
-    <label v-if="show.includes(requestFlag)" class="label" :style="`max-width: ${width}px;`">
+    <label class="label" :style="`max-width: ${width}px;`">
         <slot />
         <span class="label-wrapper">
             <input 
@@ -31,9 +31,7 @@ defineProps([
     "name", 
     "placeholder", 
     "error", 
-    "textError", 
-    "show", 
-    "requestFlag"
+    "textError"
 ]);
 </script>
 

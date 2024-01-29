@@ -5,7 +5,9 @@
                 <Title>
                     {{ $t("employeesTitle") }}
                 </Title>
-                <FormSearch @onSearch="searchHandler" />
+                <FormSearch 
+                    @onSearch="($event) => employeesForm.search = $event" 
+                />
                 <AddButton
                     @onOpenFormModal="createNewEmployeesHandler"
                 />
@@ -17,10 +19,15 @@
                 @onActionEdit="editEmployeesHandler"
                 @onActionDelete="deleteEmployeesHandler"
             />
-            <Spinner v-if="isLoadingEmployees" />
-            <div v-if="isSuccessEmployees && !employees.length" class="empty-table">
+            <Spinner 
+                v-if="isLoadingEmployees" 
+            />
+            <div 
+                v-if="isSuccessEmployees && !employees.length" 
+                class="empty-table"
+            >
                 {{ $t("emptyTableTitle") }}
-            </div> 
+            </div>
         </div>
         <FormModal :title="titleModal">
             <form class="employees__form" @submit.prevent="submitFormHandler">
@@ -33,8 +40,6 @@
                     :name="input.icon"
                     :error="v$?.[input?.errorKey]?.$error" 
                     :textError="v$?.[input?.errorKey]?.$errors[0]?.$message"
-                    :show="input.show"
-                    :requestFlag="requestFlag"
                 >
                     {{ $t(input.label) }}
                 </FormInput>
@@ -65,6 +70,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength } from "@/utils/i18n-validators.js";
 import { 
@@ -100,42 +106,43 @@ const queryClient = useQueryClient();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
+const { isOpenModalForm } = storeToRefs(modalsStore);
 
-const titleModal = ref("");
+const titleModal = ref("addNewEmployeesTitle");
 const requestFlag = ref("");
 const requestId = ref("");
+
+const isCreateForm = computed(() => isOpenModalForm);
+const isEditForm = computed(() => isOpenModalForm && requestFlag.value == 'edit');
 
 const {
     data: organizations,
     isSuccess: isSuccessOrganizations,
-    isLoading: isLoadingOrganizations,
-    refetch: refetchOrganizations
+    isLoading: isLoadingOrganizations
 } = await useQuery({
     queryKey: ["organizations"],
     queryFn: () => manualGetOrganizations(),
-    enabled: false
+    enabled: isCreateForm
 });
 
 const {
     data: roles,
     isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles,
-    refetch: refetchRoles
+    isLoading: isLoadingRoles
 } = await useQuery({
     queryKey: ["districts"],
     queryFn: () => manualGetRoles(),
-    enabled: false
+    enabled: isCreateForm
 });
 
 const {
     data: states,
     isSuccess: isSuccessStates,
-    isLoading: isLoadingStates,
-    refetch: refetchStates
+    isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["statesEmployees"],
     queryFn: () => manualGetStates(),
-    enabled: false
+    enabled: isEditForm
 });
 
 const employeesForm = ref({
@@ -146,7 +153,8 @@ const employeesForm = ref({
     phoneNumber: "",
     organizationId: "",
     roleId: "",
-    stateId: ""
+    stateId: "",
+    search: ""
 });
 
 const rules = computed(() => {
@@ -192,7 +200,6 @@ const inputs = ref([
         placeholder: "employeesFullNamePlaceholder", 
         icon: "person", 
         errorKey: "fullName",
-        show: ["create", "edit"]
     },
     { 
         id: 2, 
@@ -201,7 +208,6 @@ const inputs = ref([
         placeholder: "employeesLoginPlaceholder", 
         icon: "login", 
         errorKey: "userName",
-        show: ["create", "edit"]
     },
     { 
         id: 3, 
@@ -210,7 +216,6 @@ const inputs = ref([
         placeholder: "employeesPasswordPlaceholder", 
         icon: "password", 
         errorKey: "password",
-        show: ["create"]
     },
     { 
         id: 4, 
@@ -219,7 +224,6 @@ const inputs = ref([
         placeholder: "employeesPhonePlaceholder", 
         icon: "phone", 
         errorKey: "phoneNumber",
-        show: ["create", "edit"]
     }
 ]);
 
@@ -280,9 +284,7 @@ const {
     }
 });
 
-const {
-    refetch: refetchEmployeesById
-} = await useQuery({
+const {} = await useQuery({
     queryKey: ["employeesById", requestId],
     queryFn: () => adminGetWithId("user", requestId.value),
     select: (data) => {
@@ -294,7 +296,7 @@ const {
         employeesForm.value.roleId = data.roleId;
         employeesForm.value.stateId = data.stateId;
     },
-    enabled: false
+    enabled: isEditForm
 });
 
 const { mutate: createMutate } = useMutation({
@@ -319,16 +321,15 @@ const { mutate: deleteMutate } = useMutation({
     }
 });
 
-const searchHandler = (search) => {
-    console.log(search);
-}
-
 const isOpenFormModal = (title, flag) => {
     titleModal.value = title;
     requestFlag.value = flag;
-    refetchOrganizations();
-    refetchRoles();
     toggleIsOpenModalForm();
+
+    if (requestFlag.value === 'create' && isOpenModalForm.value) {
+        employeesForm.value = clearForm(employeesForm.value);
+        v$.value.$reset();
+    }
 }
 
 const createNewEmployeesHandler = () => {
@@ -337,8 +338,6 @@ const createNewEmployeesHandler = () => {
 
 const editEmployeesHandler = (idx) => {
     requestId.value = idx;
-    refetchEmployeesById();
-    refetchStates();
     isOpenFormModal("editEmployeesTitle", "edit");
 }
 

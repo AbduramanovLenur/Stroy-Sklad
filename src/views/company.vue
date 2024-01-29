@@ -5,7 +5,9 @@
                 <Title>
                     {{ $t("comapnyTitle") }}
                 </Title>
-                <FormSearch @onSearch="searchHandler" />
+                <FormSearch 
+                    @onSearch="($event) => companyForm.search = $event" 
+                />
                 <AddButton
                     @onOpenFormModal="createNewCompanyHandler"
                 />
@@ -17,8 +19,13 @@
                 @onActionEdit="editCompanyHandler"
                 @onActionDelete="deleteCompanyHandler"
             />
-            <Spinner v-if="isLoadingCompanies" />
-            <div v-if="isSuccessCompanies && !companies.length" class="empty-table">
+            <Spinner 
+                v-if="isLoadingCompanies" 
+            />
+            <div 
+                v-if="isSuccessCompanies && !companies.length" 
+                class="empty-table"
+            >
                 {{ $t("emptyTableTitle") }}
             </div>
         </div>
@@ -33,8 +40,6 @@
                     :name="input.icon"
                     :error="v$?.[input.errorKey].$error" 
                     :textError="v$?.[input.errorKey].$errors[0]?.$message"
-                    :show="input.show"
-                    :requestFlag="requestFlag"
                 >
                     {{ $t(input.label) }}
                 </FormInput>
@@ -64,7 +69,9 @@
 </template>
 
 <script setup>
+
 import { ref, computed } from "vue";
+import { storeToRefs } from "pinia";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@/utils/i18n-validators.js";
 import { 
@@ -100,42 +107,43 @@ const queryClient = useQueryClient();
 
 const modalsStore = useModalsStore();
 const { toggleIsOpenModalForm } = modalsStore;
+const { isOpenModalForm } = storeToRefs(modalsStore);
 
-const titleModal = ref("");
+const titleModal = ref("addNewCompanyTitle");
 const requestFlag = ref("");
 const requestId = ref("");
+
+const isCreateForm = computed(() => isOpenModalForm);
+const isEditForm = computed(() => isOpenModalForm && requestFlag.value == 'edit');
 
 const {
     data: regions,
     isSuccess: isSuccessRegions,
-    isLoading: isLoadingRegions,
-    refetch: refetchRegions
+    isLoading: isLoadingRegions
 } = await useQuery({
     queryKey: ["regions"],
     queryFn: () => manualGetRegions(),
-    enabled: false
+    enabled: isCreateForm
 });
 
 const {
     data: districts,
     isSuccess: isSuccessDistricts,
-    isLoading: isLoadingDistricts,
-    refetch: refetchDistricts
+    isLoading: isLoadingDistricts
 } = await useQuery({
     queryKey: ["districts"],
     queryFn: () => manualGetDistricts(),
-    enabled: false
+    enabled: isCreateForm
 });
 
 const {
     data: states,
     isSuccess: isSuccessStates,
-    isLoading: isLoadingStates,
-    refetch: refetchStates
+    isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["statesCompany"],
     queryFn: () => manualGetStates(),
-    enabled: false
+    enabled: isEditForm
 });
 
 const companyForm = ref({
@@ -147,7 +155,8 @@ const companyForm = ref({
     director: "",
     regionId: "",
     districtId: "",
-    stateId: ""
+    stateId: "",
+    search: ""
 });
 
 const rules = computed(() => ({
@@ -180,7 +189,6 @@ const inputs = ref([
         placeholder: "nameOrganizationPlaceholder", 
         icon: "input-company",
         errorKey: "fullName",
-        show: ["create", "edit"]
     },
     { 
         id: 2, 
@@ -189,7 +197,6 @@ const inputs = ref([
         placeholder: "innOrganizationPlaceholder", 
         icon: "tin",
         errorKey: "inn",
-        show: ["create", "edit"]
     },
     { 
         id: 3, 
@@ -198,7 +205,6 @@ const inputs = ref([
         placeholder: "addressOrganizationPlaceholder", 
         icon: "address",
         errorKey: "address",
-        show: ["create", "edit"] 
     },
     { 
         id: 4, 
@@ -207,7 +213,6 @@ const inputs = ref([
         placeholder: "phoneOrganizationPlaceholder", 
         icon: "phone",
         errorKey: "phoneNumber",
-        show: ["create", "edit"]
     },
     { 
         id: 5, 
@@ -216,7 +221,6 @@ const inputs = ref([
         placeholder: "directorOrganizationPlaceholder", 
         icon: "person",
         errorKey: "director",
-        show: ["create", "edit"]
     }
 ]);
 
@@ -264,9 +268,7 @@ const {
     queryFn: () => adminGetList("organization")
 });
 
-const {
-    refetch: refetchCompaniesById
-} = await useQuery({
+const {} = await useQuery({
     queryKey: ["companiesById", requestId],
     queryFn: () => adminGetWithId("organization", requestId.value),
     select: (data) => {
@@ -280,7 +282,7 @@ const {
         companyForm.value.districtId = data.districtId;
         companyForm.value.stateId = data.stateId;
     },
-    enabled: false
+    enabled: isEditForm
 });
 
 const { mutate: createMutate } = useMutation({
@@ -305,27 +307,24 @@ const { mutate: mutateDelete } = useMutation({
     }
 });
 
-const searchHandler = (search) => {
-    console.log(search);
-}
-
-const isOpenFormModal = (title, flag) => {
+const isOpenModal = (title, flag) => {
     titleModal.value = title;
     requestFlag.value = flag;
-    refetchRegions();
-    refetchDistricts();
     toggleIsOpenModalForm();
+
+    if (requestFlag.value === 'create' && isOpenModalForm.value) {
+        companyForm.value = clearForm(companyForm.value);
+        v$.value.$reset();
+    }
 }
 
 const createNewCompanyHandler = () => {
-    isOpenFormModal("addNewCompanyTitle", "create");
+    isOpenModal("addNewCompanyTitle", "create");
 }
 
 const editCompanyHandler = (idx) => {
     requestId.value = idx;
-    refetchCompaniesById();
-    refetchStates();
-    isOpenFormModal("editCompanyTitle", "edit");
+    isOpenModal("editCompanyTitle", "edit");
 }
 
 const deleteCompanyHandler = async (idx) => {
