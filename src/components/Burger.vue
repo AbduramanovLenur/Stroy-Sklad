@@ -1,5 +1,5 @@
 <template>
-    <div class="burger" @click="toggleIsOpen">
+    <div class="burger" @click="toggleIsOpenPanel">
         <span></span>
         <span></span>
         <span></span>
@@ -10,7 +10,7 @@
 import { usePanelStore } from "@/store/panelStore";
 
 const panelStore = usePanelStore();
-const { toggleIsOpen } = panelStore;
+const { toggleIsOpenPanel } = panelStore;
 </script>
 
 <style lang="scss" scoped>

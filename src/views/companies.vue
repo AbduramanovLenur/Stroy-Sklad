@@ -9,14 +9,14 @@
                     @onSearch="($event) => companyForm.search = $event" 
                 />
                 <AddButton
-                    @onOpenFormModal="createNewCompanyHandler"
+                    @onOpenFormModal="() => companiesHandler('create')"
                 />
             </div>
             <Table 
                 v-if="isSuccessCompanies && companies.length"
                 :headers="headers" 
                 :table="companies" 
-                @onActionEdit="editCompanyHandler"
+                @onActionEdit="($event) => companiesHandler('edit', $event)"
                 @onActionDelete="deleteCompanyHandler"
             />
             <Spinner 
@@ -69,7 +69,6 @@
 </template>
 
 <script setup>
-
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useVuelidate } from "@vuelidate/core";
@@ -93,15 +92,7 @@ import {
     manualGetStates
 } from "@/services/manual.services.js";
 import { clearForm } from "@/utils/secondary-functions.js";
-import Title from "@/components/Title.vue";
-import FormSearch from "@/components/FormSearch.vue";
-import AddButton from "@/components/AddButton.vue";
-import Table from "@/components/Table.vue";
-import FormModal from "@/components/FormModal.vue";
-import FormInput from "@/components/FormInput.vue";
-import FormSelect from "@/components/FormSelect.vue";
-import CustomButton from "@/components/CustomButton.vue";
-import Spinner from "@/components/Spinner.vue";
+
 
 const queryClient = useQueryClient();
 
@@ -114,7 +105,7 @@ const requestFlag = ref("");
 const requestId = ref("");
 
 const isCreateForm = computed(() => isOpenModalForm);
-const isEditForm = computed(() => isOpenModalForm && requestFlag.value == 'edit');
+const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
 
 const {
     data: regions,
@@ -307,24 +298,34 @@ const { mutate: mutateDelete } = useMutation({
     }
 });
 
-const isOpenModal = (title, flag) => {
+const isOpenFormModal = (title, flag) => {
     titleModal.value = title;
     requestFlag.value = flag;
     toggleIsOpenModalForm();
 
-    if (requestFlag.value === 'create' && isOpenModalForm.value) {
+    if (requestFlag.value === "create" && isOpenModalForm.value) {
         companyForm.value = clearForm(companyForm.value);
         v$.value.$reset();
     }
 }
 
-const createNewCompanyHandler = () => {
-    isOpenModal("addNewCompanyTitle", "create");
-}
+// const createNewCompanyHandler = () => {
+//     isOpenModal("addNewCompanyTitle", "create");
+// }
 
-const editCompanyHandler = (idx) => {
-    requestId.value = idx;
-    isOpenModal("editCompanyTitle", "edit");
+// const editCompanyHandler = (idx) => {
+//     requestId.value = idx;
+//     isOpenModal("editCompanyTitle", "edit");
+// }
+
+const companiesHandler = (flag, idx) => {
+    if (flag === "edit" && idx) {
+        requestId.value = idx;
+        isOpenFormModal("editCompanyTitle", "edit");
+        return;
+    }
+
+    isOpenFormModal("addNewCompanyTitle", "create");
 }
 
 const deleteCompanyHandler = async (idx) => {
@@ -338,7 +339,7 @@ const submitFormHandler = async () => {
         return;
     }
 
-    if (requestFlag.value === 'create') {
+    if (requestFlag.value === "create") {
         delete companyForm.value.id;
         delete companyForm.value.stateId;
 

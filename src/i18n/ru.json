@@ -5,8 +5,16 @@
   "loginPlaceholder": "Ваш логин",
   "passwordPlaceholder": "Ваш пароль",
   "loginButton": "Войти",
-  "itemCompany": "Компании",
-  "itemEmployees": "Сотрудники",
+  "itemAdminCompanies": "Компании",
+  "itemAdminEmployees": "Сотрудники",
+  "itemUserObjects": "Объекты",
+  "itemUserBlocks": "Блоки",
+  "itemUserSmeta": "Смета",
+  "itemUserRoles": "Роли",
+  "itemUserOrgEmployees": "Сотрудники",
+  "itemUserExpenses": "Затраты",
+  "itemUserWarehouse": "Склад",
+  "itemUserProducts": "Продукты",
   "logoutButton": "Выйти",
   "organization": "Организация:",
   "comapnyTitle": "Компании",
@@ -68,6 +76,8 @@
   "updateEmployeesToast": "Сотрудник обновлен",
   "deleteEmployeesToast": "Сотрудник удален",
   "logoutToast": "Вы вышли из системы",
+  "signInToast": "Вы вошли в систему",
   "emptySelect": "Нет опций",
-  "stateOrganizationLabel": "Состояние организации"
+  "stateOrganizationLabel": "Состояние организации",
+  "objectTitle": "Объекты"
 }

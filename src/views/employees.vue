@@ -9,14 +9,14 @@
                     @onSearch="($event) => employeesForm.search = $event" 
                 />
                 <AddButton
-                    @onOpenFormModal="createNewEmployeesHandler"
+                    @onOpenFormModal="() => employeesHandler('create')"
                 />
             </div>
             <Table 
                 v-if="isSuccessEmployees && employees.length"
                 :headers="headers" 
                 :table="employees" 
-                @onActionEdit="editEmployeesHandler"
+                @onActionEdit="($event) => employeesHandler('edit', $event)"
                 @onActionDelete="deleteEmployeesHandler"
             />
             <Spinner 
@@ -92,15 +92,7 @@ import {
     manualGetStates
 } from "@/services/manual.services.js";
 import { clearForm } from "@/utils/secondary-functions.js";
-import Title from "@/components/Title.vue";
-import FormSearch from "@/components/FormSearch.vue";
-import AddButton from "@/components/AddButton.vue";
-import Table from "@/components/Table.vue";
-import FormModal from "@/components/FormModal.vue";
-import FormInput from "@/components/FormInput.vue";
-import FormSelect from "@/components/FormSelect.vue";
-import CustomButton from "@/components/CustomButton.vue";
-import Spinner from "@/components/Spinner.vue";
+
 
 const queryClient = useQueryClient();
 
@@ -113,7 +105,7 @@ const requestFlag = ref("");
 const requestId = ref("");
 
 const isCreateForm = computed(() => isOpenModalForm);
-const isEditForm = computed(() => isOpenModalForm && requestFlag.value == 'edit');
+const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
 
 const {
     data: organizations,
@@ -326,19 +318,29 @@ const isOpenFormModal = (title, flag) => {
     requestFlag.value = flag;
     toggleIsOpenModalForm();
 
-    if (requestFlag.value === 'create' && isOpenModalForm.value) {
+    if (requestFlag.value === "create" && isOpenModalForm.value) {
         employeesForm.value = clearForm(employeesForm.value);
         v$.value.$reset();
     }
 }
 
-const createNewEmployeesHandler = () => {
-    isOpenFormModal("addNewEmployeesTitle", "create");
-}
+// const createNewEmployeesHandler = () => {
+//     isOpenFormModal("addNewEmployeesTitle", "create");
+// }
 
-const editEmployeesHandler = (idx) => {
-    requestId.value = idx;
-    isOpenFormModal("editEmployeesTitle", "edit");
+// const editEmployeesHandler = (idx) => {
+//     requestId.value = idx;
+//     isOpenFormModal("editEmployeesTitle", "edit");
+// }
+
+const employeesHandler = (flag, idx) => {
+    if (flag === "edit" && idx) {
+        requestId.value = idx;
+        isOpenFormModal("editEmployeesTitle", "edit");
+        return;
+    }
+
+    isOpenFormModal("addNewEmployeesTitle", "create");
 }
 
 const deleteEmployeesHandler = (idx) => {
@@ -352,7 +354,7 @@ const submitFormHandler = () => {
         return;
     }
 
-    if (requestFlag.value === 'create') {
+    if (requestFlag.value === "create") {
         delete employeesForm.value.id;
         delete employeesForm.value.stateId;
 

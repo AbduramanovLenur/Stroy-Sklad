@@ -51,11 +51,15 @@
 import { ref, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, minLength } from "@/utils/i18n-validators.js";
+import { useToast } from "vue-toastification";
+import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { clearForm } from "@/utils/secondary-functions.js";
 import SwitcherLang from "@/components/SwitcherLang.vue";
 
-const router = useRouter()
+const router = useRouter();
+const toast = useToast();
+const { t } = useI18n();
 
 const formData = ref({
     login: "",
@@ -97,11 +101,18 @@ const authHandler = () => {
         return;
     }
 
-    console.log(formData.value);
-    localStorage.setItem("role", "superadmin");
+    if (formData.value.login === 'root') {
+        localStorage.setItem("role", "superadmin");
+        localStorage.setItem("organization", "Microsoft Academy");
+    } else {
+        localStorage.setItem("role", "orgadmin");
+        localStorage.setItem("organization", "Tashkilot");
+    }
+
     formData.value = clearForm(formData.value);
     v$.value.$reset();
     router.push("/");
+    toast.success(t("signInToast"));
 }
 </script>
 

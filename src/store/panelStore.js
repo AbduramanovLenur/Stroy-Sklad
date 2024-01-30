@@ -2,14 +2,14 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const usePanelStore = defineStore("panelStore", () => {
-  const isOpen = ref(false);
+  const isOpenPanel = ref(false);
 
-  const toggleIsOpen = () => {
-    isOpen.value = !isOpen.value;
+  const toggleIsOpenPanel = () => {
+    isOpenPanel.value = !isOpenPanel.value;
   };
 
   return {
-    isOpen,
-    toggleIsOpen
+    isOpenPanel,
+    toggleIsOpenPanel
   };
 });

@@ -5,8 +5,16 @@
   "loginPlaceholder": "Login",
   "passwordPlaceholder": "Parolingiz",
   "loginButton": "Kirish",
-  "itemCompany": "Kompaniyalar",
-  "itemEmployees": "Xodimlar",
+  "itemAdminCompanies": "Kompaniyalar",
+  "itemAdminEmployees": "Xodimlar",
+  "itemUserObjects": "Obyekt",
+  "itemUserBlocks": "Block",
+  "itemUserSmeta": "Smeta",
+  "itemUserRoles": "Rollar",
+  "itemUserOrgEmployees": "Xodimlar",
+  "itemUserExpenses": "Xarajatlar",
+  "itemUserWarehouse": "Sklad",
+  "itemUserProducts": "Mahsulot",
   "logoutButton": "Chiqish",
   "organization": "Kompaniya:",
   "comapnyTitle": "Kompaniyalar",
@@ -68,6 +76,8 @@
   "updateEmployeesToast": "Xodim yangilandi",
   "deleteEmployeesToast": "Xodim olib tashlandi",
   "logoutToast": "Siz tizimdan chiqdingiz",
+  "signInToast": "Siz tizimga kirgansiz",
   "emptySelect": "Variantlar yo'q",
-  "stateOrganizationLabel": "Kompaniyaning holati"
+  "stateOrganizationLabel": "Kompaniyaning holati",
+  "objectTitle": "Obyekt"
 }

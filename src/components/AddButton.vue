@@ -9,9 +9,7 @@
     </button>
 </template>
 
-<script setup>
-import Icon from "@/components/Icon.vue";
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 .add-button {

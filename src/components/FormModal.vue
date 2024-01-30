@@ -15,7 +15,6 @@
 <script setup>
 import { useModalsStore } from "@/store/modalsStore.js";
 import { storeToRefs } from "pinia";
-import Icon from "@/components/Icon.vue";
 
 defineProps(["title"]);
 

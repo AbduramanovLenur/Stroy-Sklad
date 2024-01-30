@@ -1,16 +1,28 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import axios from "axios";
-import Toast from "vue-toastification";
 import { VueQueryPlugin } from "@tanstack/vue-query";
-import router from "@/router/router";
 import { useI18n } from "vue-i18n";
 import { i18n } from "@/i18n";
+// import axios from "axios";
+import Toast from "vue-toastification";
+import router from "@/router/router";
+
+import Title from "@/components/Title.vue";
+import FormSearch from "@/components/FormSearch.vue";
+import AddButton from "@/components/AddButton.vue";
+import Table from "@/components/Table.vue";
+import FormInput from "@/components/FormInput.vue";
+import FormSelect from "@/components/FormSelect.vue";
+import FormModal from "@/components/FormModal.vue";
+import CustomButton from "@/components/CustomButton.vue";
+import Spinner from "@/components/Spinner.vue";
+import Icon from "@/components/Icon.vue";
+import App from "./App.vue";
+
 import "@/assets/styles/globals.scss";
 import "@/assets/styles/variables.scss";
 import "@/assets/fonts/fonts.scss";
 import "vue-toastification/dist/index.css";
-import App from "./App.vue";
 
 const app = createApp(App, {
   setup() {
@@ -31,7 +43,19 @@ const options = {
   },
 }
 
-app.config.globalProperties.$axios = axios;
+// app.config.globalProperties.$axios = axios;
+
+app
+  .component("Title", Title)
+  .component("FormSearch", FormSearch)
+  .component("AddButton", AddButton)
+  .component("FormInput", FormInput)
+  .component("FormSelect", FormSelect)
+  .component("Table", Table)
+  .component("FormModal", FormModal)
+  .component("CustomButton", CustomButton)
+  .component("Icon", Icon)
+  .component("Spinner", Spinner);
 
 app
   .use(router)

@@ -1,7 +1,7 @@
 <template>
-    <aside :class="`sidepanel ${isOpen ? 'isOpen' : ''}`">
-        <div :class="`sidepanel__inner ${isOpen ? 'isOpen' : ''}`">
-            <div :class="`sidepanel__logo ${isOpen ? 'centered' : ''}`">
+    <aside :class="`sidepanel ${isOpenPanel ? 'isOpen' : ''}`">
+        <div :class="`sidepanel__inner ${isOpenPanel ? 'isOpen' : ''}`">
+            <div :class="`sidepanel__logo ${isOpenPanel ? 'centered' : ''}`">
                 <div class="sidepanel__logo-picture">
                     <img 
                         src="@/assets/images/logo/logo.svg" 
@@ -11,21 +11,21 @@
                         height="80"
                     >
                 </div>
-                <div :class="`sidepanel__logo-text ${isOpen ? 'hide' : ''}`">
+                <div :class="`sidepanel__logo-text ${isOpenPanel ? 'hide' : ''}`">
                     Stroy <br>
                     Sklad
                 </div>
             </div>
             <Menu />
             <button 
-                :class="`sidepanel__logout ${isOpen ? 'centered' : ''}`"
+                :class="`sidepanel__logout ${isOpenPanel ? 'centered' : ''}`"
                 type="button" 
                 @click="logoutHandler"
             >
                 <span class="sidepanel__logout-icon">
                     <Icon name="logout" />
                 </span>
-                <span :class="`sidepanel__logout-text ${isOpen ? 'hide' : ''}`">
+                <span :class="`sidepanel__logout-text ${isOpenPanel ? 'hide' : ''}`">
                     {{ $t("logoutButton") }}
                 </span>
             </button>
@@ -40,18 +40,19 @@ import { useI18n } from "vue-i18n";
 import { usePanelStore } from "@/store/panelStore";
 import { storeToRefs } from "pinia";
 import Menu from "@/components/Menu.vue";
-import Icon from "@/components/Icon.vue";
 
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
 const panelStore = usePanelStore();
-const { isOpen } = storeToRefs(panelStore);
+const { isOpenPanel } = storeToRefs(panelStore);
 
 const logoutHandler = () => {
-    router.push("/auth");
-    toast.success(t("logoutToast"))
+    localStorage.removeItem("role");
+    localStorage.removeItem("organization");
+    router.push("/auth");;
+    toast.success(t("logoutToast"));
 }
 </script>
 
@@ -95,7 +96,7 @@ const logoutHandler = () => {
         display: flex;
         flex-direction: column;
         padding: 35px 40px;
-        height: 100%;
+        min-height: 100%;
         @media (max-width: 768px) {
             padding: 35px 20px;
         }

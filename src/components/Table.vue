@@ -78,8 +78,6 @@
 </template>
 
 <script setup>
-import Icon from "@/components/Icon.vue";
-
 defineProps(["headers", "table"]);
 </script>
 

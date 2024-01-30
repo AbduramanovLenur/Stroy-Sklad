@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
         <SidePanel />
-        <div :class="`main-panel ${isOpen ? 'extended' : ''}`">
+        <div :class="`main-panel ${isOpenPanel ? 'extended' : ''}`">
             <Header />
             <main class="main">
                 <Suspense>
@@ -19,7 +19,7 @@ import SidePanel from "@/components/SidePanel.vue";
 import Header from "@/components/Header.vue";
 
 const panelStore = usePanelStore();
-const { isOpen } = storeToRefs(panelStore);
+const { isOpenPanel } = storeToRefs(panelStore);
 </script>
 
 <style lang="scss" scoped>
