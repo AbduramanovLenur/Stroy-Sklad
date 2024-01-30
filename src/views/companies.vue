@@ -1,17 +1,11 @@
 <template>
     <section class="company">
-        <div class="company__inner">
-            <div class="company__head">
-                <Title>
-                    {{ $t("comapnyTitle") }}
-                </Title>
-                <FormSearch 
-                    @onSearch="($event) => companyForm.search = $event" 
-                />
-                <AddButton
-                    @onOpenFormModal="() => companiesHandler('create')"
-                />
-            </div>
+        <div class="company__inner section-padding">
+            <HeadPage 
+                title="comapnyTitle" 
+                @onSearch="($event) => companiesForm.search = $event"
+                @onOpenFormModal="() => companiesHandler('create')"
+            />
             <Table 
                 v-if="isSuccessCompanies && companies.length"
                 :headers="headers" 
@@ -23,7 +17,7 @@
                 v-if="isLoadingCompanies" 
             />
             <div 
-                v-if="isSuccessCompanies && !companies.length" 
+                v-if="(isSuccessCompanies && !companies.length) || isError" 
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
@@ -34,7 +28,7 @@
                 <FormInput 
                     v-for="input in inputs"
                     :key="input.id"
-                    v-model="companyForm[input.model]"
+                    v-model="companiesForm[input.model]"
                     :width="500" 
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
@@ -46,7 +40,7 @@
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
-                    v-model="companyForm[select.model]" 
+                    v-model="companiesForm[select.model]" 
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
@@ -102,7 +96,7 @@ const { isOpenModalForm } = storeToRefs(modalsStore);
 
 const titleModal = ref("addNewCompanyTitle");
 const requestFlag = ref("");
-const requestId = ref("");
+const requestId = ref(0);
 
 const isCreateForm = computed(() => isOpenModalForm);
 const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
@@ -132,12 +126,12 @@ const {
     isSuccess: isSuccessStates,
     isLoading: isLoadingStates
 } = await useQuery({
-    queryKey: ["statesCompany"],
+    queryKey: ["states"],
     queryFn: () => manualGetStates(),
     enabled: isEditForm
 });
 
-const companyForm = ref({
+const companiesForm = ref({
     id: "",
     fullName: "",
     inn: "",
@@ -248,12 +242,13 @@ const selects = ref([
     }
 ]);
 
-const v$ = useVuelidate(rules, companyForm);
+const v$ = useVuelidate(rules, companiesForm);
 
 const {
     data: companies,
     isLoading: isLoadingCompanies,
-    isSuccess: isSuccessCompanies
+    isSuccess: isSuccessCompanies,
+    isError
 } = await useQuery({
     queryKey: ["companies"],
     queryFn: () => adminGetList("organization")
@@ -263,15 +258,15 @@ const {} = await useQuery({
     queryKey: ["companiesById", requestId],
     queryFn: () => adminGetWithId("organization", requestId.value),
     select: (data) => {
-        companyForm.value.id = data.id;
-        companyForm.value.fullName = data.fullName;
-        companyForm.value.inn = data.inn;
-        companyForm.value.address = data.address;
-        companyForm.value.phoneNumber = data.phoneNumber;
-        companyForm.value.director = data.director;
-        companyForm.value.regionId = data.regionId;
-        companyForm.value.districtId = data.districtId;
-        companyForm.value.stateId = data.stateId;
+        companiesForm.value.id = data.id;
+        companiesForm.value.fullName = data.fullName;
+        companiesForm.value.inn = data.inn;
+        companiesForm.value.address = data.address;
+        companiesForm.value.phoneNumber = data.phoneNumber;
+        companiesForm.value.director = data.director;
+        companiesForm.value.regionId = data.regionId;
+        companiesForm.value.districtId = data.districtId;
+        companiesForm.value.stateId = data.stateId;
     },
     enabled: isEditForm
 });
@@ -287,7 +282,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => adminUpdateById("organization", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
-        queryClient.invalidateQueries({ queryKey: ["getByIdCompany", requestId] });
+        queryClient.invalidateQueries({ queryKey: ["companiesById", requestId] });
     }
 });
 
@@ -295,6 +290,7 @@ const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => adminDeleteWithId("organization", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
+        queryClient.invalidateQueries({ queryKey: ["companiesById", requestId] });
     }
 });
 
@@ -304,19 +300,10 @@ const isOpenFormModal = (title, flag) => {
     toggleIsOpenModalForm();
 
     if (requestFlag.value === "create" && isOpenModalForm.value) {
-        companyForm.value = clearForm(companyForm.value);
+        companiesForm.value = clearForm(companiesForm.value);
         v$.value.$reset();
     }
 }
-
-// const createNewCompanyHandler = () => {
-//     isOpenModal("addNewCompanyTitle", "create");
-// }
-
-// const editCompanyHandler = (idx) => {
-//     requestId.value = idx;
-//     isOpenModal("editCompanyTitle", "edit");
-// }
 
 const companiesHandler = (flag, idx) => {
     if (flag === "edit" && idx) {
@@ -340,45 +327,22 @@ const submitFormHandler = async () => {
     }
 
     if (requestFlag.value === "create") {
-        delete companyForm.value.id;
-        delete companyForm.value.stateId;
+        delete companiesForm.value.id;
+        delete companiesForm.value.stateId;
 
-        createMutate(companyForm.value);
+        createMutate(companiesForm.value);
     } else {
-        updateMutate(companyForm.value);
+        updateMutate(companiesForm.value);
     }
 
     toggleIsOpenModalForm();
-    companyForm.value = clearForm(companyForm.value);
+    companiesForm.value = clearForm(companiesForm.value);
     v$.value.$reset();
 }
 </script>
 
 <style lang="scss" scoped>
 .company {
-    &__inner {
-        padding: 20px;
-    }
-
-    &__head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-
-        @media (max-width: 1024px) {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 768px) {
-            gap: 15px;
-        }
-
-        @media (max-width: 480px) {
-            grid-template-columns: repeat(1, 1fr);
-        }
-    }
     &__form {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

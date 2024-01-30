@@ -18,7 +18,7 @@
                 </option>
             </select>
             <select 
-                v-if="loading || !success" 
+                v-if="loading || !success || !options.length" 
                 class="select"
                 :value="modelValue" 
             >

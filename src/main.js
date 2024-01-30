@@ -7,6 +7,7 @@ import { i18n } from "@/i18n";
 import Toast from "vue-toastification";
 import router from "@/router/router";
 
+import HeadPage from "@/components/HeadPage.vue";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
 import AddButton from "@/components/AddButton.vue";
@@ -46,6 +47,7 @@ const options = {
 // app.config.globalProperties.$axios = axios;
 
 app
+  .component("HeadPage", HeadPage)
   .component("Title", Title)
   .component("FormSearch", FormSearch)
   .component("AddButton", AddButton)

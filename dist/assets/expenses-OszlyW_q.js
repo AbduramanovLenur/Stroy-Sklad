@@ -1,1 +1,0 @@
-import{_ as e,o as s,d as n,e as c}from"./index-WFLadlDb.js";const o={},t={class:"expenses"},_=c("div",{class:"expenses__inner"}," Expenses ",-1),a=[_];function r(d,i){return s(),n("section",t,a)}const x=e(o,[["render",r]]);export{x as default};

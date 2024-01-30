@@ -1,17 +1,11 @@
 <template>
     <section class="employees">
-        <div class="employees__inner">
-            <div class="employees__head">
-                <Title>
-                    {{ $t("employeesTitle") }}
-                </Title>
-                <FormSearch 
-                    @onSearch="($event) => employeesForm.search = $event" 
-                />
-                <AddButton
-                    @onOpenFormModal="() => employeesHandler('create')"
-                />
-            </div>
+        <div class="employees__inner section-padding">
+            <HeadPage
+                title="employeesTitle" 
+                @onSearch="($event) => employeesForm.search = $event"
+                @onOpenFormModal="() => employeesHandler('create')"
+            />
             <Table 
                 v-if="isSuccessEmployees && employees.length"
                 :headers="headers" 
@@ -23,7 +17,7 @@
                 v-if="isLoadingEmployees" 
             />
             <div 
-                v-if="isSuccessEmployees && !employees.length" 
+                v-if="(isSuccessEmployees && !employees.length) || isError" 
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
@@ -104,6 +98,18 @@ const titleModal = ref("addNewEmployeesTitle");
 const requestFlag = ref("");
 const requestId = ref("");
 
+const employeesForm = ref({
+    id: "",
+    fullName: "",
+    userName: "",
+    password: "",
+    phoneNumber: "",
+    organizationId: "",
+    roleId: "",
+    stateId: "",
+    search: ""
+});
+
 const isCreateForm = computed(() => isOpenModalForm);
 const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
 
@@ -122,7 +128,7 @@ const {
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["districts"],
+    queryKey: ["roles"],
     queryFn: () => manualGetRoles(),
     enabled: isCreateForm
 });
@@ -132,21 +138,9 @@ const {
     isSuccess: isSuccessStates,
     isLoading: isLoadingStates
 } = await useQuery({
-    queryKey: ["statesEmployees"],
+    queryKey: ["states"],
     queryFn: () => manualGetStates(),
     enabled: isEditForm
-});
-
-const employeesForm = ref({
-    id: "",
-    fullName: "",
-    userName: "",
-    password: "",
-    phoneNumber: "",
-    organizationId: "",
-    roleId: "",
-    stateId: "",
-    search: ""
 });
 
 const rules = computed(() => {
@@ -256,7 +250,8 @@ const v$ = useVuelidate(rules, employeesForm);
 const {
     data: employees,
     isLoading: isLoadingEmployees,
-    isSuccess: isSuccessEmployees
+    isSuccess: isSuccessEmployees,
+    isError
 } = await useQuery({
     queryKey: ["employees"],
     queryFn: () => adminGetList("user"),
@@ -302,7 +297,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => adminUpdateById("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["getByIdEmployees", requestId] });
+        queryClient.invalidateQueries({ queryKey: ["employeesById", requestId] });
     }
 });
 
@@ -310,6 +305,7 @@ const { mutate: deleteMutate } = useMutation({
     mutationFn: (idx) => adminDeleteWithId("user", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
+        queryClient.invalidateQueries({ queryKey: ["employeesById", requestId] });
     }
 });
 
@@ -323,15 +319,6 @@ const isOpenFormModal = (title, flag) => {
         v$.value.$reset();
     }
 }
-
-// const createNewEmployeesHandler = () => {
-//     isOpenFormModal("addNewEmployeesTitle", "create");
-// }
-
-// const editEmployeesHandler = (idx) => {
-//     requestId.value = idx;
-//     isOpenFormModal("editEmployeesTitle", "edit");
-// }
 
 const employeesHandler = (flag, idx) => {
     if (flag === "edit" && idx) {
@@ -371,29 +358,6 @@ const submitFormHandler = () => {
 
 <style lang="scss" scoped>
 .employees {
-    &__inner {
-        padding: 20px;
-    }
-
-    &__head {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-
-        @media (max-width: 1024px) {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 768px) {
-            gap: 15px;
-        }
-
-        @media (max-width: 480px) {
-            grid-template-columns: repeat(1, 1fr);
-        }
-    }
     &__form {
         display: grid;
         grid-template-columns: repeat(2, 1fr);

@@ -79,5 +79,10 @@
   "signInToast": "Siz tizimga kirgansiz",
   "emptySelect": "Variantlar yo'q",
   "stateOrganizationLabel": "Kompaniyaning holati",
-  "objectTitle": "Obyekt"
+  "objectTitle": "Obyekt",
+  "objectName": "Obyekt nomi",
+  "objectOrganization": "Kompaniyani nomi",
+  "objectAddress": "Manzil",
+  "objectState": "Holati",
+  "objectAction": "Amallar"
 }

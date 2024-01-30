@@ -1,0 +1,1 @@
+import{_ as e,o as s,d as o,e as c}from"./index-2liaKmgz.js";const t={},a={class:"warehouse"},r=c("div",{class:"warehouse__inner"}," Warehouse ",-1),_=[r];function n(d,i){return s(),o("section",a,_)}const u=e(t,[["render",n]]);export{u as default};

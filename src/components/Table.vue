@@ -31,8 +31,14 @@
                 <td v-if="info.role" class="table-info" align="center">
                     {{ info.role }}
                 </td>
+                <td v-if="info.fullName" class="table-info" align="center">
+                    {{ info.fullName }}
+                </td>
                 <td v-if="info.organizationName" class="table-info" align="center">
                     {{ info.organizationName }}
+                </td>
+                <td v-if="info.fullAddress" class="table-info" align="center">
+                    {{ info.fullAddress }}
                 </td>
                 <td v-if="info.inn" class="table-info" align="center">
                     {{ info.inn }}

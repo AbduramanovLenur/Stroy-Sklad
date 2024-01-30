@@ -1,0 +1,1 @@
+import{_ as e,o as s,d as o,e as c}from"./index-2liaKmgz.js";const t={},_={class:"roles"},n=c("div",{class:"roles__inner"}," Roles ",-1),r=[n];function a(l,d){return s(),o("section",_,r)}const f=e(t,[["render",a]]);export{f as default};

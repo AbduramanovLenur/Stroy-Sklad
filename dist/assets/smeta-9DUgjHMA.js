@@ -1,0 +1,1 @@
+import{_ as e,o as s,d as t,e as c}from"./index-2liaKmgz.js";const o={},a={class:"smeta"},_=c("div",{class:"smeta__inner"}," Smeta ",-1),n=[_];function r(d,i){return s(),t("section",a,n)}const f=e(o,[["render",r]]);export{f as default};

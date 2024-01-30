@@ -4,6 +4,10 @@
     margin: 0;
 }
 
+html {
+    margin-right: calc(-1 * (100vw - 100%));
+}
+
 body {
     font-family: var(--default-ff);
     font-size: var(--default-fz);
@@ -22,15 +26,14 @@ body {
 
     /* полоса прокрутки (скроллбар) */
     // &::-webkit-scrollbar {
-    //     background-color: var(--white);
+      
     // }
 
     /* ползунок скроллбара */
-    // &::-webkit-scrollbar-thumb {
-    //     border-radius: 9em;
-    //     background-color: var(--mainly-blue);
-    //     height: 135px;
-    // }
+    &::-webkit-scrollbar-thumb {
+        // border-radius: 9em;
+        background-color: var(--dark-blue);
+    }
 }
 
 li {
@@ -177,4 +180,8 @@ svg {
 .error-white {
     font-size: 13px;
     color: var(--white);
+}
+
+.section-padding {
+    padding: 20px;
 }
