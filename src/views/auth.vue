@@ -55,19 +55,21 @@ import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { clearForm } from "@/utils/secondary-functions.js";
-import SwitcherLang from "@/components/SwitcherLang.vue";
+
+import { useMutation } from "@tanstack/vue-query";
+import { loginUser } from "@/services/auth.services.js";
 
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
 const formData = ref({
-    login: "",
+    userName: "",
     password: ""
 })
 
 const rules = computed(() => ({
-    login: { required },
+    userName: { required },
     password: { required, minLength }
 }));
 
@@ -78,10 +80,10 @@ const inputs = ref([
         id: 1, 
         label: "loginLabel", 
         type: "text", 
-        model: "login", 
+        model: "userName", 
         name: "login", 
         placeholder: "loginPlaceholder",
-        errorKey: "login" 
+        errorKey: "userName" 
     },
     { 
         id: 2, 
@@ -94,6 +96,33 @@ const inputs = ref([
     },
 ]);
 
+const { mutate: loginMutate } = useMutation({
+    mutationFn: (body) => loginUser(body),
+    onSuccess: (data) => {
+        const { 
+            token, 
+            user: {
+                role, 
+                fullname, 
+                organizationName,
+                roleId
+            }
+        } = data;
+
+        localStorage.setItem("token", token);
+        localStorage.setItem("name", fullname);
+        localStorage.setItem("role", role);
+        localStorage.setItem("organization", organizationName);
+        localStorage.setItem("roleId", roleId);
+
+        router.push("/");
+        toast.success(t("signInToast"));
+
+        formData.value = clearForm(formData.value);
+        v$.value.$reset();
+    }
+});
+
 const authHandler = () => {
     v$.value.$validate();
 
@@ -101,18 +130,7 @@ const authHandler = () => {
         return;
     }
 
-    if (formData.value.login === 'root') {
-        localStorage.setItem("role", "superadmin");
-        localStorage.setItem("organization", "Microsoft Academy");
-    } else {
-        localStorage.setItem("role", "orgadmin");
-        localStorage.setItem("organization", "Tashkilot");
-    }
-
-    formData.value = clearForm(formData.value);
-    v$.value.$reset();
-    router.push("/");
-    toast.success(t("signInToast"));
+    loginMutate(formData.value);
 }
 </script>
 

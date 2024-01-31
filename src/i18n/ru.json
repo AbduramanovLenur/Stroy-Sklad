@@ -14,7 +14,7 @@
   "itemUserOrgEmployees": "Сотрудники",
   "itemUserExpenses": "Затраты",
   "itemUserWarehouse": "Склад",
-  "itemUserProducts": "Продукты",
+  "itemUserProducts": "Материалы",
   "logoutButton": "Выйти",
   "organization": "Организация:",
   "comapnyTitle": "Организации",
@@ -84,5 +84,15 @@
   "objectOrganization": "Название организации",
   "objectAddress": "Адрес",
   "objectState": "Состояние",
-  "objectAction": "Действия"
+  "objectAction": "Действия",
+  "addNewObjectTitle": "Создание объекта",
+  "editObjectTitle": "Редактирование объекта",
+  "nameObjectLabel": "Название объекта",
+  "nameObjectPlaceholder": "Объект...",
+  "addressObjectLabel": "Адрес объекта",
+  "addressObjectPlaceholder": "Адрес...",
+  "organizationObjectLabel": "Организация объекта",
+  "regionObjectLabel": "Область объекта",
+  "districtObjectLabel": "Район объекта",
+  "stateObjectLabel": "Состояние организации"
 }

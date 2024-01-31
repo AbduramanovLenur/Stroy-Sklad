@@ -49,8 +49,12 @@ const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);
 
 const logoutHandler = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
     localStorage.removeItem("role");
+    localStorage.removeItem("roleId");
     localStorage.removeItem("organization");
+
     router.push("/auth");;
     toast.success(t("logoutToast"));
 }

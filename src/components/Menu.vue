@@ -2,7 +2,7 @@
     <nav :class="`menu ${isOpenPanel ? 'centered' : ''}`">
         <ul class="menu-list">
             <template v-for="item in menu" :key="item.id">
-                <li v-if="item?.role === role" class="menu-item">
+                <li v-if="item?.roleId === roleId" class="menu-item">
                     <router-link :to="item.to" class="menu-link">
                         <span class="menu-icon">
                             <Icon :name="item.icon" />
@@ -23,19 +23,19 @@ import { usePanelStore } from "@/store/panelStore";
 import { storeToRefs } from "pinia";
 
 const menu = ref([
-    { id: 1, label: "itemAdminCompanies", icon: "companies", to: "/companies", role: "superadmin" },
-    { id: 2, label: "itemAdminEmployees", icon: "employees", to: "/employees", role: "superadmin" },
-    { id: 3, label: "itemUserObjects", icon: "objects", to: "/objects", role: "orgadmin" },
-    { id: 4, label: "itemUserBlocks", icon: "blocks", to: "/blocks", role: "orgadmin" },
-    { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", role: "orgadmin" },
-    { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", role: "orgadmin" },
-    { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", role: "orgadmin" },
-    { id: 8, label: "itemUserExpenses", icon: "expenses", to: "/expenses", role: "orgadmin" },
-    { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: "/warehouse", role: "orgadmin" },
-    { id: 10, label: "itemUserProducts", icon: "brick", to: "/products", role: "orgadmin" }
+    { id: 1, label: "itemAdminCompanies", icon: "companies", to: "/companies", roleId: "1" },
+    { id: 2, label: "itemAdminEmployees", icon: "employees", to: "/employees", roleId: "1" },
+    { id: 3, label: "itemUserObjects", icon: "objects", to: "/objects", roleId: "2" },
+    { id: 4, label: "itemUserBlocks", icon: "blocks", to: "/blocks", roleId: "2" },
+    { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
+    { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", roleId: "2" },
+    { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", roleId: "2" },
+    { id: 8, label: "itemUserExpenses", icon: "expenses", to: "/expenses", roleId: "2" },
+    { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: "/warehouse", roleId: "2" },
+    { id: 10, label: "itemUserProducts", icon: "brick", to: "/products", roleId: "2" }
 ]);
 
-const role = ref(localStorage.getItem('role'));
+const roleId = ref(localStorage.getItem('roleId'));
 
 const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);

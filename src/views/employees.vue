@@ -53,7 +53,7 @@
                     {{ $t(select.label) }}
                 </FormSelect>
                 <CustomButton 
-                    :className="`form__submit ${v$?.roleId.$errors[0]?.$message ? 'centered' : ''}`"
+                    className="form__submit"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -74,12 +74,12 @@ import {
 } from "@tanstack/vue-query";
 import { useModalsStore } from "@/store/modalsStore.js";
 import { 
-    adminGetList, 
-    adminGetWithId, 
-    adminCreate, 
-    adminUpdateById, 
-    adminDeleteWithId 
-} from "@/services/superadmin_crud.services.js";
+    getList, 
+    getWithId, 
+    create, 
+    updateById, 
+    deleteWithId 
+} from "@/services/crud.services.js";
 import { 
     manualGetOrganizations,
     manualGetRoles,
@@ -110,8 +110,8 @@ const employeesForm = ref({
     search: ""
 });
 
-const isCreateForm = computed(() => isOpenModalForm);
-const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
+const isEnabled = computed(() => isOpenModalForm);
+const isEdit = computed(() => isOpenModalForm && requestFlag.value === 'edit');
 
 const {
     data: organizations,
@@ -120,7 +120,7 @@ const {
 } = await useQuery({
     queryKey: ["organizations"],
     queryFn: () => manualGetOrganizations(),
-    enabled: isCreateForm
+    enabled: isEnabled
 });
 
 const {
@@ -130,7 +130,7 @@ const {
 } = await useQuery({
     queryKey: ["roles"],
     queryFn: () => manualGetRoles(),
-    enabled: isCreateForm
+    enabled: isEnabled
 });
 
 const {
@@ -140,7 +140,7 @@ const {
 } = await useQuery({
     queryKey: ["states"],
     queryFn: () => manualGetStates(),
-    enabled: isEditForm
+    enabled: isEdit
 });
 
 const rules = computed(() => {
@@ -254,7 +254,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["employees"],
-    queryFn: () => adminGetList("user"),
+    queryFn: () => getList("user"),
     select: (data) => {
         return data.map((elem) => {
             const employee = {
@@ -273,7 +273,7 @@ const {
 
 const {} = await useQuery({
     queryKey: ["employeesById", requestId],
-    queryFn: () => adminGetWithId("user", requestId.value),
+    queryFn: () => getWithId("user", requestId.value),
     select: (data) => {
         employeesForm.value.id = data.id;
         employeesForm.value.fullName = data.fullname;
@@ -283,18 +283,18 @@ const {} = await useQuery({
         employeesForm.value.roleId = data.roleId;
         employeesForm.value.stateId = data.stateId;
     },
-    enabled: isEditForm
+    enabled: isEdit
 });
 
 const { mutate: createMutate } = useMutation({
-    mutationFn: (body) => adminCreate("user", body),
+    mutationFn: (body) => create("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
     }
 });
 
 const { mutate: updateMutate } = useMutation({
-    mutationFn: (body) => adminUpdateById("user", body),
+    mutationFn: (body) => updateById("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         queryClient.invalidateQueries({ queryKey: ["employeesById", requestId] });
@@ -302,7 +302,7 @@ const { mutate: updateMutate } = useMutation({
 });
 
 const { mutate: deleteMutate } = useMutation({
-    mutationFn: (idx) => adminDeleteWithId("user", idx),
+    mutationFn: (idx) => deleteWithId("user", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         queryClient.invalidateQueries({ queryKey: ["employeesById", requestId] });
@@ -344,6 +344,7 @@ const submitFormHandler = () => {
     if (requestFlag.value === "create") {
         delete employeesForm.value.id;
         delete employeesForm.value.stateId;
+        delete employeesForm.value.search;
 
         createMutate(employeesForm.value);
     } else {

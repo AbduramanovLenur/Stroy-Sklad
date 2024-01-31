@@ -7,6 +7,10 @@ const toast = useToast();
 
 export const request = async ({ url, method, body = {} }) => {
   try {
+    const token = localStorage.getItem("token");
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
     const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
 
     const { data, statusText } = response;

@@ -74,12 +74,12 @@ import {
 } from "@tanstack/vue-query";
 import { useModalsStore } from "@/store/modalsStore.js";
 import { 
-    adminGetList, 
-    adminGetWithId, 
-    adminCreate, 
-    adminUpdateById, 
-    adminDeleteWithId 
-} from "@/services/superadmin_crud.services.js";
+    getList, 
+    getWithId, 
+    create, 
+    updateById, 
+    deleteWithId 
+} from "@/services/crud.services.js";
 import { 
     manualGetRegions,
     manualGetDistricts,
@@ -98,8 +98,8 @@ const titleModal = ref("addNewCompanyTitle");
 const requestFlag = ref("");
 const requestId = ref(0);
 
-const isCreateForm = computed(() => isOpenModalForm);
-const isEditForm = computed(() => isOpenModalForm && requestFlag.value == "edit");
+const isEnabled = computed(() => isOpenModalForm);
+const isEdit = computed(() => isOpenModalForm && requestFlag.value === 'edit');
 
 const {
     data: regions,
@@ -108,7 +108,7 @@ const {
 } = await useQuery({
     queryKey: ["regions"],
     queryFn: () => manualGetRegions(),
-    enabled: isCreateForm
+    enabled: isEnabled
 });
 
 const {
@@ -118,7 +118,7 @@ const {
 } = await useQuery({
     queryKey: ["districts"],
     queryFn: () => manualGetDistricts(),
-    enabled: isCreateForm
+    enabled: isEnabled
 });
 
 const {
@@ -128,7 +128,7 @@ const {
 } = await useQuery({
     queryKey: ["states"],
     queryFn: () => manualGetStates(),
-    enabled: isEditForm
+    enabled: isEdit
 });
 
 const companiesForm = ref({
@@ -251,12 +251,12 @@ const {
     isError
 } = await useQuery({
     queryKey: ["companies"],
-    queryFn: () => adminGetList("organization")
+    queryFn: () => getList("organization")
 });
 
-const {} = await useQuery({
+const { } = await useQuery({
     queryKey: ["companiesById", requestId],
-    queryFn: () => adminGetWithId("organization", requestId.value),
+    queryFn: () => getWithId("organization", requestId.value),
     select: (data) => {
         companiesForm.value.id = data.id;
         companiesForm.value.fullName = data.fullName;
@@ -268,18 +268,18 @@ const {} = await useQuery({
         companiesForm.value.districtId = data.districtId;
         companiesForm.value.stateId = data.stateId;
     },
-    enabled: isEditForm
+    enabled: isEdit
 });
 
 const { mutate: createMutate } = useMutation({
-    mutationFn: (body) => adminCreate("organization", body),
+    mutationFn: (body) => create("organization", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
     }
 });
 
 const { mutate: updateMutate } = useMutation({
-    mutationFn: (body) => adminUpdateById("organization", body),
+    mutationFn: (body) => updateById("organization", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         queryClient.invalidateQueries({ queryKey: ["companiesById", requestId] });
@@ -287,7 +287,7 @@ const { mutate: updateMutate } = useMutation({
 });
 
 const { mutate: mutateDelete } = useMutation({
-    mutationFn: (idx) => adminDeleteWithId("organization", idx),
+    mutationFn: (idx) => deleteWithId("organization", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         queryClient.invalidateQueries({ queryKey: ["companiesById", requestId] });
@@ -329,6 +329,7 @@ const submitFormHandler = async () => {
     if (requestFlag.value === "create") {
         delete companiesForm.value.id;
         delete companiesForm.value.stateId;
+        delete companiesForm.value.search;
 
         createMutate(companiesForm.value);
     } else {

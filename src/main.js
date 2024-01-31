@@ -7,6 +7,7 @@ import { i18n } from "@/i18n";
 import Toast from "vue-toastification";
 import router from "@/router/router";
 
+import SwitcherLang from "@/components/SwitcherLang.vue";
 import HeadPage from "@/components/HeadPage.vue";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
@@ -47,6 +48,7 @@ const options = {
 // app.config.globalProperties.$axios = axios;
 
 app
+  .component("SwitcherLang", SwitcherLang)
   .component("HeadPage", HeadPage)
   .component("Title", Title)
   .component("FormSearch", FormSearch)

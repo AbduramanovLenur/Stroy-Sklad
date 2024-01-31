@@ -2,8 +2,13 @@
     <header class="header">
         <div class="header__inner">
             <Burger />
-            <div class="header__organization">
-                {{ $t('organization') }} {{ organization }}
+            <div class="header__info">
+                <div class="header__organization">
+                    {{ $t('organization') }} {{ organization }}
+                </div>
+                <div class="header__user">
+                    {{ role }} : {{ name }}
+                </div>
             </div>
             <SwitcherLang className="header__langs" />
         </div>
@@ -13,10 +18,10 @@
 <script setup>
 import { ref } from "vue";
 import Burger from "@/components/Burger.vue";
-import SwitcherLang from "@/components/SwitcherLang.vue";
 
-// const role = ref(localStorage.getItem("role"));
 const organization = ref(localStorage.getItem("organization"));
+const name = ref(localStorage.getItem("name"));
+const role = ref(localStorage.getItem("role"));
 </script>
 
 <style lang="scss" scoped>
@@ -46,16 +51,26 @@ const organization = ref(localStorage.getItem("organization"));
         }
     }
 
-    &__organization {
-        font-size: 18px;
-        font-weight: 700;
+    &__info {
         margin-right: auto;
         @media (max-width: 600px) {
             order: 3;
             grid-column: span 2;
         }
+    }
+
+    &__organization {
+        font-size: 18px;
+        font-weight: 700;
         @media (max-width: 480px) {
             font-size: 14px;
+        }
+    }
+
+    &__user {
+        font-size: 16px;
+        @media (max-width: 480px) {
+            font-size: 13px;
         }
     }
 

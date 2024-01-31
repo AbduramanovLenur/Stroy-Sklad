@@ -84,5 +84,15 @@
   "objectOrganization": "Kompaniyani nomi",
   "objectAddress": "Manzil",
   "objectState": "Holati",
-  "objectAction": "Amallar"
+  "objectAction": "Amallar",
+  "addNewObjectTitle": "Obyekt yaratish",
+  "editObjectTitle": "Obyekt tahrirlash",
+  "nameObjectLabel": "Obyekt nomi",
+  "nameObjectPlaceholder": "Obyekt...",
+  "addressObjectLabel": "Obyekt manzili",
+  "addressObjectPlaceholder": "Manzil...",
+  "organizationObjectLabel": "Kompaniya obyekt",
+  "regionObjectLabel": "Obyekt viloyat",
+  "districtObjectLabel": "Obyekt tuman",
+  "stateObjectLabel": "Kompaniyaning holati"
 }

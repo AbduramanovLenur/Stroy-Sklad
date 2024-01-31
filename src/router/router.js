@@ -11,9 +11,9 @@ const routes = [
     name: "Home",
     path: "/",
     redirect: to => {
-      const role = localStorage.getItem("role");
+      const roleId = localStorage.getItem("roleId");
 
-      if (role === 'superadmin') {
+      if (roleId === '1') {
         return { path: "/companies" }
       }
 
@@ -35,18 +35,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "superadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "1",
+    }
   },
   {
     name: "Employees",
@@ -55,18 +45,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "superadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "1",
+    }
   },
   {
     name: "Objects",
@@ -75,18 +55,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Blocks",
@@ -95,18 +65,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Smeta",
@@ -115,18 +75,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Roles",
@@ -135,18 +85,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Organization-employees",
@@ -155,18 +95,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Expenses",
@@ -175,18 +105,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Warehouse",
@@ -195,18 +115,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
   {
     name: "Products",
@@ -215,18 +125,8 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      role: "orgadmin",
-    },
-    // beforeEnter: (to, from, next) => {
-    //   const role = localStorage.getItem("role");
-
-    //   if (to.meta.role !== role) {
-    //     next({ name: "Auth" });
-    //     return;
-    //   }
-
-    //   next();
-    // },
+      roleId: "2",
+    }
   },
 ];
 
@@ -236,14 +136,19 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const role = localStorage.getItem("role");
+  const roleId = localStorage.getItem("roleId");
 
-  if (to?.name !== "Auth" && to?.meta?.role !== role) {
+  if (!roleId) {
+    next();
+    return;
+  }
+
+  if (to?.name !== "Auth" && to?.meta?.roleId !== roleId) {
     next({ name: "Home" });
     return;
   }
 
   next();
-})
+});
 
 export default router;

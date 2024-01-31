@@ -1,0 +1,1 @@
+import{_ as s,o as e,e as c,f as o}from"./index-lIBmWoQk.js";const t={},_={class:"blocks"},n=o("div",{class:"blocks__inner"}," Blocks ",-1),a=[n];function r(l,i){return e(),c("section",_,a)}const f=s(t,[["render",r]]);export{f as default};

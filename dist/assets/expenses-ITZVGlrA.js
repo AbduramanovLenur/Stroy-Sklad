@@ -1,0 +1,1 @@
+import{_ as e,o as s,e as n,f as c}from"./index-lIBmWoQk.js";const o={},t={class:"expenses"},_=c("div",{class:"expenses__inner"}," Expenses ",-1),a=[_];function r(i,d){return s(),n("section",t,a)}const f=e(o,[["render",r]]);export{f as default};
