@@ -46,6 +46,7 @@ const searchHandler = () => {
     @media (max-width: 480px) {
         grid-column: initial;
         height: 35px;
+        max-width: initial;
     }
 
     &-input {
@@ -57,6 +58,7 @@ const searchHandler = () => {
         border: 1px solid var(--black);
         @media (max-width: 480px) {
             font-size: 14px;
+            max-width: initial;
         }
     }
 

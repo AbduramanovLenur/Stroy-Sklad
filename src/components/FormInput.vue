@@ -41,6 +41,7 @@ defineProps([
     flex-direction: column;
     gap: 10px;
     width: 100%;
+    
     @media (max-width: 480px) {
         font-size: 16px;
     }
@@ -63,6 +64,9 @@ defineProps([
     padding: 10px 50px;
     border-radius: 20px;
     border: none;
+    -webkit-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
     @media (max-width: 480px) {
         font-size: 14px;
     }

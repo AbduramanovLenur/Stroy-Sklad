@@ -27,11 +27,11 @@ const menu = ref([
     { id: 2, label: "itemAdminEmployees", icon: "employees", to: "/employees", roleId: "1" },
     { id: 3, label: "itemUserObjects", icon: "objects", to: "/objects", roleId: "2" },
     { id: 4, label: "itemUserBlocks", icon: "blocks", to: "/blocks", roleId: "2" },
-    { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
-    { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", roleId: "2" },
-    { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", roleId: "2" },
-    { id: 8, label: "itemUserExpenses", icon: "expenses", to: "/expenses", roleId: "2" },
-    { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: "/warehouse", roleId: "2" },
+    // { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
+    // { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", roleId: "2" },
+    // { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", roleId: "2" },
+    // { id: 8, label: "itemUserExpenses", icon: "expenses", to: "/expenses", roleId: "2" },
+    // { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: "/warehouse", roleId: "2" },
     { id: 10, label: "itemUserProducts", icon: "brick", to: "/products", roleId: "2" }
 ]);
 

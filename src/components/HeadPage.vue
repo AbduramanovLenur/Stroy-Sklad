@@ -8,12 +8,13 @@
         />
         <AddButton 
             @onOpenFormModal="() => $emit('onOpenFormModal')" 
+            :to="to"
         />
     </div>
 </template>
 
 <script setup>
-defineProps(["title"]);
+defineProps(["title", "to"]);
 </script>
 
 <style lang="scss" scoped>

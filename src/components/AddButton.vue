@@ -1,15 +1,17 @@
 <template>
-    <button type="button" class="add-button hovered" @click="() => $emit('onOpenFormModal')">
+    <router-link :to="to" class="add-button hovered">
         <span class="add-button__icon">
             <Icon name="add-company" />
         </span>
         <span class="add-button__text">
             {{ $t("addButton") }}
         </span>
-    </button>
+    </router-link>
 </template>
 
-<script setup></script>
+<script setup>
+defineProps(["to"]);
+</script>
 
 <style lang="scss" scoped>
 .add-button {

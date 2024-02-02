@@ -34,8 +34,17 @@
                 <td v-if="info.fullName" class="table-info" align="center">
                     {{ info.fullName }}
                 </td>
+                <td v-if="info.objectName" class="table-info" align="center">
+                    {{ info.objectName }}
+                </td>
                 <td v-if="info.organizationName" class="table-info" align="center">
                     {{ info.organizationName }}
+                </td>
+                <td v-if="info.numberOnFloor" class="table-info" align="center">
+                    {{ info.numberOnFloor }}
+                </td>
+                <td v-if="info.roomsOnFloor" class="table-info" align="center">
+                    {{ info.roomsOnFloor }}
                 </td>
                 <td v-if="info.fullAddress" class="table-info" align="center">
                     {{ info.fullAddress }}
@@ -64,12 +73,12 @@
                     </span>
                 </td>
                 <td class="table-info" align="center">
-                    <span 
+                    <router-link
+                        :to="{ name: to, params: { id: info.id } }" 
                         class="table-edit"
-                        @click="() => $emit('onActionEdit', info.id)"
                     >
                         <Icon name="edit" />
-                    </span>
+                    </router-link>
                     <span 
                         v-if="info.stateId === 1"
                         class="table-delete" 
@@ -84,7 +93,7 @@
 </template>
 
 <script setup>
-defineProps(["headers", "table"]);
+defineProps(["headers", "table", "to"]);
 </script>
 
 <style lang="scss" scoped>

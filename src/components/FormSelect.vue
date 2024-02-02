@@ -1,9 +1,9 @@
 <template>
-    <label v-if="show?.includes(requestFlag)" class="label" :style="`max-width: ${width}px;`">
+    <label class="label" :style="`max-width: ${width}px;`">
         <slot />
         <span class="select-wrapper">
             <select 
-                v-if="success" 
+                v-if="success && options.length" 
                 class="select" 
                 @change="($event) => $emit('update:modelValue', $event.target.value)"
                 :value="modelValue"
@@ -72,6 +72,9 @@ defineProps([
     height: 50px;
     padding: 5px 30px;
     width: 100%;
+    -webkit-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
     @media (max-width: 480px) {
         font-size: 14px;
     }
