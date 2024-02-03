@@ -19,8 +19,8 @@
                 <td v-if="info.id" class="table-info" align="center">
                     {{ info.id }}
                 </td>
-                <td v-if="info.fullname" class="table-info" align="center">
-                    {{ info.fullname }}
+                <td v-if="info.name" class="table-info" align="center">
+                    {{ info.name }}
                 </td>
                 <td v-if="info.company" class="table-info" align="center">
                     {{ info.company }}

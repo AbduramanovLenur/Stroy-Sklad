@@ -33,7 +33,7 @@ import { routes } from "@/utils/routes.js";
 const queryClient = useQueryClient();
 
 const search = ref("");
-const companyId = ref("");
+const objectsId = ref("");
 
 const headers = ref([
     { id: 1, label: "objectName", width: 385 },
@@ -57,12 +57,12 @@ const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("building_object", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
-        queryClient.invalidateQueries({ queryKey: ["objectById", companyId] });
+        queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
     }
 });
 
 const deleteHandler = async (idx) => {
-    companyId.value = idx;
+    objectsId.value = idx;
     mutateDelete(idx);
 }
 </script>

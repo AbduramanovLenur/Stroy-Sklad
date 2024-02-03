@@ -207,3 +207,35 @@ svg {
         align-items: center;
     }
 }
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30px;
+        height: 30px;
+        -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+
+        transform: skew(-20deg);
+        &:first-child,
+        &:last-child {
+            transform: skew(0deg);
+            border-radius: 50%;
+        }
+    }
+}
+
+.paginate-buttons {
+    font-size: 14px;
+    transform: skew(20deg);
+    padding: 13px;
+    &.active-page {
+        color: #ff0000;
+    }
+}

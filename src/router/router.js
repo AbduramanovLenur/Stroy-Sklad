@@ -11,10 +11,10 @@ const routes = [
       const roleId = localStorage.getItem("roleId");
 
       if (roleId === '1') {
-        return { path: "/companies" }
+        return { path: routesList.COMPANIES.path }
       }
 
-      return { path: "/objects" }
+      return { path: routesList.OBJECTS.path }
     },
   },
   {
@@ -205,26 +205,26 @@ const routes = [
       roleId: "2",
     }
   },
-  // {
-  //   name: routesList.CREATE_PRODUCTS.name,
-  //   path: routesList.CREATE_PRODUCTS.path,
-  //   component: () => import("@/views/products/create.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
-  // {
-  //   name: routesList.UPDATE_PRODUCTS.name,
-  //   path: routesList.UPDATE_PRODUCTS.path,
-  //   component: () => import("@/views/products/update.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
+  {
+    name: routesList.CREATE_PRODUCTS.name,
+    path: routesList.CREATE_PRODUCTS.path,
+    component: () => import("@/views/products/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.UPDATE_PRODUCTS.name,
+    path: routesList.UPDATE_PRODUCTS.path,
+    component: () => import("@/views/products/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
 ];
 
 const router = createRouter({

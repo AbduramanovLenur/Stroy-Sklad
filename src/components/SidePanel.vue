@@ -1,8 +1,8 @@
 <template>
     <aside :class="`sidepanel ${isOpenPanel ? 'isOpen' : ''}`">
         <div :class="`sidepanel__inner ${isOpenPanel ? 'isOpen' : ''}`">
-            <div :class="`sidepanel__logo ${isOpenPanel ? 'centered' : ''}`">
-                <div class="sidepanel__logo-picture">
+            <router-link :to="routes.HOME.path" :class="`sidepanel__logo ${isOpenPanel ? 'centered' : ''}`">
+                <span class="sidepanel__logo-picture">
                     <img 
                         src="@/assets/images/logo/logo.svg" 
                         alt="logo" 
@@ -10,12 +10,12 @@
                         width="30" 
                         height="80"
                     >
-                </div>
-                <div :class="`sidepanel__logo-text ${isOpenPanel ? 'hide' : ''}`">
+                </span>
+                <span :class="`sidepanel__logo-text ${isOpenPanel ? 'hide' : ''}`">
                     Stroy <br>
                     Sklad
-                </div>
-            </div>
+                </span>
+            </router-link>
             <Menu />
             <button 
                 :class="`sidepanel__logout ${isOpenPanel ? 'centered' : ''}`"
@@ -39,6 +39,7 @@ import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { usePanelStore } from "@/store/panelStore";
 import { storeToRefs } from "pinia";
+import { routes } from "@/utils/routes.js";
 import Menu from "@/components/Menu.vue";
 
 const router = useRouter();

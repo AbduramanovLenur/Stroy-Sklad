@@ -120,5 +120,14 @@
   "blockRooms": "Количество квартир",
   "blockAddress": "Адрес блока",
   "blockState": "Состояние",
-  "blockAction": "Действия"
+  "blockAction": "Действия",
+  "productsTitle": "Материалы",
+  "productsName": "Название материала",
+  "productsState": "Состояние",
+  "productsAction": "Действия",
+  "addNewProductTitle": "Создание материала",
+  "nameProductsLabel": "Название материала",
+  "nameProductsPlaceholder": "Материал...",
+  "editProductTitle": "Редактирование материала",
+  "stateProductsLabel": "Состояние материала"
 }

@@ -120,5 +120,14 @@
   "blockRooms": "Kvartiralar soni",
   "blockAddress": "Blok manzili",
   "blockState": "Holati",
-  "blockAction": "Amallar"
+  "blockAction": "Amallar",
+  "productsTitle": "Mahsulot",
+  "productsName": "Mahsulot nomi",
+  "productsState": "Holati",
+  "productsAction": "Amallar",
+  "addNewProductTitle": "Mahsulot yaratish",
+  "nameProductsLabel": "Mahsulot nomi",
+  "nameProductsPlaceholder": "Mahsulot...",
+  "editProductTitle": "Mahsulot tahrirlash",
+  "stateProductsLabel": "Obyekt holati"
 }

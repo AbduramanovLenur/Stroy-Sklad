@@ -7,15 +7,20 @@
                 @onSearch="($event) => search = $event"
             />
             <Table 
-                v-if="isSuccessEmployees && employees.length"
+                v-if="isSuccessEmployees && employees?.count"
                 :headers="headers" 
-                :table="employees" 
+                :table="employees?.users" 
                 :to="routes.UPDATE_EMPLOYEES.name"
                 @onActionDelete="deleteHandler"
             />
+            <Pagination
+                :count="employees?.count"
+                :isSucces="isLoadingEmployees"
+                :isEmpty="!!employees?.count"
+            />
             <Spinner v-if="isLoadingEmployees" />
             <div 
-                v-if="(isSuccessEmployees && !employees.length) || isError" 
+                v-if="(isSuccessEmployees && !employees?.count) || isError" 
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
@@ -25,15 +30,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useTableStore } from "@/store/tableStore";
+import { refDebounced } from "@vueuse/core";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 
-const search = ref("");
-const companyId = ref("");
+const tableStore = useTableStore();
+const { setSearchValue } = tableStore;
+const { page, limit, search } = storeToRefs(tableStore);
+
+onMounted(() => {
+    setSearchValue("");
+});
+
+const employeesId = ref("");
+
+const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "employeesFullName", width: 300 },
@@ -50,21 +67,26 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["employees"],
-    queryFn: () => getList("user"),
+    queryKey: ["employees", { page, limit, debouncedSearch, isAdmin: true }],
+    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value, true),
     select: (data) => {
-        return data.map((elem) => {
+        let employees = {...data};
+        employees.users = data?.users.map((elem) => {
             const employee = {
                 ...elem,
                 phone: elem.phoneNumber,
-                company: elem.organizationName
+                company: elem.organizationName,
+                name: elem.fullName
             }
 
+            delete employee.fullName;
             delete employee.phoneNumber;
             delete employee.organizationName;
 
             return employee;
         })
+
+        return employees;
     }
 });
 
@@ -72,12 +94,12 @@ const { mutate: deleteMutate } = useMutation({
     mutationFn: (idx) => deleteWithId("user", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["employeesById", companyId] });
+        queryClient.invalidateQueries({ queryKey: ["employeesById"] });
     }
 });
 
 const deleteHandler = (idx) => {
-    companyId.value = idx;
+    employeesId.value = idx;
     deleteMutate(idx);
 }
 </script>

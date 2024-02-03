@@ -51,12 +51,16 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetRegions, manualGetDistricts, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
+
+const tableStore = useTableStore();
+const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
 
@@ -210,11 +214,14 @@ watch(isError, (value) => {
 
 const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("organization", body),
-    onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["companies"] });
-        queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
+    onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ["companies"] });
+        await queryClient.invalidateQueries({ queryKey: ["companiesById"] });
+
+        setPagePagination(1);
+        setLimitPagination(10);
+
         router.push(routes.COMPANIES.path);
-        // setTimeout(() => toast.success(t("updateToast")), 1000);
     }
 });
 

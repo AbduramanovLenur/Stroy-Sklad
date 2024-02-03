@@ -51,12 +51,16 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetOrganizations, manualGetRoles, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
+
+const tableStore = useTableStore();
+const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
 
@@ -178,7 +182,7 @@ const { isError } = await useQuery({
     queryFn: () => getWithId("user", slugId.value),
     select: (data) => {
         state.value.id = data.id;
-        state.value.fullName = data.fullname;
+        state.value.fullName = data.fullName;
         state.value.userName = data.userName;
         state.value.phoneNumber = data.phoneNumber;
         state.value.organizationId = data.organizationId;
@@ -197,7 +201,11 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["employeesById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["employeesById"] });
+        
+        setPagePagination(1);
+        setLimitPagination(10);
+
         router.push(routes.EMPLOYEES.path);
     }
 });

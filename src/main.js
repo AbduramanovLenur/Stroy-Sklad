@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 import { i18n } from "@/i18n";
 // import axios from "axios";
 import Toast from "vue-toastification";
+import VueAwesomePaginate from "vue-awesome-paginate";
 import router from "@/router/router";
 
 import SwitcherLang from "@/components/SwitcherLang.vue";
@@ -15,10 +16,10 @@ import AddButton from "@/components/AddButton.vue";
 import Table from "@/components/Table.vue";
 import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
-import FormModal from "@/components/FormModal.vue";
 import CustomButton from "@/components/CustomButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import Icon from "@/components/Icon.vue";
+import Pagination from "@/components/Pagination.vue";
 import App from "./App.vue";
 
 import "@/assets/styles/globals.scss";
@@ -56,16 +57,17 @@ app
   .component("FormInput", FormInput)
   .component("FormSelect", FormSelect)
   .component("Table", Table)
-  .component("FormModal", FormModal)
   .component("CustomButton", CustomButton)
   .component("Icon", Icon)
-  .component("Spinner", Spinner);
+  .component("Spinner", Spinner)
+  .component("Pagination", Pagination);
 
 app
   .use(router)
   .use(i18n)
   .use(createPinia())
   .use(VueQueryPlugin, options)
-  .use(Toast);
+  .use(Toast)
+  .use(VueAwesomePaginate);
 
 app.mount("#app");

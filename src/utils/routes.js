@@ -65,7 +65,7 @@ export const routes = {
         path: "/products"
     },
     CREATE_PRODUCTS: {
-        name: "UpdateProducts",
+        name: "CreateProducts",
         path: "/products/manage"
     },
     UPDATE_PRODUCTS: {

@@ -5,6 +5,7 @@
             class="form-input" 
             type="text" 
             :placeholder="$t('companySearchPlaceholder')"
+            @input="($event) => $emit('onSearch', $event.target.value)"
         >
         <button class="form-submit" type="submit">
             <Icon name="search" />
@@ -21,7 +22,7 @@ const search = ref("");
 
 const searchHandler = () => {
     emit("onSearch", search.value);
-    search.value = "";
+    // search.value = "";
 }
 </script>
 
