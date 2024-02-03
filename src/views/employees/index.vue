@@ -15,7 +15,7 @@
             />
             <Pagination
                 :count="employees?.count"
-                :isSucces="isLoadingEmployees"
+                :isSucces="isSuccessEmployees"
                 :isEmpty="!!employees?.count"
             />
             <Spinner v-if="isLoadingEmployees" />

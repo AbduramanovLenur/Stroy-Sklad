@@ -1,2 +1,0 @@
-import{r as d}from"./generic.services-_wmr52k_.js";const $=(t,e,a,o,s)=>d({url:`${t}/GetList?page=${e}&limit=${a}&search=${o}${s?`&isAdmin=${s}`:""}`,method:"GET"}),i=(t,e)=>d({url:`${t}/GetById/id?id=${e}`,method:"GET"}),c=(t,e)=>d({url:`${t}/Create`,method:"POST",body:e}),h=(t,e)=>d({url:`${t}/Update`,method:"POST",body:e}),l=(t,e)=>d({url:`${t}/Delete/${e}`,method:"POST"});export{i as a,c,l as d,$ as g,h as u};
-//# sourceMappingURL=crud.services-oazsYCL2.js.map

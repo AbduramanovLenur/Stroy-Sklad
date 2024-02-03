@@ -1,2 +1,0 @@
-import{r as t}from"./generic.services-_wmr52k_.js";const e=()=>t({url:"manual/RegionSelectList",method:"GET"}),s=()=>t({url:"manual/DistrictSelectList",method:"GET"}),l=()=>t({url:"manual/OrganizationSelectList",method:"GET"}),n=()=>t({url:"manual/RoleSelectList",method:"GET"}),o=()=>t({url:"manual/StateSelectList",method:"GET"});export{s as a,o as b,l as c,n as d,e as m};
-//# sourceMappingURL=manual.services-vAJaRngc.js.map

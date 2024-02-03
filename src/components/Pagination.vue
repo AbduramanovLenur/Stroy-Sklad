@@ -27,11 +27,9 @@ import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 
 defineProps([
-    "limit",
     "count", 
     "isSucces", 
-    "isEmpty", 
-    "modelValue"
+    "isEmpty",
 ]);
 
 const tableStore = useTableStore();
