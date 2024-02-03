@@ -103,14 +103,14 @@ const { mutate: loginMutate } = useMutation({
             token, 
             user: {
                 role, 
-                fullname, 
+                fullName, 
                 organizationName,
                 roleId
             }
         } = data;
 
         localStorage.setItem("token", token);
-        localStorage.setItem("name", fullname);
+        localStorage.setItem("name", fullName);
         localStorage.setItem("role", role);
         localStorage.setItem("organization", organizationName);
         localStorage.setItem("roleId", roleId);
