@@ -162,7 +162,7 @@ const { isError } = await useQuery({
     queryFn: () => getWithId("building_object", slugId.value),
     select: (data) => {
         state.value.id = data.id;
-        state.value.name = data.fullname;
+        state.value.name = data.fullName;
         state.value.organizationId = data.organizationId;
         state.value.regionId = data.regionId;
         state.value.districtId = data.districtId;
@@ -181,7 +181,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("building_object", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
-        queryClient.invalidateQueries({ queryKey: ["objectById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["objectById"] });
         router.push(routes.OBJECTS.path);
     }
 });

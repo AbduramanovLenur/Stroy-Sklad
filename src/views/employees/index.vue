@@ -4,7 +4,7 @@
             <HeadPage
                 title="employeesTitle" 
                 :to="routes.CREATE_EMPLOYEES.path"
-                @onSearch="($event) => search = $event"
+                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
@@ -68,7 +68,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["employees", { page, limit, debouncedSearch, isAdmin: true }],
-    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value, true),
+    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value, { isAdmin: true }),
     select: (data) => {
         let employees = {...data};
         employees.users = data?.users.map((elem) => {

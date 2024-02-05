@@ -1,6 +1,6 @@
 import { request } from "./generic.services.js";
 
-export const getList = (api, page, limit, search, isAdmin) => request({ url: `${api}/GetList?page=${page}&limit=${limit}&search=${search}${isAdmin ? `&isAdmin=${isAdmin}` : ''}`, method: "GET" });
+export const getList = (api, page, limit, search, info = { id: 1 }) => request({ url: `${api}/GetList?page=${page}&limit=${limit}${search ? `&search=${search}` : ''}${info?.isAdmin ? `&isAdmin=${info?.isAdmin}` : `&OrganizationId=${info?.id}`}`, method: "GET" });
 
 export const getWithId = (api, idx) => request({ url: `${api}/GetById/id?id=${idx}`, method: "GET" });
 

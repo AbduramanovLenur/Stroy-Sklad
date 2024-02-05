@@ -7,15 +7,20 @@
                 @onSearch="($event) => search = $event"
             />
             <Table 
-                v-if="isSuccessBlocks && blocks.length"
+                v-if="isSuccessBlocks && blocks?.count"
                 :headers="headers" 
-                :table="blocks"
+                :table="blocks?.objects"
                 :to="routes.UPDATE_BLOCKS.name"
                 @onActionDelete="deleteHandler"
             />
+            <Pagination
+                :count="blocks?.count"
+                :isSucces="isSuccessBlocks"
+                :isEmpty="!!blocks?.count"
+            />
             <Spinner v-if="isLoadingBlocks" />
             <div 
-                v-if="(isSuccessBlocks && !blocks.length) || isError" 
+                v-if="(isSuccessBlocks && !blocks.count) || isError" 
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
@@ -25,15 +30,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useTableStore } from "@/store/tableStore";
+import { refDebounced } from "@vueuse/core";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 
-const search = ref("");
+const tableStore = useTableStore();
+const { setSearchValue } = tableStore;
+const { page, limit, search } = storeToRefs(tableStore);
+
+onMounted(() => {
+    setSearchValue("");
+});
+
 const blocksId = ref("");
+
+const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "blockName", width: 185 },
@@ -52,8 +69,8 @@ const {
     isSuccess: isSuccessBlocks,
     isError
 } = await useQuery({
-    queryKey: ["blocks"],
-    queryFn: () => getList("building_block")
+    queryKey: ["blocks", { page, limit, debouncedSearch }],
+    queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value)
 });
 
 const { mutate: mutateDelete } = useMutation({

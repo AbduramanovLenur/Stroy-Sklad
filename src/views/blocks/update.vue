@@ -201,7 +201,7 @@ const { isError } = await useQuery({
     queryFn: () => getWithId("building_block", slugId.value),
     select: (data) => {
         state.value.id = data.id;
-        state.value.fullname = data.fullname;
+        state.value.fullname = data.fullName;
         state.value.numberOfFloors = data.numberOfFloors;
         state.value.roomsOnFloor = data.roomsOnFloor;
         state.value.address = data.address;
@@ -222,7 +222,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("building_block", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
-        queryClient.invalidateQueries({ queryKey: ["blocksById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["blocksById"] });
         router.push(routes.BLOCKS.path);
         // setTimeout(() => toast.success(t("updateToast")), 1000);
     }

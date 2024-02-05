@@ -4,18 +4,23 @@
             <HeadPage 
                 title="objectTitle" 
                 :to="routes.CREATE_OBJECTS.path"
-                @onSearch="($event) => search = $event"
+                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
-                v-if="isSuccessObjects && objects.length"
+                v-if="isSuccessObjects && objects?.count"
                 :headers="headers" 
-                :table="objects"
+                :table="objects?.objects"
                 :to="routes.UPDATE_OBJECTS.name"
                 @onActionDelete="deleteHandler"
             />
+            <Pagination
+                :count="objects?.count"
+                :isSucces="isSuccessObjects"
+                :isEmpty="!!objects?.count"
+            />
             <Spinner v-if="isLoadingObjects" />
             <div 
-                v-if="(isSuccessObjects && !objects.length) || isError" 
+                v-if="(isSuccessObjects && !objects?.count) || isError" 
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
@@ -25,15 +30,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useTableStore } from "@/store/tableStore";
+import { refDebounced } from "@vueuse/core";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 
-const search = ref("");
+const tableStore = useTableStore();
+const { setSearchValue } = tableStore;
+const { page, limit, search } = storeToRefs(tableStore);
+
+onMounted(() => {
+    setSearchValue("");
+});
+
 const objectsId = ref("");
+
+const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "objectName", width: 385 },
@@ -49,15 +66,15 @@ const {
     isSuccess: isSuccessObjects,
     isError
 } = await useQuery({
-    queryKey: ["objects"],
-    queryFn: () => getList("building_object")
+    queryKey: ["objects", { page, limit, debouncedSearch }],
+    queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value)
 });
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("building_object", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
-        queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
+        queryClient.invalidateQueries({ queryKey: ["objectById"] });
     }
 });
 
