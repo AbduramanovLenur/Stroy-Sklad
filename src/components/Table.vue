@@ -15,9 +15,9 @@
                     {{ $t(title.label) }}
                 </th>
             </tr>
-            <tr class="table-line" v-for="info in table" :key="info.id">
+            <tr class="table-line" v-for="(info, index) in table" :key="info.id">
                 <td v-if="info.id" class="table-info" align="center">
-                    {{ info.id }}
+                    {{ index + 1 }}
                 </td>
                 <td v-if="info.name" class="table-info" align="center">
                     {{ info.name }}

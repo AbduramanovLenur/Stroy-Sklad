@@ -1,5 +1,5 @@
 <template>
-    <div class="pagination" v-if="isSucces && isEmpty">
+    <div class="pagination shadowed" v-if="isSucces && isEmpty">
         <vue-awesome-paginate
             v-model="pageLocal"
             :total-items="count"

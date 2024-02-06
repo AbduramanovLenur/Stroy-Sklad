@@ -9,3 +9,5 @@ export const manualGetOrganizations = () => request({ url: "manual/OrganizationS
 export const manualGetRoles = () => request({ url: "manual/RoleSelectList", method: "GET" });
 
 export const manualGetStates = () => request({ url: "manual/StateSelectList", method: "GET" });
+
+export const manualGetObjects = (idx) => request({ url: `manual/BuildingObjectSelectList/organizationId?organizationId=${idx}`, method: "GET" });

@@ -39,6 +39,8 @@ const tableStore = useTableStore();
 const { setSearchValue } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
+const organizationId = ref(localStorage.getItem("organizationId"));
+
 onMounted(() => {
     setSearchValue("");
 });
@@ -59,8 +61,8 @@ const {
     isSuccess: isSuccessProducts,
     isError
 } = await useQuery({
-    queryKey: ["products", { page, limit, debouncedSearch }],
-    queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value),
+    queryKey: ["products", { page, limit, debouncedSearch, organizationId }],
+    queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
     select: (data) => {
         return data.map((elem) => {
             const product = {

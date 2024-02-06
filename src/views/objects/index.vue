@@ -44,6 +44,8 @@ const tableStore = useTableStore();
 const { setSearchValue } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
+const organizationId = ref(localStorage.getItem("organizationId"));
+
 onMounted(() => {
     setSearchValue("");
 });
@@ -66,8 +68,8 @@ const {
     isSuccess: isSuccessObjects,
     isError
 } = await useQuery({
-    queryKey: ["objects", { page, limit, debouncedSearch }],
-    queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value)
+    queryKey: ["objects", { page, limit, debouncedSearch, organizationId }],
+    queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value })
 });
 
 const { mutate: mutateDelete } = useMutation({
@@ -75,6 +77,7 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
+        queryClient.invalidateQueries({ queryKey: ["objectsList"] });
     }
 });
 

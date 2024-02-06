@@ -137,6 +137,7 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("building_object", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
+        queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         router.push(routes.OBJECTS.path);
     }
 });

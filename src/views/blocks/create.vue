@@ -49,13 +49,15 @@ import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
-import { manualGetRegions, manualGetDistricts } from "@/services/manual.services.js";
+import { manualGetRegions, manualGetDistricts, manualGetObjects } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const organizationId = ref(localStorage.getItem("organizationId"));
 
 const {
     data: regions,
@@ -75,21 +77,21 @@ const {
     queryFn: () => manualGetDistricts()
 });
 
-// const {
-//     data: objectsList,
-//     isSuccess: isSuccessObjectsList,
-//     isLoading: isLoadingObjectsList
-// } = await useQuery({
-//     queryKey: ["objectsList"],
-//     queryFn: () => manualGetObjectsList()
-// });
+const {
+    data: objectsList,
+    isSuccess: isSuccessObjectsList,
+    isLoading: isLoadingObjectsList
+} = await useQuery({
+    queryKey: ["objectsList", { organizationId }],
+    queryFn: () => manualGetObjects(organizationId.value)
+});
 
 const state = ref({
     fullname: "",
     numberOfFloors: "",
     roomsOnFloor: "",
     address: "",
-    buildingObjectId: 1,
+    buildingObjectId: "",
     regionId: "",
     districtId: "",
 });
@@ -99,7 +101,7 @@ const rules = computed(() => ({
     numberOfFloors: { required },
     roomsOnFloor: { required },
     address: { required },
-    // buildingObjectId: { required },
+    buildingObjectId: { required },
     regionId: { required },
     districtId: { required },
 }));
@@ -146,10 +148,10 @@ const selects = ref([
         id: 1, 
         model: "buildingObjectId", 
         label: "buildIdBlocksLabel", 
-        options: [], 
+        options: objectsList, 
         errorKey: "buildingObjectId", 
-        success: true,
-        loading: false
+        success: isSuccessObjectsList,
+        loading: isLoadingObjectsList
     },
     { 
         id: 2, 
@@ -180,9 +182,6 @@ const { mutate: createMutate } = useMutation({
 });
 
 const submitHandler = () => {
-    // const organizationId = localStorage.getItem("organizationId");
-    // state.value.organizationId = organizationId;
-
     v$.value.$validate();
 
     if (v$.value.$errors.length) {

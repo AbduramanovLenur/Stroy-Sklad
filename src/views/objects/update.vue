@@ -182,6 +182,7 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         router.push(routes.OBJECTS.path);
     }
 });
