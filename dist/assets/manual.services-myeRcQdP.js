@@ -1,0 +1,2 @@
+import{r as t}from"./generic.services-CPrETf56.js";const n=()=>t({url:"manual/RegionSelectList",method:"GET"}),s=()=>t({url:"manual/DistrictSelectList",method:"GET"}),l=()=>t({url:"manual/OrganizationSelectList",method:"GET"}),o=()=>t({url:"manual/RoleSelectList",method:"GET"}),i=()=>t({url:"manual/StateSelectList",method:"GET"}),m=a=>t({url:`manual/BuildingObjectSelectList/organizationId?organizationId=${a}`,method:"GET"});export{s as a,i as b,l as c,o as d,m as e,n as m};
+//# sourceMappingURL=manual.services-myeRcQdP.js.map

@@ -1,5 +1,5 @@
 <template>
-    <section class="object shadowed">
+    <section class="object">
         <div class="object__inner section-padding">
             <HeadPage 
                 title="objectTitle" 
