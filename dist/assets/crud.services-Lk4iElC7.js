@@ -1,2 +1,0 @@
-import{r as s}from"./generic.services-SMByNSgc.js";const m=(t,e,$,a,d={id:1})=>s({url:`${t}/GetList?page=${e}&limit=${$}${a?`&search=${a}`:""}${d!=null&&d.isAdmin?`&isAdmin=${d==null?void 0:d.isAdmin}`:`&OrganizationId=${d==null?void 0:d.id}`}`,method:"GET"}),l=(t,e)=>s({url:`${t}/GetById/id?id=${e}`,method:"GET"}),u=(t,e)=>s({url:`${t}/Create`,method:"POST",body:e}),c=(t,e)=>s({url:`${t}/Update`,method:"POST",body:e}),h=(t,e)=>s({url:`${t}/Delete/${e}`,method:"POST"});export{l as a,u as c,h as d,m as g,c as u};
-//# sourceMappingURL=crud.services-Lk4iElC7.js.map

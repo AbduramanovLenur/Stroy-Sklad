@@ -9,7 +9,7 @@
             <Table 
                 v-if="isSuccessBlocks && blocks?.count"
                 :headers="headers" 
-                :table="blocks?.objects"
+                :table="blocks?.blocks"
                 :to="routes.UPDATE_BLOCKS.name"
                 @onActionDelete="deleteHandler"
             />
