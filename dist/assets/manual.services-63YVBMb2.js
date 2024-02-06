@@ -1,0 +1,2 @@
+import{r as t}from"./generic.services-AaJVcBS6.js";const e=()=>t({url:"manual/RegionSelectList",method:"GET"}),s=()=>t({url:"manual/DistrictSelectList",method:"GET"}),l=()=>t({url:"manual/OrganizationSelectList",method:"GET"}),n=()=>t({url:"manual/RoleSelectList",method:"GET"}),o=()=>t({url:"manual/StateSelectList",method:"GET"});export{s as a,o as b,l as c,n as d,e as m};
+//# sourceMappingURL=manual.services-63YVBMb2.js.map

@@ -75,8 +75,7 @@ const { mutate: createMutate } = useMutation({
 });
 
 const submitHandler = () => {
-    // const organizationId = localStorage.getItem("organizationId");
-    const organizationId = 1;
+    const organizationId = localStorage.getItem("organizationId");
     state.value.organizationId = organizationId;
 
     v$.value.$validate();

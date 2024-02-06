@@ -6,26 +6,24 @@
                 :to="routes.CREATE_BLOCKS.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <div class="shadowed">
-                <Table 
-                    v-if="isSuccessBlocks && blocks?.count"
-                    :headers="headers" 
-                    :table="blocks?.blocks"
-                    :to="routes.UPDATE_BLOCKS.name"
-                    @onActionDelete="deleteHandler"
-                />
-                <Pagination
-                    :count="blocks?.count"
-                    :isSucces="isSuccessBlocks"
-                    :isEmpty="!!blocks?.count"
-                />
-                <Spinner v-if="isLoadingBlocks" />
-                <div 
-                    v-if="(isSuccessBlocks && !blocks.count) || isError" 
-                    class="empty-table"
-                >
-                    {{ $t("emptyTableTitle") }}
-                </div>
+            <Table 
+                v-if="isSuccessBlocks && blocks?.count"
+                :headers="headers" 
+                :table="blocks?.blocks"
+                :to="routes.UPDATE_BLOCKS.name"
+                @onActionDelete="deleteHandler"
+            />
+            <Pagination
+                :count="blocks?.count"
+                :isSucces="isSuccessBlocks"
+                :isEmpty="!!blocks?.count"
+            />
+            <Spinner v-if="isLoadingBlocks" />
+            <div 
+                v-if="(isSuccessBlocks && !blocks.count) || isError" 
+                class="empty-table"
+            >
+                {{ $t("emptyTableTitle") }}
             </div>
         </div>
     </section>

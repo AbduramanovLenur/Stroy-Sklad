@@ -6,26 +6,24 @@
                 :to="routes.CREATE_OBJECTS.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <div class="shadowed">
-                <Table 
-                    v-if="isSuccessObjects && objects?.count"
-                    :headers="headers" 
-                    :table="objects?.objects"
-                    :to="routes.UPDATE_OBJECTS.name"
-                    @onActionDelete="deleteHandler"
-                />
-                <Pagination
-                    :count="objects?.count"
-                    :isSucces="isSuccessObjects"
-                    :isEmpty="!!objects?.count"
-                />
-                <Spinner v-if="isLoadingObjects" />
-                <div 
-                    v-if="(isSuccessObjects && !objects?.count) || isError" 
-                    class="empty-table"
-                >
-                    {{ $t("emptyTableTitle") }}
-                </div>
+            <Table 
+                v-if="isSuccessObjects && objects?.count"
+                :headers="headers" 
+                :table="objects?.objects"
+                :to="routes.UPDATE_OBJECTS.name"
+                @onActionDelete="deleteHandler"
+            />
+            <Pagination
+                :count="objects?.count"
+                :isSucces="isSuccessObjects"
+                :isEmpty="!!objects?.count"
+            />
+            <Spinner v-if="isLoadingObjects" />
+            <div 
+                v-if="(isSuccessObjects && !objects?.count) || isError" 
+                class="empty-table"
+            >
+                {{ $t("emptyTableTitle") }}
             </div>
         </div>
     </section>

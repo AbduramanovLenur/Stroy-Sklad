@@ -6,26 +6,24 @@
                 :to="routes.CREATE_EMPLOYEES.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <div class="shadowed">
-                <Table 
-                    v-if="isSuccessEmployees && employees?.count"
-                    :headers="headers" 
-                    :table="employees?.users" 
-                    :to="routes.UPDATE_EMPLOYEES.name"
-                    @onActionDelete="deleteHandler"
-                />
-                <Pagination
-                    :count="employees?.count"
-                    :isSucces="isSuccessEmployees"
-                    :isEmpty="!!employees?.count"
-                />
-                <Spinner v-if="isLoadingEmployees" />
-                <div 
-                    v-if="(isSuccessEmployees && !employees?.count) || isError" 
-                    class="empty-table"
-                >
-                    {{ $t("emptyTableTitle") }}
-                </div>
+            <Table 
+                v-if="isSuccessEmployees && employees?.count"
+                :headers="headers" 
+                :table="employees?.users" 
+                :to="routes.UPDATE_EMPLOYEES.name"
+                @onActionDelete="deleteHandler"
+            />
+            <Pagination
+                :count="employees?.count"
+                :isSucces="isSuccessEmployees"
+                :isEmpty="!!employees?.count"
+            />
+            <Spinner v-if="isLoadingEmployees" />
+            <div 
+                v-if="(isSuccessEmployees && !employees?.count) || isError" 
+                class="empty-table"
+            >
+                {{ $t("emptyTableTitle") }}
             </div>
         </div>
     </section>

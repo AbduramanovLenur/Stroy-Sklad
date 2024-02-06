@@ -105,6 +105,7 @@ const { mutate: loginMutate } = useMutation({
                 role, 
                 fullName, 
                 organizationName,
+                organizationId,
                 roleId
             }
         } = data;
@@ -113,6 +114,7 @@ const { mutate: loginMutate } = useMutation({
         localStorage.setItem("name", fullName);
         localStorage.setItem("role", role);
         localStorage.setItem("organization", organizationName);
+        localStorage.setItem("organizationId", organizationId);
         localStorage.setItem("roleId", roleId);
 
         router.push("/");

@@ -55,8 +55,9 @@ const logoutHandler = () => {
     localStorage.removeItem("role");
     localStorage.removeItem("roleId");
     localStorage.removeItem("organization");
+    localStorage.removeItem("organizationId");
 
-    router.push("/auth");;
+    router.push("/auth");
     toast.success(t("logoutToast"));
 }
 </script>

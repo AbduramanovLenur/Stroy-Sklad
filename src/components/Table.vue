@@ -1,5 +1,5 @@
 <template>
-    <div class="table" bordercolor="#000">
+    <div class="table shadowed" bordercolor="#000">
         <table class="table-wrapper">
             <tr class="table-line">
                 <th class="table-title" align="center" style="width: 55px;">
