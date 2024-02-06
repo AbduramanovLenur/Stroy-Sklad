@@ -1,5 +1,5 @@
 <template>
-    <section class="products section-height">
+    <section class="products">
         <div class="products__inner section-padding">
             <HeadPage 
                 title="productsTitle" 
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { refDebounced } from "@vueuse/core";
@@ -36,13 +36,17 @@ import { routes } from "@/utils/routes.js";
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue } = tableStore;
+const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
 const organizationId = ref(localStorage.getItem("organizationId"));
 
 onMounted(() => {
     setSearchValue("");
+});
+
+watch(search, () => {
+    setPagePagination(1);
 });
 
 const productsId = ref("");

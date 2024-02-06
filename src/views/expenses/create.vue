@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height">
+    <section class="manage section-height shadowed">
         <div class="manage__inner section-padding">
             <Title>
                 {{ $t("addNewExpensesTitle") }}
