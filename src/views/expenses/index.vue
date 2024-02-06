@@ -6,7 +6,8 @@
                 :to="routes.CREATE_EXPENSES.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <Table 
+            <div class="shadowed">
+                <Table 
                 v-if="isSuccessExpenses && expenses?.count"
                 :headers="headers" 
                 :table="expenses?.cost"
@@ -24,6 +25,7 @@
                 class="empty-table"
             >
                 {{ $t("emptyTableTitle") }}
+            </div>
             </div>
         </div>
     </section>

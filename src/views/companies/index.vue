@@ -6,24 +6,26 @@
                 :to="routes.CREATE_COMPANIES.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <Table 
-                v-if="isSuccessCompanies && companies?.count"
-                :headers="headers" 
-                :table="companies?.organizations" 
-                :to="routes.UPDATE_COMPANIES.name"
-                @onActionDelete="deleteHandler"
-            />
-            <Pagination
-                :count="companies?.count"
-                :isSucces="isSuccessCompanies"
-                :isEmpty="!!companies?.count"
-            />
-            <Spinner v-if="isLoadingCompanies" />
-            <div 
-                v-if="(isSuccessCompanies && !companies?.count) || isError" 
-                class="empty-table"
-            >
-                {{ $t("emptyTableTitle") }}
+            <div class="shadowed">
+                <Table 
+                    v-if="isSuccessCompanies && companies?.count"
+                    :headers="headers" 
+                    :table="companies?.organizations" 
+                    :to="routes.UPDATE_COMPANIES.name"
+                    @onActionDelete="deleteHandler"
+                />
+                <Pagination
+                    :count="companies?.count"
+                    :isSucces="isSuccessCompanies"
+                    :isEmpty="!!companies?.count"
+                />
+                <Spinner v-if="isLoadingCompanies" />
+                <div 
+                    v-if="(isSuccessCompanies && !companies?.count) || isError" 
+                    class="empty-table"
+                >
+                    {{ $t("emptyTableTitle") }}
+                </div>
             </div>
         </div>
     </section>

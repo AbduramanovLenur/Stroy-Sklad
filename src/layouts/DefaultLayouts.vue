@@ -25,10 +25,6 @@ const { isOpenPanel } = storeToRefs(panelStore);
 <style lang="scss" scoped>
 .main {
     margin: 20px;
-    -webkit-box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 33px -1px rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
     &-panel {
         width: 100%;
         margin-left: 255px;

@@ -1,5 +1,5 @@
 <template>
-    <div class="head-page">
+    <div class="head-page shadowed">
         <Title>
             {{ $t(title) }}
         </Title>
@@ -23,6 +23,7 @@ defineProps(["title", "to"]);
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+    margin-bottom: 20px;
 
     @media (max-width: 1024px) {
         display: grid;

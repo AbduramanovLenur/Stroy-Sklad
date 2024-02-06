@@ -6,19 +6,21 @@
                 :to="routes.CREATE_PRODUCTS.path"
                 @onSearch="($event) => setSearchValue($event)"
             />
-            <Table 
-                v-if="isSuccessProducts && products.length"
-                :headers="headers" 
-                :table="products"
-                :to="routes.UPDATE_PRODUCTS.name"
-                @onActionDelete="deleteHandler"
-            />
-            <Spinner v-if="isLoadingProducts" />
-            <div 
-                v-if="(isSuccessProducts && !products.length) || isError" 
-                class="empty-table"
-            >
-                {{ $t("emptyTableTitle") }}
+            <div class="shadowed">
+                <Table 
+                    v-if="isSuccessProducts && products.length"
+                    :headers="headers" 
+                    :table="products"
+                    :to="routes.UPDATE_PRODUCTS.name"
+                    @onActionDelete="deleteHandler"
+                />
+                <Spinner v-if="isLoadingProducts" />
+                <div 
+                    v-if="(isSuccessProducts && !products.length) || isError" 
+                    class="empty-table"
+                >
+                    {{ $t("emptyTableTitle") }}
+                </div>
             </div>
         </div>
     </section>

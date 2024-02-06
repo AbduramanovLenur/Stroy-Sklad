@@ -99,8 +99,8 @@ defineProps(["headers", "table", "to"]);
 <style lang="scss" scoped>
 .table {
     overflow-x: auto;
+    overflow-y: hidden;
     width: 100%;
-    margin-top: 30px;
 
     &-wrapper {
         border-collapse: collapse;
@@ -110,8 +110,18 @@ defineProps(["headers", "table", "to"]);
     }
 
     &-line {
-        &:nth-child(odd) {
-            background-color: rgb(240, 229, 229);
+        position: relative;
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--black-2);
+        }
+        &:after {
+            content: "";
+            background-color: var(--legrand);
+            height: 100%;
+            left: 0;
+            position: absolute;
+            width: 4px;
+            opacity: 0;
         }
     }
 
@@ -119,8 +129,7 @@ defineProps(["headers", "table", "to"]);
         font-size: 18px;
         font-weight: 500;
         text-transform: uppercase;
-        padding: 25px 10px;
-        background-color: #00ffff;
+        padding: 15px 10px;
     }
 
     &-info {
@@ -129,15 +138,32 @@ defineProps(["headers", "table", "to"]);
         padding: 15px 10px;
         white-space: pre-line;
         span {
-            padding: 10px;
+            position: relative;
+            padding: 10px 10px 10px 30px;
             border-radius: 10px;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                left: 10px;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
             &.active {
-                background-color: var(--green);
-                color: var(--white);
+                background-color: rgba(0, 128, 0, 0.2);
+                color: var(--green);
+                &::after {
+                    background-color: var(--green);
+                }
             }
             &.no-active {
-                background-color: var(--red);
-                color: var(--white);
+                background-color: rgba(255, 0, 0, 0.2);
+                color: var(--red);
+                &::after {
+                    background-color: var(--red);
+                }
             }
         }
         &:first-child {
@@ -151,6 +177,21 @@ th {
 tr {
     &:last-child {
         border-bottom: none;
+    }
+}
+
+@media (hover: hover) {
+    .table {
+        &-line {
+            &:not(:first-child) {
+                &:hover {
+                    background-color: rgba(var(--base-color-light-separators),.15);
+                    &::after {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
     }
 }
 </style>
