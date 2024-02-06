@@ -58,7 +58,7 @@
                 <td v-if="info.district" class="table-info" align="center">
                     {{ info.district }}
                 </td>
-                <td v-if="info.address" class="table-info" align="center">
+                <td v-if="info.address" class="table-info no-wraped" align="center">
                     {{ info.address }}
                 </td>
                 <td v-if="info.phoneNumber" class="table-info" align="center">
@@ -67,7 +67,7 @@
                 <td v-if="info.director" class="table-info" align="center">
                     {{ info.director }}
                 </td>
-                <td v-if="info.state" class="table-info" align="center">
+                <td v-if="info.state" class="table-info no-wraped" align="center">
                     <span :class="`${info.stateId === 1 ? 'active' : 'no-active'}`">
                         {{ info.state }}
                     </span>
@@ -137,6 +137,9 @@ defineProps(["headers", "table", "to"]);
         font-weight: 400;
         padding: 15px 10px;
         white-space: pre-line;
+        &.no-wraped {
+            white-space: nowrap;
+        }
         span {
             position: relative;
             padding: 10px 10px 10px 30px;
