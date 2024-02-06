@@ -55,12 +55,12 @@ const debouncedSearch = refDebounced(search, 500);
 const headers = ref([
     { id: 1, label: "organizationName", width: 220 },
     { id: 2, label: "organizationInn", width: 115 },
-    { id: 3, label: "organizationRegion", width: 215 },
+    { id: 3, label: "organizationRegion", width: 200 },
     { id: 4, label: "organizationDistrict", width: 155 },
     { id: 5, label: "organizationAddress", width: 200 },
     { id: 6, label: "organizationPhone", width: 170 },
-    { id: 7, label: "organizationDirector", width: 245 },
-    { id: 7, label: "organizationState", width: 100 },
+    { id: 7, label: "organizationDirector", width: 230 },
+    { id: 7, label: "organizationState", width: 130 },
     { id: 8, label: "organizationAction", width: 130 },
 ]);
 
