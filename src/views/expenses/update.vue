@@ -2,7 +2,7 @@
     <section class="manage section-height">
         <div class="manage__inner section-padding">
             <Title>
-                {{ $t("editProductTitle") }}
+                {{ $t("editExpensesTitle") }}
             </Title>
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -71,14 +71,14 @@ const {
 
 const state = ref({
     id: "",
-    fullname: "",
+    fullName: "",
     organizationId: "",
     stateId: ""
 });
 
 const rules = computed(() => ({
     id: { required },
-    fullname: { required },
+    fullName: { required },
     organizationId: { required },
     stateId: { required }
 }));
@@ -86,13 +86,13 @@ const rules = computed(() => ({
 const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
-    { 
+{ 
         id: 1, 
-        model: "fullname", 
-        label: "nameProductsLabel", 
-        placeholder: "nameProductsPlaceholder", 
-        icon: "pen",
-        errorKey: "fullname",
+        model: "fullName", 
+        label: "nameExpensesLabel", 
+        placeholder: "nameExpensesPlaceholder", 
+        icon: "input-company",
+        errorKey: "fullName",
     }
 ]);
 
@@ -100,7 +100,7 @@ const selects = ref([
     { 
         id: 1, 
         model: "stateId", 
-        label: "stateProductsLabel", 
+        label: "stateExpensesLabel", 
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates
@@ -108,11 +108,11 @@ const selects = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["productsById", slugId],
-    queryFn: () => getWithId("construction_material", slugId.value),
+    queryKey: ["expensesById", slugId],
+    queryFn: () => getWithId("cost", slugId.value),
     select: (data) => {
         state.value.id = data.id;
-        state.value.fullname = data.fullname;
+        state.value.fullName = data.fullname;
         state.value.organizationId = data.organizationId;
         state.value.stateId = data.stateId;
     }
@@ -125,11 +125,11 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
-    mutationFn: (body) => updateById("construction_material", body),
+    mutationFn: (body) => updateById("cost", body),
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["products"] });
-        queryClient.invalidateQueries({ queryKey: ["productsById", slugId] });
-        router.push(routes.PRODUCTS.path);
+        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["expensesById", slugId] });
+        router.push(routes.EXPENSES.path);
     }
 });
 

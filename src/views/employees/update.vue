@@ -201,7 +201,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["employeesById"] });
+        queryClient.invalidateQueries({ queryKey: ["employeesById", slugId] });
         
         setPagePagination(1);
         setLimitPagination(10);

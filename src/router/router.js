@@ -175,16 +175,36 @@ const routes = [
   //     roleId: "2",
   //   }
   // },
-  // {
-  //   name: "Expenses",
-  //   path: "/expenses",
-  //   component: () => import("@/views/expenses.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
+  {
+    name: routesList.EXPENSES.name,
+    path: routesList.EXPENSES.path,
+    component: () => import("@/views/expenses/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.CREATE_EXPENSES.name,
+    path: routesList.CREATE_EXPENSES.path,
+    component: () => import("@/views/expenses/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    },
+  },
+  {
+    name: routesList.UPDATE_EXPENSES.name,
+    path: routesList.UPDATE_EXPENSES.path,
+    component: () => import("@/views/expenses/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    },
+  },
   // {
   //   name: "Warehouse",
   //   path: "/warehouse",

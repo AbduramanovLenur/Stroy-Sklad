@@ -78,7 +78,7 @@ const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("organization", idx),
     onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["companies"] });
-        await queryClient.invalidateQueries({ queryKey: ["companiesById"] });
+        await queryClient.invalidateQueries({ queryKey: ["companiesById", companyId] });
     }
 });
 

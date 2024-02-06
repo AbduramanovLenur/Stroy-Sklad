@@ -129,5 +129,14 @@
   "nameProductsLabel": "Название материала",
   "nameProductsPlaceholder": "Материал...",
   "editProductTitle": "Редактирование материала",
-  "stateProductsLabel": "Состояние материала"
+  "stateProductsLabel": "Состояние материала",
+  "expensesTitle": "Типы затратов",
+  "expensesName": "Тип затрата",
+  "expensesState": "Состояние",
+  "expensesAction": "Действия",
+  "nameExpensesLabel": "Название затрата",
+  "nameExpensesPlaceholder": "Затрат...",
+  "stateExpensesLabel": "Состояние затрата",
+  "addNewExpensesTitle": "Создание затрат",
+  "editExpensesTitle": "Редактирование затрат"
 }

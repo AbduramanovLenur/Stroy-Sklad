@@ -216,7 +216,7 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("organization", body),
     onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["companies"] });
-        await queryClient.invalidateQueries({ queryKey: ["companiesById"] });
+        await queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
 
         setPagePagination(1);
         setLimitPagination(10);

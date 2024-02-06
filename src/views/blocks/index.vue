@@ -4,7 +4,7 @@
             <HeadPage 
                 title="blockTitle" 
                 :to="routes.CREATE_BLOCKS.path"
-                @onSearch="($event) => search = $event"
+                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessBlocks && blocks?.count"

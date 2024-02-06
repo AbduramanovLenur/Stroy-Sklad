@@ -129,5 +129,14 @@
   "nameProductsLabel": "Mahsulot nomi",
   "nameProductsPlaceholder": "Mahsulot...",
   "editProductTitle": "Mahsulot tahrirlash",
-  "stateProductsLabel": "Obyekt holati"
+  "stateProductsLabel": "Obyekt holati",
+  "expensesTitle": "Xarajat turlari",
+  "expensesName": "Xarajat turi",
+  "expensesState": "Holati",
+  "expensesAction": "Amallar",
+  "nameExpensesLabel": "Xarajat nomi",
+  "nameExpensesPlaceholder": "Xarajat...",
+  "stateExpensesLabel": "Xarajat holati",
+  "addNewExpensesTitle": "Xarajat yaratish",
+  "editExpensesTitle": "Xarajat tahrirlash"
 }

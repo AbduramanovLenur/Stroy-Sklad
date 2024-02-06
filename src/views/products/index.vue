@@ -4,7 +4,7 @@
             <HeadPage 
                 title="productsTitle" 
                 :to="routes.CREATE_PRODUCTS.path"
-                @onSearch="($event) => search = $event"
+                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessProducts && products.length"
@@ -25,15 +25,27 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useTableStore } from "@/store/tableStore";
+import { refDebounced } from "@vueuse/core";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 
-const search = ref("");
+const tableStore = useTableStore();
+const { setSearchValue } = tableStore;
+const { page, limit, search } = storeToRefs(tableStore);
+
+onMounted(() => {
+    setSearchValue("");
+});
+
 const productsId = ref("");
+
+const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "productsName", width: 725 },
@@ -47,8 +59,8 @@ const {
     isSuccess: isSuccessProducts,
     isError
 } = await useQuery({
-    queryKey: ["products"],
-    queryFn: () => getList("construction_material"),
+    queryKey: ["products", { page, limit, debouncedSearch }],
+    queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         return data.map((elem) => {
             const product = {
