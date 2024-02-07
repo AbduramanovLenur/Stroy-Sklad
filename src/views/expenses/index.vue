@@ -11,6 +11,7 @@
                 :headers="headers" 
                 :table="expenses?.cost"
                 :to="routes.UPDATE_EXPENSES.name"
+                :options="{ page, limit }"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

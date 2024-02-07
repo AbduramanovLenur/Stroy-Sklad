@@ -84,5 +84,18 @@ export const routes = {
     UPDATE_EXPENSES: {
         name: "UpdateExpenses",
         path: "/expenses/manage/:id"
+    },
+
+    WAREHOUSE: {
+        name: "Warehouse",
+        path: "/warehouse"
+    },
+    CREATE_WAREHOUSE: {
+        name: "CreateWarehouse",
+        path: "/warehouse/manage"
+    },
+    UPDATE_WAREHOUSE: {
+        name: "UpdateWarehouse",
+        path: "/warehouse/manage/:id"
     }
 }

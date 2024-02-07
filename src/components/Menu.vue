@@ -21,18 +21,19 @@
 import { ref } from "vue";
 import { usePanelStore } from "@/store/panelStore";
 import { storeToRefs } from "pinia";
+import { routes } from "@/utils/routes";
 
 const menu = ref([
-    { id: 1, label: "itemAdminCompanies", icon: "companies", to: "/companies", roleId: "1" },
+    { id: 1, label: "itemAdminCompanies", icon: "companies", to: routes.COMPANIES.path, roleId: "1" },
     { id: 2, label: "itemAdminEmployees", icon: "employees", to: "/employees", roleId: "1" },
-    { id: 3, label: "itemUserObjects", icon: "objects", to: "/objects", roleId: "2" },
-    { id: 4, label: "itemUserBlocks", icon: "blocks", to: "/blocks", roleId: "2" },
+    { id: 3, label: "itemUserObjects", icon: "objects", to: routes.OBJECTS.path, roleId: "2" },
+    { id: 4, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCKS.path, roleId: "2" },
     // { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
     // { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", roleId: "2" },
     // { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", roleId: "2" },
-    { id: 8, label: "itemUserExpenses", icon: "expenses", to: "/expenses", roleId: "2" },
-    // { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: "/warehouse", roleId: "2" },
-    { id: 10, label: "itemUserProducts", icon: "brick", to: "/products", roleId: "2" }
+    { id: 8, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, roleId: "2" },
+    { id: 9, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, roleId: "2" },
+    { id: 10, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, roleId: "2" },
 ]);
 
 const roleId = ref(localStorage.getItem('roleId'));

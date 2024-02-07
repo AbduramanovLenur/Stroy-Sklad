@@ -11,6 +11,7 @@
                 :headers="headers" 
                 :table="blocks?.blocks"
                 :to="routes.UPDATE_BLOCKS.name"
+                :options="{ page, limit }"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

@@ -205,16 +205,6 @@ const routes = [
       roleId: "2",
     },
   },
-  // {
-  //   name: "Warehouse",
-  //   path: "/warehouse",
-  //   component: () => import("@/views/warehouse.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
   {
     name: routesList.PRODUCTS.name,
     path: routesList.PRODUCTS.path,
@@ -245,6 +235,36 @@ const routes = [
       roleId: "2",
     }
   },
+  {
+    name: routesList.WAREHOUSE.name,
+    path: routesList.WAREHOUSE.path,
+    component: () => import("@/views/warehouse/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.CREATE_WAREHOUSE.name,
+    path: routesList.CREATE_WAREHOUSE.path,
+    component: () => import("@/views/warehouse/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.UPDATE_WAREHOUSE.name,
+    path: routesList.UPDATE_WAREHOUSE.path,
+    component: () => import("@/views/warehouse/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  }
 ];
 
 const router = createRouter({
@@ -257,19 +277,19 @@ router.beforeEach((to, from, next) => {
   const roleId = localStorage.getItem("roleId");
   const token = localStorage.getItem("token");
 
-  if (to?.name !== routesList.AUTH.name && !token) {
+  if (to?.name !== routesList.AUTH.name && (!token || !roleId)) {
     next({ name: routesList.AUTH.name });
-    return;
-  }
-
-  if (!roleId) {
-    next();
     return;
   }
 
   if (to?.name !== routesList.AUTH.name && to?.meta?.roleId !== roleId) {
     next({ name: routesList.HOME.name });
     return;
+  }
+
+  if (token && roleId && to?.name === routesList.AUTH.name) {
+    next({ name: routesList.HOME.name });
+    return
   }
 
   next();

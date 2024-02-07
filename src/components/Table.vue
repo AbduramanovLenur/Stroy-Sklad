@@ -17,7 +17,16 @@
             </tr>
             <tr class="table-line" v-for="(info, index) in table" :key="info.id">
                 <td v-if="info.id" class="table-info" align="center">
-                    {{ index + 1 }}
+                    {{ getId(index) }}
+                </td>
+                <td v-if="info.material" class="table-info" align="center">
+                    {{ info.material }}
+                </td>
+                <td v-if="info.quantity" class="table-info" align="center">
+                    {{ info.quantity }}
+                </td>
+                <td v-if="info.quantityType" class="table-info" align="center">
+                    {{ info.quantityType }}
                 </td>
                 <td v-if="info.name" class="table-info" align="center">
                     {{ info.name }}
@@ -93,7 +102,13 @@
 </template>
 
 <script setup>
-defineProps(["headers", "table", "to"]);
+import { computed } from "vue";
+
+const props = defineProps(["headers", "table", "to", "options"]);
+
+const getId = computed(() => {
+    return (id) => props.options.limit * (props.options.page - 1) + id + 1;
+});
 </script>
 
 <style lang="scss" scoped>

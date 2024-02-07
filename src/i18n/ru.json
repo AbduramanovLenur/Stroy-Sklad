@@ -122,7 +122,7 @@
   "blockState": "Состояние",
   "blockAction": "Действия",
   "productsTitle": "Материалы",
-  "productsName": "Название материала",
+  "productsName": "Тип материала",
   "productsState": "Состояние",
   "productsAction": "Действия",
   "addNewProductTitle": "Создание материала",
@@ -138,5 +138,17 @@
   "nameExpensesPlaceholder": "Затрат...",
   "stateExpensesLabel": "Состояние затрата",
   "addNewExpensesTitle": "Создание затрат",
-  "editExpensesTitle": "Редактирование затрат"
+  "editExpensesTitle": "Редактирование затрат",
+  "warehouseTitle": "Склад",
+  "warehouseName": "Названиние материала",
+  "warehouseQuantity": "Количество материала",
+  "warehouseQuantityType": "Величина",
+  "warehouseState": "Состояние",
+  "warehouseAction": "Действия",
+  "warehouseOrganization": "Название организации",
+  "qunatityTypesWarehouseLabel": "Величина материала",
+  "materialsWarehouseLabel": "Тип материала",
+  "stateWarehouseLabel": "Состояние материала",
+  "quantityWarehouseLabel": "Количество материала",
+  "quantityWarehousePlaceholder": "Количество..."
 }

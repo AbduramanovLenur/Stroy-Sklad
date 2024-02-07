@@ -129,6 +129,7 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["productsById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["materials"] });
         router.push(routes.PRODUCTS.path);
     }
 });

@@ -11,6 +11,7 @@
                 :headers="headers" 
                 :table="employees?.users" 
                 :to="routes.UPDATE_EMPLOYEES.name"
+                :options="{ page, limit }"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

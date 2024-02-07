@@ -11,3 +11,7 @@ export const manualGetRoles = () => request({ url: "manual/RoleSelectList", meth
 export const manualGetStates = () => request({ url: "manual/StateSelectList", method: "GET" });
 
 export const manualGetObjects = (idx) => request({ url: `manual/BuildingObjectSelectList/organizationId?organizationId=${idx}`, method: "GET" });
+
+export const manualQuantityTypes = () => request({ url: "manual/QuantityTypeSelectList", method: "GET" });
+
+export const manualConstructionMaterial = (idx) => request({ url: `manual/ConstructionMaterialSelectList/organizationId?organizationId=${idx}`, method: "GET" });

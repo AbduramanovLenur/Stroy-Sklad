@@ -11,6 +11,7 @@
                 :headers="headers" 
                 :table="products?.constructionMaterial"
                 :to="routes.UPDATE_PRODUCTS.name"
+                :options="{ page, limit }"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

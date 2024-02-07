@@ -70,6 +70,7 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("construction_material", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });
+        queryClient.invalidateQueries({ queryKey: ["materials"] });
         router.push(routes.PRODUCTS.path);
     }
 });

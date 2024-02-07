@@ -11,6 +11,7 @@
                 :headers="headers" 
                 :table="objects?.objects"
                 :to="routes.UPDATE_OBJECTS.name"
+                :options="{ page, limit }"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -91,19 +92,4 @@ const deleteHandler = async (idx) => {
 }
 </script>
 
-<style lang="scss" scoped>
-.object {
-    &__form {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        @media (max-width: 1024px) {
-            gap: 10px;
-        }
-        @media (max-width: 768px) {
-            grid-template-columns: repeat(1, 1fr);
-            gap: 20px;
-        }
-    }
-}
-</style>
+<style lang="scss" scoped></style>
