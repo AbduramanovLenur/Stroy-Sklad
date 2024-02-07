@@ -16,12 +16,11 @@
             <Pagination
                 :count="expenses?.count"
                 :isSucces="isSuccessExpenses"
-                :isEmpty="!!expenses?.count"
             />
             <Spinner v-if="isLoadingExpenses" />
             <div 
                 v-if="(isSuccessExpenses && !expenses.count) || isError" 
-                class="empty-table"
+                class="empty-table shadowed"
             >
                 {{ $t("emptyTableTitle") }}
             </div>
@@ -53,7 +52,6 @@ onMounted(() => {
 watch(search, () => {
     setPagePagination(1);
 });
-
 
 const expensesId = ref("");
 

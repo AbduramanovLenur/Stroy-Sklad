@@ -21,7 +21,7 @@
             <Spinner v-if="isLoadingCompanies" />
             <div 
                 v-if="(isSuccessCompanies && !companies?.count) || isError" 
-                class="empty-table"
+                class="empty-table shadowed"
             >
                 {{ $t("emptyTableTitle") }}
             </div>

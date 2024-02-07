@@ -1,5 +1,5 @@
 <template>
-    <div class="pagination shadowed" v-if="isSucces && isEmpty">
+    <div class="pagination shadowed" v-if="isSucces && !!count">
         <vue-awesome-paginate
             v-model="pageLocal"
             :total-items="count"
@@ -28,8 +28,7 @@ import { useTableStore } from "@/store/tableStore";
 
 defineProps([
     "count", 
-    "isSucces", 
-    "isEmpty",
+    "isSucces"
 ]);
 
 const tableStore = useTableStore();

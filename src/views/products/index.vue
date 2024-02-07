@@ -7,16 +7,20 @@
                 @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
-                v-if="isSuccessProducts && products.length"
+                v-if="isSuccessProducts && products?.count"
                 :headers="headers" 
-                :table="products"
+                :table="products?.constructionMaterial"
                 :to="routes.UPDATE_PRODUCTS.name"
                 @onActionDelete="deleteHandler"
             />
+            <Pagination
+                :count="products?.count"
+                :isSucces="isSuccessProducts"
+            />
             <Spinner v-if="isLoadingProducts" />
             <div 
-                v-if="(isSuccessProducts && !products.length) || isError" 
-                class="empty-table"
+                v-if="(isSuccessProducts && !products?.count) || isError" 
+                class="empty-table shadowed"
             >
                 {{ $t("emptyTableTitle") }}
             </div>
@@ -68,7 +72,9 @@ const {
     queryKey: ["products", { page, limit, debouncedSearch, organizationId }],
     queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
     select: (data) => {
-        return data.map((elem) => {
+        let productsList = [...data?.constructionMaterial];
+
+        productsList = productsList.map((elem) => {
             const product = {
                 ...elem
             }
@@ -77,6 +83,11 @@ const {
 
             return product;
         })
+
+        return {
+            constructionMaterial: productsList,
+            count: data?.count
+        }
     }
 });
 
