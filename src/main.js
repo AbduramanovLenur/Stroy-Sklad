@@ -12,7 +12,7 @@ import SwitcherLang from "@/components/SwitcherLang.vue";
 import HeadPage from "@/components/HeadPage.vue";
 import Title from "@/components/Title.vue";
 import FormSearch from "@/components/FormSearch.vue";
-import AddButton from "@/components/AddButton.vue";
+import MyButton from "@/components/MyButton.vue";
 import Table from "@/components/Table.vue";
 import FormInput from "@/components/FormInput.vue";
 import FormSelect from "@/components/FormSelect.vue";
@@ -20,7 +20,8 @@ import CustomButton from "@/components/CustomButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import Icon from "@/components/Icon.vue";
 import Pagination from "@/components/Pagination.vue";
-import PrimeVue from 'primevue/config';
+import ManageHead from "@/components/ManageHead.vue";
+import PrimeVue from "primevue/config";
 import App from "./App.vue";
 
 import "@/assets/styles/globals.scss";
@@ -54,13 +55,14 @@ app
   .component("HeadPage", HeadPage)
   .component("Title", Title)
   .component("FormSearch", FormSearch)
-  .component("AddButton", AddButton)
+  .component("MyButton", MyButton)
   .component("FormInput", FormInput)
   .component("FormSelect", FormSelect)
   .component("Table", Table)
   .component("CustomButton", CustomButton)
   .component("Icon", Icon)
   .component("Spinner", Spinner)
+  .component("ManageHead", ManageHead)
   .component("Pagination", Pagination);
 
 app

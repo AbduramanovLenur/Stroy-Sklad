@@ -6,10 +6,13 @@
         <FormSearch 
             @onSearch="($event) => $emit('onSearch', $event)" 
         />
-        <AddButton 
+        <MyButton 
             @onOpenFormModal="() => $emit('onOpenFormModal')" 
             :to="to"
-        />
+            icon="add-company"
+        >
+            {{ $t("addButton") }}
+        </MyButton>
     </div>
 </template>
 

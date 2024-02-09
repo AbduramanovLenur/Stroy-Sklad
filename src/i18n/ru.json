@@ -168,5 +168,6 @@
   "stateWarehouseLabel": "Состояние материала",
   "stateWarehousePlaceholder": "Состояние...",
   "quantityWarehouseLabel": "Количество материала",
-  "quantityWarehousePlaceholder": "Количество..."
+  "quantityWarehousePlaceholder": "Количество...",
+  "backButton": "Назад"
 }

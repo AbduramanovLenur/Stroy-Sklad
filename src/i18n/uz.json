@@ -168,5 +168,6 @@
   "stateWarehouseLabel": "Material holati",
   "stateWarehousePlaceholder": "Holati...",
   "quantityWarehouseLabel": "Materiallar miqdori",
-  "quantityWarehousePlaceholder": "Miqdori..."
+  "quantityWarehousePlaceholder": "Miqdori...",
+  "backButton": "Orqaga"
 }
