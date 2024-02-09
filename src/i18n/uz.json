@@ -14,6 +14,7 @@
   "itemUserOrgEmployees": "Xodimlar",
   "itemUserExpenses": "Xarajatlar",
   "itemUserWarehouse": "Sklad",
+  "itemUserApplications": "Arizalar",
   "itemUserProducts": "Mahsulot",
   "logoutButton": "Chiqish",
   "organization": "Kompaniya:",
@@ -109,6 +110,7 @@
   "updateToast": "Yangilangan",
   "blockTitle": "Bloklar",
   "addNewBlocksTitle": "Blok yaratish",
+  "editBlocksTitle": "Blok tahrirlash",
   "regionBlocksLabel": "Blok viloyat",
   "regionBlocksPlaceholder": "Viloyat...",
   "districtBlocksLabel": "Blok tuman",
@@ -169,5 +171,16 @@
   "stateWarehousePlaceholder": "Holati...",
   "quantityWarehouseLabel": "Materiallar miqdori",
   "quantityWarehousePlaceholder": "Miqdori...",
-  "backButton": "Orqaga"
+  "backButton": "Orqaga",
+  "applicationTitle": "Arizalar",
+  "applicationUserName": "To'liq ism",
+  "applicationOrganization": "Kompaniya",
+  "applicationDedline": "Topshirish muddati",
+  "applicationConstructionMaterial": "Materiallar",
+  "applicationObject": "Obyekt",
+  "applicationBlock": "Block",
+  "applicationFloor": "Qavat",
+  "applicationCost": "Xarajatlar",
+  "applicationState": "Holati",
+  "applicationAction": "Amallar"
 }

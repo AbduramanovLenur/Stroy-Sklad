@@ -1,9 +1,10 @@
 <template>
     <section class="manage section-height shadowed">
         <div class="manage__inner section-padding">
-            <Title>
-                {{ $t("addNewCompanyTitle") }}
-            </Title>
+            <ManageHead 
+                title="addNewCompanyTitle" 
+                :to="routes.COMPANIES.path"
+            />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
                     v-for="input in inputs"

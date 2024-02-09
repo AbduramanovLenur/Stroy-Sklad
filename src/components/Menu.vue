@@ -34,6 +34,7 @@ const menu = ref([
     { id: 8, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, roleId: "2" },
     { id: 9, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, roleId: "2" },
     { id: 10, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, roleId: "2" },
+    { id: 11, label: "itemUserApplications", icon: "info", to: routes.APPLICATIONS.path, roleId: "2" },
 ]);
 
 const roleId = ref(localStorage.getItem('roleId'));

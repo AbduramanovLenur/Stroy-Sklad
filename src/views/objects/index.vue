@@ -17,7 +17,6 @@
             <Pagination
                 :count="objects?.count"
                 :isSucces="isSuccessObjects"
-                :isEmpty="!!objects?.count"
             />
             <Spinner v-if="isLoadingObjects" />
             <div 
@@ -63,8 +62,8 @@ const headers = ref([
     { id: 1, label: "objectName", width: 385 },
     { id: 2, label: "objectOrganization", width: 480 },
     { id: 3, label: "objectAddress", width: 185 },
-    { id: 4, label: "objectState", width: 255 },
-    { id: 5, label: "objectAction", width: 255 }
+    { id: 4, label: "objectState" },
+    { id: 5, label: "objectAction" }
 ]);
 
 const {

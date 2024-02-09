@@ -17,7 +17,6 @@
             <Pagination
                 :count="blocks?.count"
                 :isSucces="isSuccessBlocks"
-                :isEmpty="!!blocks?.count"
             />
             <Spinner v-if="isLoadingBlocks" />
             <div 
@@ -66,8 +65,8 @@ const headers = ref([
     { id: 4, label: "blockFloors", width: 230 },
     { id: 5, label: "blockRooms", width: 235 },
     { id: 6, label: "blockAddress", width: 150 },
-    { id: 7, label: "blockState", width: 140 },
-    { id: 8, label: "blockAction", width: 125 }
+    { id: 7, label: "blockState" },
+    { id: 8, label: "blockAction" }
 ]);
 
 const {

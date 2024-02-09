@@ -63,8 +63,8 @@ const headers = ref([
     { id: 2, label: "warehouseQuantity", width: 345 },
     { id: 3, label: "warehouseQuantityType", width: 160 },
     { id: 4, label: "warehouseOrganization", width: 345 },
-    { id: 5, label: "warehouseState", width: 180 },
-    { id: 6, label: "warehouseAction", width: 160 }
+    { id: 5, label: "warehouseState" },
+    { id: 6, label: "warehouseAction" }
 ]);
 
 const {

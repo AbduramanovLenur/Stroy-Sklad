@@ -2,7 +2,7 @@
     <section class="manage section-height shadowed">
         <div class="manage__inner section-padding">
             <ManageHead 
-                title="editCompanyTitle" 
+                title="editBlocksTitle" 
                 :to="routes.BLOCKS.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">

@@ -264,7 +264,37 @@ const routes = [
       requiresAuth: true,
       roleId: "2",
     }
-  }
+  },
+  {
+    name: routesList.APPLICATIONS.name,
+    path: routesList.APPLICATIONS.path,
+    component: () => import("@/views/applications/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.CREATE_APPLICATIONS.name,
+    path: routesList.CREATE_APPLICATIONS.path,
+    component: () => import("@/views/applications/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.UPDATE_APPLICATIONS.name,
+    path: routesList.UPDATE_APPLICATIONS.path,
+    component: () => import("@/views/applications/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
 ];
 
 const router = createRouter({

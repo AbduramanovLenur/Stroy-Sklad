@@ -17,7 +17,6 @@
             <Pagination
                 :count="companies?.count"
                 :isSucces="isSuccessCompanies"
-                :isEmpty="!!companies?.count"
             />
             <Spinner v-if="isLoadingCompanies" />
             <div 
@@ -65,8 +64,8 @@ const headers = ref([
     { id: 5, label: "organizationAddress", width: 200 },
     { id: 6, label: "organizationPhone", width: 170 },
     { id: 7, label: "organizationDirector", width: 230 },
-    { id: 7, label: "organizationState", width: 130 },
-    { id: 8, label: "organizationAction", width: 130 },
+    { id: 7, label: "organizationState" },
+    { id: 8, label: "organizationAction" },
 ]);
 
 const {
