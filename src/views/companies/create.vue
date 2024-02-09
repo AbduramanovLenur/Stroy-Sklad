@@ -20,10 +20,11 @@
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
-                    v-model="state[select.model]" 
+                    v-model="state[select.model]"
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -81,8 +82,8 @@ const state = ref({
     address: "",
     phoneNumber: "",
     director: "",
-    regionId: "",
-    districtId: ""
+    regionId: [],
+    districtId: []
 });
 
 const rules = computed(() => ({
@@ -145,23 +146,29 @@ const selects = ref([
         id: 1, 
         model: "regionId", 
         label: "regionOrganizationLabel", 
+        placeholder: "regionOrganizationPlaceholder",
+        errorKey: "regionId",
         options: regions,
         success: isSuccessRegions,
-        loading: isLoadingRegions,
-        errorKey: "regionId"
+        loading: isLoadingRegions
     },
     { 
         id: 2, 
         model: "districtId", 
         label: "districtOrganizationLabel", 
+        placeholder: "districtOrganizationPlaceholder",
+        errorKey: "districtId",
         options: districts,
         success: isSuccessDistricts,
-        loading: isLoadingDistricts,
-        errorKey: "districtId"
+        loading: isLoadingDistricts
     }
 ]);
 
 const { mutate: createMutate } = useMutation({
+    onMutate: (body) => {
+        body.regionId = body.regionId[0];
+        body.districtId = body.districtId[0];
+    },
     mutationFn: (body) => create("organization", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });

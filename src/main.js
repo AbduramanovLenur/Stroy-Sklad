@@ -20,6 +20,7 @@ import CustomButton from "@/components/CustomButton.vue";
 import Spinner from "@/components/Spinner.vue";
 import Icon from "@/components/Icon.vue";
 import Pagination from "@/components/Pagination.vue";
+import PrimeVue from 'primevue/config';
 import App from "./App.vue";
 
 import "@/assets/styles/globals.scss";
@@ -68,6 +69,7 @@ app
   .use(createPinia())
   .use(VueQueryPlugin, options)
   .use(Toast)
-  .use(VueAwesomePaginate);
+  .use(VueAwesomePaginate)
+  .use(PrimeVue);
 
 app.mount("#app");

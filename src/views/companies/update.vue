@@ -19,11 +19,12 @@
                 </FormInput>
                 <FormSelect 
                     v-for="select in selects"
-                    :key="select.id"
-                    v-model="state[select.model]" 
+                    :key="select.id" 
+                    v-model="state[select.model]"
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -98,9 +99,9 @@ const state = ref({
     address: "",
     phoneNumber: "",
     director: "",
-    regionId: "",
-    districtId: "",
-    stateId: ""
+    regionId: [],
+    districtId: [],
+    stateId: []
 });
 
 const rules = computed(() => ({
@@ -165,28 +166,31 @@ const selects = ref([
         id: 1, 
         model: "regionId", 
         label: "regionOrganizationLabel", 
+        placeholder: "regionOrganizationPlaceholder",
+        errorKey: "regionId",
         options: regions,
         success: isSuccessRegions,
-        loading: isLoadingRegions,
-        errorKey: "regionId"
+        loading: isLoadingRegions
     },
     { 
         id: 2, 
         model: "districtId", 
         label: "districtOrganizationLabel", 
+        placeholder: "districtOrganizationPlaceholder",
+        errorKey: "districtId",
         options: districts,
         success: isSuccessDistricts,
-        loading: isLoadingDistricts,
-        errorKey: "districtId"
+        loading: isLoadingDistricts
     },
     { 
         id: 3, 
         model: "stateId", 
         label: "stateOrganizationLabel", 
+        placeholder: "stateOrganizationPlaceholder",
+        errorKey: "stateId",
         options: states,
         success: isSuccessStates,
-        loading: isLoadingStates,
-        errorKey: "stateId"
+        loading: isLoadingStates
     }
 ]);
 
@@ -200,9 +204,9 @@ const { isError } = await useQuery({
         state.value.address = data.address;
         state.value.phoneNumber = data.phoneNumber;
         state.value.director = data.director;
-        state.value.regionId = data.regionId;
-        state.value.districtId = data.districtId;
-        state.value.stateId = data.stateId;
+        state.value.regionId = [data?.regionId];
+        state.value.districtId = [data?.districtId];
+        state.value.stateId = [data?.stateId];
     }
 });
 
@@ -213,6 +217,11 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
+    onMutate: (body) => {
+        body.regionId = body.regionId[0];
+        body.districtId = body.districtId[0];
+        body.stateId = body.stateId[0];
+    },
     mutationFn: (body) => updateById("organization", body),
     onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ["companies"] });

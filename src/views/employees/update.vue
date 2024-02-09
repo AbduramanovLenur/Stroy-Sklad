@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -97,9 +98,9 @@ const state = ref({
     userName: "",
     password: "",
     phoneNumber: "",
-    organizationId: "",
-    roleId: "",
-    stateId: ""
+    organizationId: [],
+    roleId: [],
+    stateId: []
 });
 
 const rules = computed(() => ({
@@ -153,8 +154,9 @@ const selects = ref([
         id: 1, 
         model: "organizationId", 
         label: "employeesOrganizationLabel", 
-        options: organizations, 
+        placeholder: "employeesOrganizationPlaceholder", 
         errorKey: "organizationId",
+        options: organizations, 
         success: isSuccessOrganizations,
         loading: isLoadingOrganizations
     },
@@ -162,15 +164,17 @@ const selects = ref([
         id: 2, 
         model: "roleId", 
         label: "employeesRoleLabel", 
-        options: roles, 
+        placeholder: "employeesRolePlaceholder", 
         errorKey: "roleId", 
+        options: roles, 
         success: isSuccessRoles,
         loading: isLoadingRoles
     },
     { 
         id: 3, 
         model: "stateId", 
-        label: "employeesStateLabel", 
+        label: "employeesStatePlaceholder", 
+        placeholder: "employeesStatePlaceholder", 
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates
@@ -185,9 +189,9 @@ const { isError } = await useQuery({
         state.value.fullName = data.fullName;
         state.value.userName = data.userName;
         state.value.phoneNumber = data.phoneNumber;
-        state.value.organizationId = data.organizationId;
-        state.value.roleId = data.roleId;
-        state.value.stateId = data.stateId;
+        state.value.organizationId = [data.organizationId];
+        state.value.roleId = [data.roleId];
+        state.value.stateId = [data.stateId];
     }
 });
 
@@ -198,6 +202,11 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
+    onMutate: (body) => {
+        body.organizationId = body.organizationId[0];
+        body.roleId = body.roleId[0];
+        body.stateId = body.stateId[0];
+    },
     mutationFn: (body) => updateById("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });

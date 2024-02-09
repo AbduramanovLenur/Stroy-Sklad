@@ -1,47 +1,33 @@
 <template>
-    <label class="label" :style="`max-width: ${width}px;`">
+    <div class="label" :style="`max-width: ${width}px;`">
         <slot />
-        <span class="select-wrapper">
-            <select 
-                v-if="success && options.length" 
-                class="select" 
-                @change="($event) => $emit('update:modelValue', $event.target.value)"
-                :value="modelValue"
-            >
-                <option 
-                    v-for="option in options" 
-                    :key="option.id" 
-                    :value="option.id" 
-                    class="option"
-                >
-                    {{ option.name }}
-                </option>
-            </select>
-            <select 
-                v-if="loading || !success || !options.length" 
-                class="select"
-                :value="modelValue" 
-            >
-                <option>
-                    {{ $t("emptySelect") }}
-                </option>
-            </select>
-            <div class="select-icon">
-                <Icon name="down" />
-            </div>
-        </span>
+        <MultiSelect 
+            @change="changeValue"
+            :options="options" 
+            :modelValue="modelValue"
+            filter 
+            optionLabel="name" 
+            optionValue="id"
+            :placeholder="$t(placeholder)"
+            :loading="loading"
+            :disabled="loading"
+        >
+        </MultiSelect>
         <span 
             v-if="error" 
             class="error"
         >
             {{ textError }}
         </span>
-    </label>
+    </div>
 </template>
 
 <script setup>
-defineProps([
-    "modelValue", 
+import MultiSelect from 'primevue/multiselect';
+
+const emit = defineEmits(["update:modelValue"]);
+
+const props = defineProps([
     "width", 
     "placeholder", 
     "options", 
@@ -49,9 +35,19 @@ defineProps([
     "textError", 
     "success", 
     "loading",
-    "show",
-    "requestFlag"
+    "modelValue"
 ]);
+
+const changeValue = (event) => {
+    const value = event.value;
+    const options = [...value];
+
+    if (options.length > 1) {
+        options.shift();
+    }
+
+    emit('update:modelValue', options);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -62,36 +58,5 @@ defineProps([
     flex-direction: column;
     gap: 10px;
     width: 100%;
-}
-
-.select {
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 20px;
-    border: none;
-    height: 50px;
-    padding: 5px 30px;
-    width: 100%;
-    -webkit-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
-    @media (max-width: 480px) {
-        font-size: 14px;
-    }
-    &-wrapper {
-        position: relative;
-    }
-    &-icon {
-        position: absolute;
-        top: 60%;
-        transform: translateY(-60%);
-        right: 20px;
-    }
-}
-
-.option {
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 20px;
 }
 </style>

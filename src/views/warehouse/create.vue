@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -78,9 +79,9 @@ const {
 });
 
 const state = ref({
-    materialId: "",
+    materialId: [],
     quantity: "",
-    quantityTypeId: "",
+    quantityTypeId: [],
     organizationId: "",
 });
 
@@ -109,6 +110,8 @@ const selects = ref([
         id: 1, 
         model: "materialId", 
         label: "materialsWarehouseLabel", 
+        placeholder: "materialsWarehousePlaceholder",
+        errorKey: "materialId",
         options: materials,
         success: isSuccessMaterials,
         loading: isLoadingMaterials
@@ -117,6 +120,8 @@ const selects = ref([
         id: 2, 
         model: "quantityTypeId", 
         label: "qunatityTypesWarehouseLabel", 
+        placeholder: "qunatityTypesWarehousePlaceholder",
+        errorKey: "quantityTypeId",
         options: quantityTypes,
         success: isSuccessQunatityTypes,
         loading: isLoadingQunatityTypes
@@ -124,6 +129,10 @@ const selects = ref([
 ]);
 
 const { mutate: createMutate } = useMutation({
+    onMutate: (body) => {
+        body.materialId = body.materialId[0];
+        body.quantityTypeId = body.quantityTypeId[0];
+    },
     mutationFn: (body) => create("warehouse", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
@@ -135,6 +144,8 @@ const submitHandler = () => {
     state.value.organizationId = organizationId.value;
 
     v$.value.$validate();
+
+    console.log(v$.value.$errors);
 
     if (v$.value.$errors.length) {
         return;

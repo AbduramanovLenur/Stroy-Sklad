@@ -241,3 +241,101 @@ svg {
         color: #ff0000;
     }
 }
+
+.p-multiselect {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+    padding: 10px 20px;
+    border-radius: 20px;
+
+    &-panel  {
+        background-color: var(--white);
+        padding: 15px;
+        border-radius: 10px;
+        -webkit-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        overflow: hidden;
+        max-width: 500px;
+    }
+
+    &-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    &-filter-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 350px;
+        width: 100%;
+
+        svg {
+            -webkit-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+            -moz-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+            box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+            width: 35px;
+            height: 35px;
+            padding: 5px;
+            border-radius: 10px;
+        }
+    }
+    &-filter {
+        width: 100%;
+        border: none;
+        -webkit-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        padding: 5px;
+        border-radius: 10px;
+    }
+    &-items  {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 15px;
+        max-height: 195px;
+        overflow-y: auto;
+    }
+    &-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: 0.5s;
+        @media (hover: hover) {
+            &:hover {
+                background-color: rgba(0, 128, 0, 0.2);
+                color: var(--green);
+            }
+        }
+    }
+    &-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        -webkit-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        -moz-box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+        padding: 5px;
+        border-radius: 10px;
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+}
+
+.p-checkbox-box {
+    display: none;
+}
+
+.p-checkbox-input {
+    display: none;
+}

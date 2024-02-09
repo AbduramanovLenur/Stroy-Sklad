@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -73,7 +74,7 @@ const state = ref({
     id: "",
     fullname: "",
     organizationId: "",
-    stateId: ""
+    stateId: []
 });
 
 const rules = computed(() => ({
@@ -101,6 +102,8 @@ const selects = ref([
         id: 1, 
         model: "stateId", 
         label: "stateProductsLabel", 
+        placeholder: "stateProductsPlaceholder",
+        errorKey: "stateId",
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates
@@ -114,7 +117,7 @@ const { isError } = await useQuery({
         state.value.id = data.id;
         state.value.fullname = data.fullname;
         state.value.organizationId = data.organizationId;
-        state.value.stateId = data.stateId;
+        state.value.stateId = [data.stateId];
     }
 });
 
@@ -125,6 +128,9 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
+    onMutate: (body) => {
+        body.stateId = body.stateId[0];
+    },
     mutationFn: (body) => updateById("construction_material", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });

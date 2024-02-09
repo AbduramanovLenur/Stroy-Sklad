@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -80,8 +81,8 @@ const state = ref({
     userName: "",
     password: "",
     phoneNumber: "",
-    organizationId: "",
-    roleId: "",
+    organizationId: [],
+    roleId: [],
 });
 
 const rules = computed(() => ({
@@ -135,8 +136,9 @@ const selects = ref([
         id: 1, 
         model: "organizationId", 
         label: "employeesOrganizationLabel", 
-        options: organizations, 
+        placeholder: "employeesOrganizationPlaceholder", 
         errorKey: "organizationId",
+        options: organizations, 
         success: isSuccessOrganizations,
         loading: isLoadingOrganizations
     },
@@ -144,14 +146,19 @@ const selects = ref([
         id: 2, 
         model: "roleId", 
         label: "employeesRoleLabel", 
-        options: roles, 
+        placeholder: "employeesRolePlaceholder", 
         errorKey: "roleId", 
+        options: roles, 
         success: isSuccessRoles,
         loading: isLoadingRoles
     },
 ]);
 
 const { mutate: createMutate } = useMutation({
+    onMutate: (body) => {
+        body.organizationId = body.organizationId[0];
+        body.roleId = body.roleId[0];
+    },
     mutationFn: (body) => create("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });

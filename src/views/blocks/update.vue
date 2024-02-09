@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -104,10 +105,10 @@ const state = ref({
     numberOfFloors: "",
     roomsOnFloor: "",
     address: "",
-    buildingObjectId: 1,
-    regionId: "",
-    districtId: "",
-    stateId: "",
+    buildingObjectId: [],
+    regionId: [],
+    districtId: [],
+    stateId: [],
 });
 
 const rules = computed(() => ({
@@ -164,8 +165,9 @@ const selects = ref([
         id: 1, 
         model: "buildingObjectId", 
         label: "buildIdBlocksLabel", 
-        options: objectsList, 
+        placeholder: "buildIdBlocksPlaceholder",
         errorKey: "buildingObjectId", 
+        options: objectsList, 
         success: isSuccessObjectsList,
         loading: isLoadingObjectsList
     },
@@ -173,8 +175,9 @@ const selects = ref([
         id: 2, 
         model: "regionId", 
         label: "regionBlocksLabel", 
-        options: regions, 
+        placeholder: "regionBlocksPlaceholder",
         errorKey: "regionId",
+        options: regions, 
         success: isSuccessRegions,
         loading: isLoadingRegions
     },
@@ -182,8 +185,9 @@ const selects = ref([
         id: 3, 
         model: "districtId", 
         label: "districtBlocksLabel", 
-        options: districts, 
+        placeholder: "districtBlocksPlaceholder",
         errorKey: "districtId", 
+        options: districts, 
         success: isSuccessDistricts,
         loading: isLoadingDistricts
     },
@@ -191,10 +195,11 @@ const selects = ref([
         id: 4, 
         model: "stateId", 
         label: "stateBlocksLabel", 
+        placeholder: "stateBlocksPlaceholder",
+        errorKey: "stateId",
         options: states,
         success: isSuccessStates,
-        loading: isLoadingStates,
-        errorKey: "stateId"
+        loading: isLoadingStates
     }
 ]);
 
@@ -207,10 +212,10 @@ const { isError } = await useQuery({
         state.value.numberOfFloors = data.numberOfFloors;
         state.value.roomsOnFloor = data.roomsOnFloor;
         state.value.address = data.address;
-        state.value.buildingObjectId = data.buildingObjectId;
-        state.value.regionId = data.regionId;
-        state.value.districtId = data.districtId;
-        state.value.stateId = data.stateId;
+        state.value.buildingObjectId = [data.buildingObjectId];
+        state.value.regionId = [data.regionId];
+        state.value.districtId = [data.districtId];
+        state.value.stateId = [data.stateId];
     }
 });
 
@@ -221,6 +226,12 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
+    onMutate: (body) => {
+        body.buildingObjectId = body.buildingObjectId[0];
+        body.regionId = body.regionId[0];
+        body.districtId = body.districtId[0];
+        body.stateId = body.stateId[0];
+    },
     mutationFn: (body) => updateById("building_block", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["blocks"] });

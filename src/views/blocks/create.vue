@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -91,9 +92,9 @@ const state = ref({
     numberOfFloors: "",
     roomsOnFloor: "",
     address: "",
-    buildingObjectId: "",
-    regionId: "",
-    districtId: "",
+    buildingObjectId: [],
+    regionId: [],
+    districtId: [],
 });
 
 const rules = computed(() => ({
@@ -148,8 +149,9 @@ const selects = ref([
         id: 1, 
         model: "buildingObjectId", 
         label: "buildIdBlocksLabel", 
-        options: objectsList, 
+        placeholder: "buildIdBlocksPlaceholder",
         errorKey: "buildingObjectId", 
+        options: objectsList, 
         success: isSuccessObjectsList,
         loading: isLoadingObjectsList
     },
@@ -157,8 +159,9 @@ const selects = ref([
         id: 2, 
         model: "regionId", 
         label: "regionBlocksLabel", 
-        options: regions, 
+        placeholder: "regionBlocksPlaceholder",
         errorKey: "regionId",
+        options: regions, 
         success: isSuccessRegions,
         loading: isLoadingRegions
     },
@@ -166,14 +169,20 @@ const selects = ref([
         id: 3, 
         model: "districtId", 
         label: "districtBlocksLabel", 
-        options: districts, 
+        placeholder: "districtBlocksPlaceholder",
         errorKey: "districtId", 
+        options: districts, 
         success: isSuccessDistricts,
         loading: isLoadingDistricts
     }
 ]);
 
 const { mutate: createMutate } = useMutation({
+    onMutate: (body) => {
+        body.buildingObjectId = body.buildingObjectId[0];
+        body.regionId = body.regionId[0];
+        body.districtId = body.districtId[0];
+    },
     mutationFn: (body) => create("building_block", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["blocks"] });

@@ -24,6 +24,7 @@
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 
+                    :placeholder="select?.placeholder"
                     :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
                     :success="select.success"
                     :loading="select.loading"
@@ -91,11 +92,11 @@ const {
 
 const state = ref({
     id: "",
-    materialId: "",
+    materialId: [],
     quantity: "",
-    quantityTypeId: "",
+    quantityTypeId: [],
     organizationId: "",
-    stateId: ""
+    stateId: []
 });
 
 const rules = computed(() => ({
@@ -125,6 +126,8 @@ const selects = ref([
         id: 1, 
         model: "materialId", 
         label: "materialsWarehouseLabel", 
+        placeholder: "materialsWarehousePlaceholder",
+        errorKey: "materialId",
         options: materials,
         success: isSuccessMaterials,
         loading: isLoadingMaterials
@@ -133,6 +136,8 @@ const selects = ref([
         id: 2, 
         model: "quantityTypeId", 
         label: "qunatityTypesWarehouseLabel", 
+        placeholder: "qunatityTypesWarehousePlaceholder",
+        errorKey: "quantityTypeId",
         options: quantityTypes,
         success: isSuccessQunatityTypes,
         loading: isLoadingQunatityTypes
@@ -141,6 +146,8 @@ const selects = ref([
         id: 3, 
         model: "stateId", 
         label: "stateWarehouseLabel", 
+        placeholder: "stateWarehousePlaceholder",
+        errorKey: "stateId",
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates
@@ -152,11 +159,11 @@ const { isError } = await useQuery({
     queryFn: () => getWithId("warehouse", slugId.value),
     select: (data) => {
         state.value.id = data.id;
-        state.value.materialId = data.materialId;
+        state.value.materialId = [data.materialId];
         state.value.quantity = data.quantity;
-        state.value.quantityTypeId = data.quantityTypeId;
+        state.value.quantityTypeId = [data.quantityTypeId];
         state.value.organizationId = data.organizationId;
-        state.value.stateId = data.stateId;
+        state.value.stateId = [data.stateId];
     }
 });
 
@@ -167,6 +174,11 @@ watch(isError, (value) => {
 });
 
 const { mutate: updateMutate } = useMutation({
+    onMutate: (body) => {
+        body.materialId = body.materialId[0];
+        body.quantityTypeId = body.quantityTypeId[0];
+        body.stateId = body.stateId[0];
+    },
     mutationFn: (body) => updateById("warehouse", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
