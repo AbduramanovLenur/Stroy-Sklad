@@ -165,16 +165,36 @@ const routes = [
   //     roleId: "2",
   //   }
   // },
-  // {
-  //   name: "Organization-employees",
-  //   path: "/organization-employees",
-  //   component: () => import("@/views/organization-employees.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
+  {
+    name: routesList.ORG_USER.name,
+    path: routesList.ORG_USER.path,
+    component: () => import("@/views/org-user/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.CREATE_ORG_USER.name,
+    path: routesList.CREATE_ORG_USER.path,
+    component: () => import("@/views/org-user/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
+  {
+    name: routesList.UPDATE_ORG_USER.name,
+    path: routesList.UPDATE_ORG_USER.path,
+    component: () => import("@/views/org-user/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: "2",
+    }
+  },
   {
     name: routesList.EXPENSES.name,
     path: routesList.EXPENSES.path,

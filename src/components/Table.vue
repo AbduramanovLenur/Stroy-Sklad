@@ -76,7 +76,7 @@
                 <td v-if="info.director" class="table-info" align="center">
                     {{ info.director }}
                 </td>
-                <td v-if="info.state" class="table-info no-wraped" align="center">
+                <td v-if="info.state" class="table-info table-status" align="center">
                     <span :class="`${info.stateId === 1 ? 'active' : 'no-active'}`">
                         {{ info.state }}
                     </span>
@@ -133,6 +133,7 @@ const getId = computed(() => {
             content: "";
             background-color: var(--legrand);
             height: 100%;
+            top: 0;
             left: 0;
             position: absolute;
             width: 4px;
@@ -152,9 +153,21 @@ const getId = computed(() => {
         font-weight: 400;
         padding: 15px 10px;
         white-space: pre-line;
-        &.no-wraped {
-            white-space: nowrap;
+        &:first-child {
+            font-weight: 600;
         }
+        // &:last-child {
+        //     display: flex;
+        //     justify-content: center;
+        //     align-items: center;
+        //     gap: 30px;
+        // }
+    }
+    &-delete {
+        margin-left: 30px;
+    }
+    &-status {
+        white-space: nowrap;
         span {
             position: relative;
             padding: 10px 10px 10px 30px;
@@ -183,9 +196,6 @@ const getId = computed(() => {
                     background-color: var(--red);
                 }
             }
-        }
-        &:first-child {
-            font-weight: 600;
         }
     }
 }

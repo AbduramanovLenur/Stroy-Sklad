@@ -2,6 +2,7 @@
     <div class="label" :style="`max-width: ${width}px;`">
         <slot />
         <MultiSelect 
+            ref="multiselectRef"
             @change="changeValue"
             :options="options" 
             :modelValue="modelValue"
@@ -23,7 +24,10 @@
 </template>
 
 <script setup>
-import MultiSelect from 'primevue/multiselect';
+import { ref } from "vue";
+import MultiSelect from "primevue/multiselect";
+
+const multiselectRef = ref(null);
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -47,6 +51,8 @@ const changeValue = (event) => {
     }
 
     emit('update:modelValue', options);
+
+    multiselectRef.value.hide();
 }
 </script>
 

@@ -30,7 +30,7 @@ const menu = ref([
     { id: 4, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCKS.path, roleId: "2" },
     // { id: 5, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
     // { id: 6, label: "itemUserRoles", icon: "roles", to: "/roles", roleId: "2" },
-    // { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: "/organization-employees", roleId: "2" },
+    { id: 7, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, roleId: "2" },
     { id: 8, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, roleId: "2" },
     { id: 9, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, roleId: "2" },
     { id: 10, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, roleId: "2" },

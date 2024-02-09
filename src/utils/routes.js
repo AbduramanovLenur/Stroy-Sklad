@@ -110,5 +110,18 @@ export const routes = {
     UPDATE_APPLICATIONS: {
         name: "UpdateApplications",
         path: "/applications/manage/:id"
-    }
+    },
+
+    ORG_USER: {
+        name: "OrganizationUser",
+        path: "/organization-employees"
+    },
+    CREATE_ORG_USER: {
+        name: "CreateOrganizationUser",
+        path: "/organization-employees/manage"
+    },
+    UPDATE_ORG_USER: {
+        name: "UpdateOrganizationUser",
+        path: "/organization-employees/manage/:id"
+    },
 }
