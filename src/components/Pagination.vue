@@ -4,7 +4,7 @@
             v-model="pageLocal"
             :total-items="count"
             :items-per-page="limit"
-            :max-pages-shown="5"
+            :max-pages-shown="2"
         />
         <select 
             v-model="limitLocal"
@@ -68,13 +68,23 @@ watch(limitLocal, (value) => {
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+    @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 20px;
+    }
     &-select {
+        text-align: center;
         margin-left: 20px;
         -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
         box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
         padding: 10px;
         border-radius: 10px;
+
+        @media (max-width: 480px) {
+            font-size: 14px;
+            padding: 8px;
+        }
     }
 }
 </style>

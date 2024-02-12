@@ -37,7 +37,7 @@ const switchLang = (lang) => {
 
     locale.value = lang;
     localStorage.setItem('lang', locale.value);
-    window.location.reload();
+    // window.location.reload();
 }
 </script>
 
