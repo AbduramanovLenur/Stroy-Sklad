@@ -16,24 +16,39 @@
                         {{ $t("login") }}
                     </h2>
                     <form class="auth__form" @submit.prevent="authHandler">
-                        <label 
-                            v-for="input in inputs" 
-                            :key="input.id" 
-                            class="auth__label"
-                        >
-                            {{ $t(input.label) }}
+                        <label class="auth__label">
+                            {{ $t("loginLabel") }}
                             <input 
                                 class="auth__input" 
-                                :type="input.type" 
-                                v-model="formData[input.model]" 
-                                :name="input.name" 
-                                :placeholder="$t(input.placeholder)"
+                                type="text" 
+                                v-model="formData.userName"
+                                :placeholder="$t('loginPlaceholder')"
                             >
                             <span 
-                                v-if="v$?.[input.errorKey].$error" 
+                                v-if="v$?.userName?.$error" 
                                 class="error-white"
                             >
-                                {{ v$?.[input.errorKey].$errors[0]?.$message }}
+                                {{ v$?.userName?.$errors[0]?.$message }}
+                            </span>
+                        </label>
+                        <label class="auth__label">
+                            {{ $t("passwordLabel") }}
+                            <span class="auth__label-wrapper">
+                                <input 
+                                    class="auth__input" 
+                                    :type="isShow ? 'text' : 'password'" 
+                                    v-model="formData.password"
+                                    :placeholder="$t('passwordPlaceholder')"
+                                >
+                                <span class="auth__label-icon" @click="() => isShow = !isShow">
+                                    <Icon name="eye" />
+                                </span>
+                            </span>
+                            <span 
+                                v-if="v$?.password?.$error" 
+                                class="error-white"
+                            >
+                                {{ v$?.password?.$errors[0]?.$message }}
                             </span>
                         </label>
                         <button class="auth__submit" type="submit">
@@ -62,6 +77,8 @@ import { loginUser } from "@/services/auth.services.js";
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const isShow = ref(false);
 
 const formData = ref({
     userName: "",
@@ -201,11 +218,20 @@ const authHandler = () => {
         @media (max-width: 480px) {
             margin-bottom: 20px;
         }
+        &-wrapper {
+            position: relative;
+        }
+        &-icon {
+            position: absolute;
+            top: 65%;
+            transform: translateY(-50%);
+            right: 20px;
+        }
     }
     &__input {
         width: 100%;
         height: 50px;
-        padding: 0 25px;
+        padding: 0 50px 0 25px;
         border-radius: 10px;
         border: 1px solid var(--light);
         color: var(--black);
