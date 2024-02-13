@@ -50,6 +50,7 @@ const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);
 
 const logoutHandler = () => {
+    localStorage.removeItem("id");
     localStorage.removeItem("token");
     localStorage.removeItem("name");
     localStorage.removeItem("role");

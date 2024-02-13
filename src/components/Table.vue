@@ -34,6 +34,12 @@
                 <td v-if="info.company" class="table-info" align="center">
                     {{ info.company }}
                 </td>
+                <td v-if="info.docDate" class="table-info" align="center">
+                    {{ info.docDate }}
+                </td>
+                <td v-if="info.deadline" class="table-info" align="center">
+                    {{ info.deadline }}
+                </td>
                 <td v-if="info.phone" class="table-info" align="center">
                     {{ info.phone }}
                 </td>
@@ -45,6 +51,12 @@
                 </td>
                 <td v-if="info.objectName" class="table-info" align="center">
                     {{ info.objectName }}
+                </td>
+                <td v-if="info.blockName" class="table-info" align="center">
+                    {{ info.blockName }}
+                </td>
+                <td v-if="info.cost" class="table-info" align="center">
+                    {{ info.cost }}
                 </td>
                 <td v-if="info.organizationName" class="table-info" align="center">
                     {{ info.organizationName }}
@@ -81,6 +93,11 @@
                         {{ info.state }}
                     </span>
                 </td>
+                <td v-if="info.status" class="table-info table-status" align="center">
+                    <span :class="`${info.statusId === 1 ? 'active' : 'no-active'}`">
+                        {{ info.status }}
+                    </span>
+                </td>
                 <td class="table-info" align="center">
                     <router-link
                         :to="{ name: to, params: { id: info.id } }" 
@@ -89,7 +106,7 @@
                         <Icon name="edit" />
                     </router-link>
                     <span 
-                        v-if="info.stateId === 1"
+                        v-if="info.stateId === 1 || info.statusId === 1"
                         class="table-delete" 
                         @click="() => $emit('onActionDelete', info.id)"
                     >

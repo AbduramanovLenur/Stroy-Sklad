@@ -59,6 +59,8 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
+const organizationId = ref(localStorage.getItem("organizationId"));
+
 const {
     data: roles,
     isSuccess: isSuccessRoles,
@@ -73,7 +75,7 @@ const state = ref({
     userName: "",
     password: "",
     phoneNumber: "",
-    organizationId: "",
+    organizationId: organizationId.value,
     roleId: [],
 });
 
@@ -148,9 +150,6 @@ const { mutate: createMutate } = useMutation({
 });
 
 const submitHandler = () => {
-    const organizationId = localStorage.getItem("organizationId");
-    state.value.organizationId = organizationId;
-
     v$.value.$validate();
 
     if (v$.value.$errors.length) {

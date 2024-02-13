@@ -189,8 +189,6 @@ const { mutate: updateMutate } = useMutation({
 });
 
 const submitHandler = async () => {
-    state.value.organizationId = organizationId.value;
-
     v$.value.$validate();
 
     if (v$.value.$errors.length) {

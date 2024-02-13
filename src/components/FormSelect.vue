@@ -8,12 +8,11 @@
             :modelValue="modelValue"
             filter 
             optionLabel="name" 
-            optionValue="id"
+            :optionValue="optionValue ? optionValue : 'id'"
             :placeholder="$t(placeholder)"
             :loading="loading"
-            :disabled="loading"
-        >
-        </MultiSelect>
+            :disabled="loading || !options?.length"
+        />
         <span 
             v-if="error" 
             class="error"
@@ -39,14 +38,16 @@ const props = defineProps([
     "textError", 
     "success", 
     "loading",
-    "modelValue"
+    "modelValue",
+    "isMultiSelect",
+    "optionValue"
 ]);
 
 const changeValue = (event) => {
     const value = event.value;
     const options = [...value];
 
-    if (options.length > 1) {
+    if (options.length > 1 && !props.isMultiSelect) {
         options.shift();
     }
 

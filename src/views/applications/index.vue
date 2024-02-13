@@ -59,16 +59,15 @@ const applicationId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "applicationUserName", width: 150 },
-    { id: 2, label: "applicationOrganization", width: 220 },
-    { id: 3, label: "applicationDedline", width: 265 },
-    { id: 4, label: "applicationConstructionMaterial", width: 175 },
-    { id: 5, label: "applicationObject", width: 115 },
-    { id: 6, label: "applicationBlock", width: 105 },
-    { id: 7, label: "applicationFloor", width: 100 },
-    { id: 8, label: "applicationCost", width: 165 },
-    { id: 9, label: "applicationState", width: 130 },
-    { id: 9, label: "applicationAction", width: 110 }
+    { id: 1, label: "applicationUserName", width: 130 },
+    { id: 2, label: "applicationOrganization", width: 185 },
+    { id: 3, label: "applicationDocDate", width: 210 },
+    { id: 4, label: "applicationDedline", width: 240 },
+    { id: 5, label: "applicationObject", width: 100 },
+    { id: 6, label: "applicationBlock", width: 95 },
+    { id: 7, label: "applicationCost", width: 330 },
+    { id: 8, label: "applicationState" },
+    { id: 9, label: "applicationAction" }
 ]);
 
 const {
@@ -78,11 +77,31 @@ const {
     isError
 } = await useQuery({
     queryKey: ["applications", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("api", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value })
+    queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
+    select: (data) => {
+        let applications = {...data};
+
+        applications.applications = applications?.applications.map((elem) => {
+            const application = {
+                ...elem,
+                name: elem.userName,
+                company: elem.organizationName,
+            }
+
+            delete application.userName;
+            delete application.organizationName;
+            delete application.state;
+            delete application.stateId;
+
+            return application;
+        })
+
+        return applications;
+    }
 });
 
 const { mutate: mutateDelete } = useMutation({
-    mutationFn: (idx) => deleteWithId("api", idx),
+    mutationFn: (idx) => deleteWithId("application", idx),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", applicationId] });

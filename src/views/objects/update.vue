@@ -198,9 +198,6 @@ const { mutate: updateMutate } = useMutation({
 });
 
 const submitHandler = async () => {
-    const organizationId = localStorage.getItem("organizationId");
-    state.value.organizationId = organizationId;
-
     v$.value.$validate();
 
     if (v$.value.$errors.length) {

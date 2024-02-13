@@ -83,7 +83,7 @@ const state = ref({
     materialId: [],
     quantity: "",
     quantityTypeId: [],
-    organizationId: "",
+    organizationId: organizationId.value,
 });
 
 const rules = computed(() => ({
@@ -142,11 +142,7 @@ const { mutate: createMutate } = useMutation({
 });
 
 const submitHandler = () => {
-    state.value.organizationId = organizationId.value;
-
     v$.value.$validate();
-
-    console.log(v$.value.$errors);
 
     if (v$.value.$errors.length) {
         return;

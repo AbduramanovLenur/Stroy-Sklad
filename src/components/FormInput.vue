@@ -4,7 +4,7 @@
         <span class="label-wrapper">
             <input 
                 class="input" 
-                type="text" 
+                :type="type ? type : 'text'" 
                 :placeholder="placeholder" 
                 :value="modelValue" 
                 @input="($event) => $emit('update:modelValue', $event.target.value)"
@@ -29,7 +29,8 @@ defineProps([
     "name", 
     "placeholder", 
     "error", 
-    "textError"
+    "textError",
+    "type"
 ]);
 </script>
 

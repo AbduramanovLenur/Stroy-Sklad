@@ -102,6 +102,7 @@ const { mutate: loginMutate } = useMutation({
         const { 
             token, 
             user: {
+                id,
                 role, 
                 fullName, 
                 organizationName,
@@ -110,6 +111,7 @@ const { mutate: loginMutate } = useMutation({
             }
         } = data;
 
+        localStorage.setItem("id", id);
         localStorage.setItem("token", token);
         localStorage.setItem("name", fullName);
         localStorage.setItem("role", role);
