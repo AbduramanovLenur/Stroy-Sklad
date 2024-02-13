@@ -196,5 +196,7 @@
   "objectAppPlaceholder": "Obyekt...",
   "blockAppLabel": "Block nomi",
   "blockAppPlaceholder": "Block...",
-  "editApplicationTitle": "Ariza tahrirlash"
+  "editApplicationTitle": "Ariza tahrirlash",
+  "appRoleLabel": "Arizani oluvchi",
+  "appRolePlaceholder": "Oluvchi..."
 }

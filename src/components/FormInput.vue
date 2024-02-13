@@ -8,6 +8,7 @@
                 :placeholder="placeholder" 
                 :value="modelValue" 
                 @input="($event) => $emit('update:modelValue', $event.target.value)"
+                :disabled="isDisabled"
             >
             <span class="label-icon">
                 <Icon :name="name" />
@@ -30,7 +31,8 @@ defineProps([
     "placeholder", 
     "error", 
     "textError",
-    "type"
+    "type",
+    "isDisabled"
 ]);
 </script>
 

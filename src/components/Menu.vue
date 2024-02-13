@@ -3,7 +3,7 @@
         <ul class="menu-list">
             <template v-for="item in menu" :key="item.id">
                 <li v-if="item?.roleId === roleId" class="menu-item">
-                    <router-link :to="item.to" class="menu-link">
+                    <router-link :to="item.to" :class="`menu-link ${isOpenPanel ? 'centered' : ''}`">
                         <span class="menu-icon">
                             <Icon :name="item.icon" />
                         </span>
@@ -70,6 +70,9 @@ const { isOpenPanel } = storeToRefs(panelStore);
         transition: 0.5s;
         @media (max-width: 768px) {
             gap: 10px;
+        }
+        &.centered {
+            justify-content: center;
         }
         &.router-link-active  {
             border-color: var(--white);

@@ -103,7 +103,8 @@
                         :to="{ name: to, params: { id: info.id } }" 
                         class="table-edit"
                     >
-                        <Icon name="edit" />
+                        <Icon name="eye" v-if="isShow" />
+                        <Icon name="edit" v-else />
                     </router-link>
                     <span 
                         v-if="info.stateId === 1 || info.statusId === 1"
@@ -121,7 +122,7 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["headers", "table", "to", "options"]);
+const props = defineProps(["headers", "table", "to", "options", "isShow"]);
 
 const getId = computed(() => {
     return (id) => props.options.limit * (props.options.page - 1) + id + 1;

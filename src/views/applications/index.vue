@@ -12,6 +12,7 @@
                 :table="applications?.applications"
                 :to="routes.UPDATE_APPLICATIONS.name"
                 :options="{ page, limit }"
+                :isShow="true"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -45,6 +46,7 @@ const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
 const organizationId = ref(localStorage.getItem("organizationId"));
+const roleId = ref(localStorage.getItem("roleId"));
 
 onMounted(() => {
     setSearchValue("");
@@ -76,8 +78,8 @@ const {
     isSuccess: isSuccessApplications,
     isError
 } = await useQuery({
-    queryKey: ["applications", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
+    queryKey: ["applications", { page, limit, debouncedSearch, organizationId, roleId }],
+    queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value, roleId: roleId.value }),
     select: (data) => {
         let applications = {...data};
 

@@ -197,5 +197,7 @@
   "objectAppPlaceholder": "Объект...",
   "blockAppLabel": "Название блока",
   "blockAppPlaceholder": "Блок...",
-  "editApplicationTitle": "Редактирование заявления"
+  "editApplicationTitle": "Редактирование заявления",
+  "appRoleLabel": "Получатель заявления",
+  "appRolePlaceholder": "Получатель..."
 }

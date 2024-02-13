@@ -8,10 +8,10 @@
             :modelValue="modelValue"
             filter 
             optionLabel="name" 
-            :optionValue="optionValue ? optionValue : 'id'"
+            optionValue="id"
             :placeholder="$t(placeholder)"
             :loading="loading"
-            :disabled="loading || !options?.length"
+            :disabled="loading || !options?.length || isDisabled"
         />
         <span 
             v-if="error" 
@@ -40,7 +40,7 @@ const props = defineProps([
     "loading",
     "modelValue",
     "isMultiSelect",
-    "optionValue"
+    "isDisabled"
 ]);
 
 const changeValue = (event) => {

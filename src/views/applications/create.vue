@@ -31,7 +31,6 @@
                     :success="select.success"
                     :loading="select.loading"
                     :isMultiSelect="select?.multiple"
-                    :optionValue="select?.optionValue"
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
@@ -59,7 +58,8 @@ import {
     manualGetFloors, 
     manualGetCost, 
     manualGetObjects, 
-    manualGetBlocks 
+    manualGetBlocks,
+    manualGetRoles
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 
@@ -101,6 +101,15 @@ const {
 });
 
 const {
+    data: roles,
+    isSuccess: isSuccessRoles,
+    isLoading: isLoadingRoles
+} = await useQuery({
+    queryKey: ["roles"],
+    queryFn: () => manualGetRoles()
+});
+
+const {
     data: objects,
     isSuccess: isSuccessObjects,
     isLoading: isLoadingObjects
@@ -116,8 +125,9 @@ const state = ref({
     constructionMaterialIds: [],
     buildingObjectId: [],
     buildingBlockId: [],
-    floor: [],
+    floorId: [],
     costId: [],
+    roleIds: []
 });
 
 const valueObject = computed(() => state.value.buildingObjectId);
@@ -147,8 +157,9 @@ const rules = computed(() => ({
     constructionMaterialIds: { required },
     buildingObjectId: { required },
     buildingBlockId: { required },
-    floor: { required },
+    floorId: { required },
     costId: { required },
+    roleIds: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
@@ -168,14 +179,13 @@ const inputs = ref([
 const selects = ref([
     { 
         id: 1, 
-        model: "floor", 
+        model: "floorId", 
         label: "floorsAppLabel", 
         placeholder: "floorsAppPlaceholder", 
-        errorKey: "floor",
+        errorKey: "floorId",
         options: floors,
         success: isSuccessFloors,
-        loading: isLoadingFloors,
-        optionValue: "name"
+        loading: isLoadingFloors
     },
     { 
         id: 2, 
@@ -217,7 +227,18 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
-    }
+    },
+    { 
+        id: 6, 
+        model: "roleIds", 
+        label: "appRoleLabel", 
+        placeholder: "appRolePlaceholder", 
+        errorKey: "roleIds", 
+        options: roles, 
+        success: isSuccessRoles,
+        loading: isLoadingRoles,
+        multiple: true
+    },
 ]);
 
 const { mutate: createMutate } = useMutation({
@@ -226,7 +247,7 @@ const { mutate: createMutate } = useMutation({
 
         body.buildingObjectId = body.buildingObjectId[0];
         body.buildingBlockId = body.buildingBlockId[0];
-        body.floor = body.floor[0];
+        body.floorId = body.floorId[0];
         body.costId = body.costId[0];
     },
     mutationFn: (body) => create("application", body),

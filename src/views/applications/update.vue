@@ -16,6 +16,7 @@
                     :error="v$?.[input.errorKey]?.$error" 
                     :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
                     :type="input?.type"
+                    :isDisabled="true"
                 >
                     {{ $t(input.label) }}
                 </FormInput>
@@ -31,15 +32,10 @@
                     :success="select.success"
                     :loading="select.loading"
                     :isMultiSelect="select?.multiple"
-                    :optionValue="select?.optionValue"
+                    :isDisabled="true"
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
-                <CustomButton 
-                    :className="`form__submit`"
-                >
-                    {{ $t("formButton") }}
-                </CustomButton>
             </form>
         </div>
     </section>
@@ -59,7 +55,8 @@ import {
     manualGetFloors, 
     manualGetCost, 
     manualGetObjects, 
-    manualGetBlocks 
+    manualGetBlocks,
+    manualGetRoles
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 
@@ -83,8 +80,9 @@ const state = ref({
     constructionMaterialIds: [],
     buildingObjectId: [],
     buildingBlockId: [],
-    floor: [],
+    floorId: [],
     costId: [],
+    roleIds: []
 });
 
 const {
@@ -112,6 +110,15 @@ const {
 } = await useQuery({
     queryKey: ["materials", { organizationId }],
     queryFn: () => manualConstructionMaterial(organizationId.value)
+});
+
+const {
+    data: roles,
+    isSuccess: isSuccessRoles,
+    isLoading: isLoadingRoles
+} = await useQuery({
+    queryKey: ["roles"],
+    queryFn: () => manualGetRoles()
 });
 
 const {
@@ -153,8 +160,9 @@ const rules = computed(() => ({
     constructionMaterialIds: { required },
     buildingObjectId: { required },
     buildingBlockId: { required },
-    floor: { required },
+    floorId: { required },
     costId: { required },
+    roleIds: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
@@ -174,14 +182,13 @@ const inputs = ref([
 const selects = ref([
     { 
         id: 1, 
-        model: "floor", 
+        model: "floorId", 
         label: "floorsAppLabel", 
         placeholder: "floorsAppPlaceholder", 
-        errorKey: "floor",
+        errorKey: "floorId",
         options: floors,
         success: isSuccessFloors,
-        loading: isLoadingFloors,
-        optionValue: "name"
+        loading: isLoadingFloors
     },
     { 
         id: 2, 
@@ -223,7 +230,18 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
-    }
+    },
+    { 
+        id: 6, 
+        model: "roleIds", 
+        label: "appRoleLabel", 
+        placeholder: "appRolePlaceholder", 
+        errorKey: "roleIds", 
+        options: roles, 
+        success: isSuccessRoles,
+        loading: isLoadingRoles,
+        multiple: true
+    },
 ]);
 
 const { isError } = await useQuery({
@@ -237,8 +255,9 @@ const { isError } = await useQuery({
         state.value.constructionMaterialIds = [...data.constructionMaterialIds];
         state.value.buildingObjectId = [data.buildingObjectId];
         state.value.buildingBlockId = [data.buildingBlockId];
-        state.value.floor = [data.floor];
+        state.value.floorId = [data.floorId];
         state.value.costId = [data.costId];
+        state.value.roleIds = [...data.roleIds];
 
         isFirstChange.value = true;
     }
@@ -256,7 +275,7 @@ const { mutate: updateMutate } = useMutation({
         
         body.buildingObjectId = body.buildingObjectId[0];
         body.buildingBlockId = body.buildingBlockId[0];
-        body.floor = body.floor[0];
+        body.floorId = body.floorId[0];
         body.costId = body.costId[0];
     },
     mutationFn: (body) => updateById("application", body),
