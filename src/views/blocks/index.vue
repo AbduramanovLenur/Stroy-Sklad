@@ -76,7 +76,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["blocks", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value })
+    queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value)
 });
 
 const { mutate: mutateDelete } = useMutation({

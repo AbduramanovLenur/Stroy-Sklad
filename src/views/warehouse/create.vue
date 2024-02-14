@@ -83,14 +83,12 @@ const state = ref({
     materialId: [],
     quantity: "",
     quantityTypeId: [],
-    organizationId: organizationId.value,
 });
 
 const rules = computed(() => ({
     materialId: { required },
     quantity: { required },
     quantityTypeId: { required },
-    organizationId: { required },
 }));
 
 const v$ = useVuelidate(rules, state);

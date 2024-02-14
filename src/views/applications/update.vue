@@ -75,7 +75,6 @@ const isFirstChange = ref(false);
 
 const state = ref({
     userId: "",
-    organizationId: "",
     deadline: "",
     constructionMaterialIds: [],
     buildingObjectId: [],
@@ -155,7 +154,6 @@ const {
 
 const rules = computed(() => ({
     userId: { required },
-    organizationId: { required },
     deadline: { required },
     constructionMaterialIds: { required },
     buildingObjectId: { required },
@@ -250,7 +248,6 @@ const { isError } = await useQuery({
     select: (data) => {
         state.value.id = data.id;
         state.value.userId = data.userId;
-        state.value.organizationId = data.organizationId;
         state.value.deadline = data.deadline;
         state.value.constructionMaterialIds = [...data.constructionMaterialIds];
         state.value.buildingObjectId = [data.buildingObjectId];

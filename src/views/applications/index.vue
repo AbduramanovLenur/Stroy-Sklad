@@ -79,7 +79,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["applications", { page, limit, debouncedSearch, organizationId, roleId }],
-    queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value, roleId: roleId.value }),
+    queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let applications = {...data};
 

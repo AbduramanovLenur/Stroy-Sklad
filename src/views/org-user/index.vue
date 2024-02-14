@@ -74,7 +74,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["orgUser", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
+    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};
         employees.users = data?.users.map((elem) => {

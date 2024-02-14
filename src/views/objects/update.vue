@@ -93,7 +93,6 @@ const state = ref({
     id: "",
     name: "",
     address: "",
-    organizationId: "",
     regionId: [],
     districtId: [],
     stateId: []
@@ -103,7 +102,6 @@ const rules = computed(() => ({
     id: { required },
     name: { required },
     address: { required },
-    organizationId: { required },
     regionId: { required },
     districtId: { required },
     stateId: { required }
@@ -168,7 +166,6 @@ const { isError } = await useQuery({
     select: (data) => {
         state.value.id = data.id;
         state.value.name = data.fullName;
-        state.value.organizationId = data.organizationId;
         state.value.address = data.address;
         state.value.regionId = [data.regionId];
         state.value.districtId = [data.districtId];

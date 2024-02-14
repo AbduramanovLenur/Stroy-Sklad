@@ -74,14 +74,12 @@ const {
 const state = ref({
     id: "",
     fullName: "",
-    organizationId: "",
     stateId: []
 });
 
 const rules = computed(() => ({
     id: { required },
     fullName: { required },
-    organizationId: { required },
     stateId: { required }
 }));
 
@@ -117,7 +115,6 @@ const { isError } = await useQuery({
     select: (data) => {
         state.value.id = data.id;
         state.value.fullName = data.fullname;
-        state.value.organizationId = data.organizationId;
         state.value.stateId = [data.stateId];
     }
 });

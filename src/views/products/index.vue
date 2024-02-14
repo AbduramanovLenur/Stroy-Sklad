@@ -71,7 +71,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["products", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value }),
+    queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let productsList = [...data?.constructionMaterial];
 

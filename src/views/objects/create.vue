@@ -59,8 +59,6 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const organizationId = ref(localStorage.getItem("organizationId"));
-
 const {
     data: regions,
     isSuccess: isSuccessRegions,
@@ -82,7 +80,6 @@ const {
 const state = ref({
     name: "",
     address: "",
-    organizationId: organizationId.value,
     regionId: [],
     districtId: [],
 });
@@ -90,7 +87,6 @@ const state = ref({
 const rules = computed(() => ({
     name: { required },
     address: { required },
-    organizationId: { required },
     regionId: { required },
     districtId: { required },
 }));

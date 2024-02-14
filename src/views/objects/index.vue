@@ -73,12 +73,12 @@ const {
     isError
 } = await useQuery({
     queryKey: ["objects", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value })
+    queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value)
 });
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("building_object", idx),
-    onSuccess: () => {
+    onSuccess: (data) => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });

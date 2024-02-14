@@ -44,16 +44,12 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const organizationId = ref(localStorage.getItem("organizationId"));
-
 const state = ref({
-    fullname: "",
-    organizationId: organizationId.value
+    fullname: ""
 });
 
 const rules = computed(() => ({
-    fullname: { required },
-    organizationId: { required }
+    fullname: { required }
 }));
 
 const v$ = useVuelidate(rules, state);

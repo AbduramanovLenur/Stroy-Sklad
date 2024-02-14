@@ -71,7 +71,7 @@ const {
     isError
 } = await useQuery({
     queryKey: ["expenses", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("cost", page.value, limit.value, debouncedSearch.value, { organizationId: organizationId.value })
+    queryFn: () => getList("cost", page.value, limit.value, debouncedSearch.value)
 });
 
 const { mutate: mutateDelete } = useMutation({

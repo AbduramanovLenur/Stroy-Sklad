@@ -1,0 +1,2 @@
+import{r as s}from"./generic.services-Zkt5ZkSV.js";const m=(t,e,a,$,d)=>s({url:`${t}/GetList?page=${e}&limit=${a}${$?`&search=${$}`:""}${d!=null&&d.isAdmin?`&isAdmin=${d==null?void 0:d.isAdmin}`:""}`,method:"GET"}),l=(t,e)=>s({url:`${t}/GetById/id?id=${e}`,method:"GET"}),u=(t,e)=>s({url:`${t}/Create`,method:"POST",body:e}),c=(t,e)=>s({url:`${t}/Update`,method:"POST",body:e}),h=(t,e)=>s({url:`${t}/Delete/${e}`,method:"POST"});export{l as a,u as c,h as d,m as g,c as u};
+//# sourceMappingURL=crud.services-WcX_HSPp.js.map

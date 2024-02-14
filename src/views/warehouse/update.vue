@@ -96,7 +96,6 @@ const state = ref({
     materialId: [],
     quantity: "",
     quantityTypeId: [],
-    organizationId: "",
     stateId: []
 });
 
@@ -105,7 +104,6 @@ const rules = computed(() => ({
     materialId: { required },
     quantity: { required },
     quantityTypeId: { required },
-    organizationId: { required },
     stateId: { required }
 }));
 
@@ -163,7 +161,6 @@ const { isError } = await useQuery({
         state.value.materialId = [data.materialId];
         state.value.quantity = data.quantity;
         state.value.quantityTypeId = [data.quantityTypeId];
-        state.value.organizationId = data.organizationId;
         state.value.stateId = [data.stateId];
     }
 });

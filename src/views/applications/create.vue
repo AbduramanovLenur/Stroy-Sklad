@@ -120,7 +120,6 @@ const {
 
 const state = ref({
     userId: userId.value,
-    organizationId: organizationId.value,
     deadline: "",
     constructionMaterialIds: [],
     buildingObjectId: [],
@@ -152,7 +151,6 @@ const {
 
 const rules = computed(() => ({
     userId: { required },
-    organizationId: { required },
     deadline: { required },
     constructionMaterialIds: { required },
     buildingObjectId: { required },
