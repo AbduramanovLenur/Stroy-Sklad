@@ -199,5 +199,6 @@
   "blockAppPlaceholder": "Блок...",
   "editApplicationTitle": "Редактирование заявления",
   "appRoleLabel": "Получатель заявления",
-  "appRolePlaceholder": "Получатель..."
+  "appRolePlaceholder": "Получатель...",
+  "appButton": "Отправить"
 }

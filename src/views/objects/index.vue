@@ -78,7 +78,7 @@ const {
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("building_object", idx),
-    onSuccess: (data) => {
+    onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });

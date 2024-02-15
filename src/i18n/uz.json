@@ -198,5 +198,6 @@
   "blockAppPlaceholder": "Block...",
   "editApplicationTitle": "Ariza tahrirlash",
   "appRoleLabel": "Arizani oluvchi",
-  "appRolePlaceholder": "Oluvchi..."
+  "appRolePlaceholder": "Oluvchi...",
+  "appButton": "Yuborish"
 }

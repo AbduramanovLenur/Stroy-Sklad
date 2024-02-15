@@ -62,6 +62,18 @@ const { t } = useI18n();
 
 const slugId = ref(route.params.id);
 
+const isSubmit = ref(false);
+const isFirstChange = ref(false);
+
+const state = ref({
+    id: "",
+    name: "",
+    address: "",
+    regionId: [],
+    districtId: [],
+    stateId: []
+});
+
 const {
     data: regions,
     isSuccess: isSuccessRegions,
@@ -71,13 +83,26 @@ const {
     queryFn: () => manualGetRegions()
 });
 
+const valueRegion = computed(() => state.value.regionId);
+
+const isEnabled = computed(() => !!valueRegion.value.length);
+
+watch(valueRegion, () => {
+    if (!isFirstChange.value && !isSubmit.value) {
+        state.value.districtId = [];
+    }
+
+    isFirstChange.value = false;
+}, { immediate: true });
+
 const {
     data: districts,
     isSuccess: isSuccessDistricts,
     isLoading: isLoadingDistricts
 } = await useQuery({
-    queryKey: ["districts"],
-    queryFn: () => manualGetDistricts()
+    queryKey: ["districts", { districtId: valueRegion }],
+    queryFn: () => manualGetDistricts(valueRegion.value),
+    enabled: isEnabled
 });
 
 const {
@@ -87,15 +112,6 @@ const {
 } = await useQuery({
     queryKey: ["states"],
     queryFn: () => manualGetStates()
-});
-
-const state = ref({
-    id: "",
-    name: "",
-    address: "",
-    regionId: [],
-    districtId: [],
-    stateId: []
 });
 
 const rules = computed(() => ({
@@ -170,6 +186,8 @@ const { isError } = await useQuery({
         state.value.regionId = [data.regionId];
         state.value.districtId = [data.districtId];
         state.value.stateId = [data.stateId];
+
+        isFirstChange.value = true;
     }
 });
 
@@ -181,6 +199,8 @@ watch(isError, (value) => {
 
 const { mutate: updateMutate } = useMutation({
     onMutate: (body) => {
+        isSubmit.value = true;
+
         body.regionId = body.regionId[0];
         body.districtId = body.districtId[0];
         body.stateId = body.stateId[0];

@@ -144,7 +144,7 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("user", body),
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["orgUser"] });
+        queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         router.push(routes.ORG_USER.path);
     }
 });

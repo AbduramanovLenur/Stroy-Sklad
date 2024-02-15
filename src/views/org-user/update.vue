@@ -190,11 +190,8 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("user", body),
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["orgUser"] });
+        queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         queryClient.invalidateQueries({ queryKey: ["orgUserById", slugId] });
-        
-        setPagePagination(1);
-        setLimitPagination(10);
 
         router.push(routes.ORG_USER.path);
     }

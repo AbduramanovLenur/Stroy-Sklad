@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
@@ -61,32 +61,7 @@ const { t } = useI18n();
 
 const organizationId = ref(localStorage.getItem("organizationId"));
 
-const {
-    data: regions,
-    isSuccess: isSuccessRegions,
-    isLoading: isLoadingRegions
-} = await useQuery({
-    queryKey: ["regions"],
-    queryFn: () => manualGetRegions()
-});
-
-const {
-    data: districts,
-    isSuccess: isSuccessDistricts,
-    isLoading: isLoadingDistricts
-} = await useQuery({
-    queryKey: ["districts"],
-    queryFn: () => manualGetDistricts()
-});
-
-const {
-    data: objectsList,
-    isSuccess: isSuccessObjectsList,
-    isLoading: isLoadingObjectsList
-} = await useQuery({
-    queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects(organizationId.value)
-});
+const isSubmit = ref(false);
 
 const state = ref({
     fullname: "",
@@ -96,6 +71,44 @@ const state = ref({
     buildingObjectId: [],
     regionId: [],
     districtId: [],
+});
+
+const {
+    data: regions,
+    isSuccess: isSuccessRegions,
+    isLoading: isLoadingRegions
+} = await useQuery({
+    queryKey: ["regions"],
+    queryFn: () => manualGetRegions()
+});
+
+const valueRegion = computed(() => state.value.regionId);
+
+const isEnabled = computed(() => !!valueRegion.value.length);
+
+watch(valueRegion, () => {
+    if (!isSubmit.value) {
+        state.value.districtId = [];
+    }
+}, { immediate: true });
+
+const {
+    data: districts,
+    isSuccess: isSuccessDistricts,
+    isLoading: isLoadingDistricts
+} = await useQuery({
+    queryKey: ["districts", { districtId: valueRegion }],
+    queryFn: () => manualGetDistricts(valueRegion.value),
+    enabled: isEnabled
+});
+
+const {
+    data: objectsList,
+    isSuccess: isSuccessObjectsList,
+    isLoading: isLoadingObjectsList
+} = await useQuery({
+    queryKey: ["objectsList", { organizationId }],
+    queryFn: () => manualGetObjects(organizationId.value)
 });
 
 const rules = computed(() => ({
@@ -180,6 +193,8 @@ const selects = ref([
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
+        isSubmit.value = true;
+
         body.buildingObjectId = body.buildingObjectId[0];
         body.regionId = body.regionId[0];
         body.districtId = body.districtId[0];

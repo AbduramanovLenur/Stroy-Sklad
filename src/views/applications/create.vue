@@ -37,7 +37,7 @@
                 <CustomButton 
                     :className="`form__submit`"
                 >
-                    {{ $t("formButton") }}
+                    {{ $t("appButton") }}
                 </CustomButton>
             </form>
         </div>
@@ -72,6 +72,17 @@ const organizationId = ref(localStorage.getItem("organizationId"));
 const userId = ref(localStorage.getItem("id"));
 
 const isSubmit = ref(false);
+
+const state = ref({
+    userId: userId.value,
+    deadline: "",
+    constructionMaterialIds: [],
+    buildingObjectId: [],
+    buildingBlockId: [],
+    floorId: [],
+    costId: [],
+    roleIds: []
+});
 
 const {
     data: floors,
@@ -116,17 +127,6 @@ const {
 } = await useQuery({
     queryKey: ["objectsList", { organizationId }],
     queryFn: () => manualGetObjects(organizationId.value)
-});
-
-const state = ref({
-    userId: userId.value,
-    deadline: "",
-    constructionMaterialIds: [],
-    buildingObjectId: [],
-    buildingBlockId: [],
-    floorId: [],
-    costId: [],
-    roleIds: []
 });
 
 const valueObject = computed(() => state.value.buildingObjectId);
@@ -177,37 +177,6 @@ const inputs = ref([
 const selects = ref([
     { 
         id: 1, 
-        model: "floorId", 
-        label: "floorsAppLabel", 
-        placeholder: "floorsAppPlaceholder", 
-        errorKey: "floorId",
-        options: floors,
-        success: isSuccessFloors,
-        loading: isLoadingFloors
-    },
-    { 
-        id: 2, 
-        model: "constructionMaterialIds", 
-        label: "materialsAppLabel", 
-        placeholder: "materialsAppPlaceholder",
-        errorKey: "constructionMaterialIds",
-        options: materials,
-        success: isSuccessMaterials,
-        loading: isLoadingMaterials,
-        multiple: true
-    },
-    { 
-        id: 3, 
-        model: "costId", 
-        label: "costAppLabel", 
-        placeholder: "costAppPlaceholder",
-        errorKey: "costId",
-        options: costs,
-        success: isSuccessCosts,
-        loading: isLoadingCosts
-    },
-    { 
-        id: 4, 
         model: "buildingObjectId", 
         label: "objectAppLabel", 
         placeholder: "objectAppPlaceholder",
@@ -217,7 +186,7 @@ const selects = ref([
         loading: isLoadingObjects
     },
     { 
-        id: 5, 
+        id: 2, 
         model: "buildingBlockId", 
         label: "blockAppLabel", 
         placeholder: "blockAppPlaceholder",
@@ -225,6 +194,37 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
+    },
+    { 
+        id: 3, 
+        model: "floorId", 
+        label: "floorsAppLabel", 
+        placeholder: "floorsAppPlaceholder", 
+        errorKey: "floorId",
+        options: floors,
+        success: isSuccessFloors,
+        loading: isLoadingFloors
+    },
+    { 
+        id: 4, 
+        model: "costId", 
+        label: "costAppLabel", 
+        placeholder: "costAppPlaceholder",
+        errorKey: "costId",
+        options: costs,
+        success: isSuccessCosts,
+        loading: isLoadingCosts
+    },
+    { 
+        id: 5, 
+        model: "constructionMaterialIds", 
+        label: "materialsAppLabel", 
+        placeholder: "materialsAppPlaceholder",
+        errorKey: "constructionMaterialIds",
+        options: materials,
+        success: isSuccessMaterials,
+        loading: isLoadingMaterials,
+        multiple: true
     },
     { 
         id: 6, 

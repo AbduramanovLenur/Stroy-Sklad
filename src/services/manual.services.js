@@ -2,7 +2,7 @@ import { request } from "./generic.services";
 
 export const manualGetRegions = () => request({ url: "manual/RegionSelectList", method: "GET" });
 
-export const manualGetDistricts = () => request({ url: "manual/DistrictSelectList", method: "GET" });
+export const manualGetDistricts = (idx) => request({ url: `manual/DistrictSelectListFromId/regionId?regionId=${idx}`, method: "GET" });
 
 export const manualGetOrganizations = () => request({ url: "manual/OrganizationSelectList", method: "GET" });
 

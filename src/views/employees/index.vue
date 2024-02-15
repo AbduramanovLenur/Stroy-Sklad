@@ -71,8 +71,8 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["employees", { page, limit, debouncedSearch, isAdmin: true }],
-    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value, { isAdmin: true }),
+    queryKey: ["employees", { page, limit, debouncedSearch }],
+    queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};
         employees.users = data?.users.map((elem) => {

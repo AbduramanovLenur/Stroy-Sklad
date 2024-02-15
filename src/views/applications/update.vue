@@ -85,6 +85,38 @@ const state = ref({
 });
 
 const {
+    data: objects,
+    isSuccess: isSuccessObjects,
+    isLoading: isLoadingObjects
+} = await useQuery({
+    queryKey: ["objectsList", { organizationId }],
+    queryFn: () => manualGetObjects(organizationId.value),
+
+});
+
+const valueObject = computed(() => state.value.buildingObjectId);
+
+const isEnabled = computed(() => !!valueObject.value.length);
+
+watch(valueObject, () => {
+    if (!isFirstChange.value && !isSubmit.value) {
+        state.value.buildingBlockId = [];
+    }
+
+    isFirstChange.value = false;
+}, { immediate: true });
+
+const {
+    data: blocks,
+    isSuccess: isSuccessBlocks,
+    isLoading: isLoadingBlocks
+} = await useQuery({
+    queryKey: ["blocksList", { blockId: valueObject }],
+    queryFn: () => manualGetBlocks(valueObject.value),
+    enabled: isEnabled
+});
+
+const {
     data: floors,
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
@@ -118,38 +150,6 @@ const {
 } = await useQuery({
     queryKey: ["roles"],
     queryFn: () => manualGetRoles()
-});
-
-const {
-    data: objects,
-    isSuccess: isSuccessObjects,
-    isLoading: isLoadingObjects
-} = await useQuery({
-    queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects(organizationId.value),
-
-});
-
-const valueObject = computed(() => state.value.buildingObjectId);
-
-const isEnabled = computed(() => !!valueObject.value.length);
-
-watch(valueObject, () => {
-    if (!isFirstChange.value && !isSubmit.value) {
-        state.value.buildingBlockId = [];
-    }
-
-    isFirstChange.value = false;
-}, { immediate: true });
-
-const {
-    data: blocks,
-    isSuccess: isSuccessBlocks,
-    isLoading: isLoadingBlocks
-} = await useQuery({
-    queryKey: ["blocksList", { blockId: valueObject }],
-    queryFn: () => manualGetBlocks(valueObject.value),
-    enabled: isEnabled
 });
 
 const rules = computed(() => ({

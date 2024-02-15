@@ -73,7 +73,7 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["orgUser", { page, limit, debouncedSearch, organizationId }],
+    queryKey: ["orgUsers", { page, limit, debouncedSearch, organizationId }],
     queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};
@@ -99,7 +99,7 @@ const {
 const { mutate: deleteMutate } = useMutation({
     mutationFn: (idx) => deleteWithId("user", idx),
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["orgUser"] });
+        queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         queryClient.invalidateQueries({ queryKey: ["orgUserById", employeesId] });
     }
 });

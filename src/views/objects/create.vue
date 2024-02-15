@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
@@ -59,6 +59,15 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
+const isSubmit = ref(false);
+
+const state = ref({
+    name: "",
+    address: "",
+    regionId: [],
+    districtId: [],
+});
+
 const {
     data: regions,
     isSuccess: isSuccessRegions,
@@ -68,20 +77,24 @@ const {
     queryFn: () => manualGetRegions()
 });
 
+const valueRegion = computed(() => state.value.regionId);
+
+const isEnabled = computed(() => !!valueRegion.value.length);
+
+watch(valueRegion, () => {
+    if (!isSubmit.value) {
+        state.value.districtId = [];
+    }
+}, { immediate: true });
+
 const {
     data: districts,
     isSuccess: isSuccessDistricts,
     isLoading: isLoadingDistricts
 } = await useQuery({
-    queryKey: ["districts"],
-    queryFn: () => manualGetDistricts()
-});
-
-const state = ref({
-    name: "",
-    address: "",
-    regionId: [],
-    districtId: [],
+    queryKey: ["districts", { districtId: valueRegion }],
+    queryFn: () => manualGetDistricts(valueRegion.value),
+    enabled: isEnabled
 });
 
 const rules = computed(() => ({
@@ -137,6 +150,8 @@ const selects = ref([
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
+        isSubmit.value = true;
+
         body.regionId = body.regionId[0];
         body.districtId = body.districtId[0];
     },
