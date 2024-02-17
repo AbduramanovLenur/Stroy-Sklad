@@ -71,7 +71,8 @@ const slugId = ref(route.params.id);
 const organizationId = ref(localStorage.getItem("organizationId"));
 
 const isSubmit = ref(false);
-const isFirstChange = ref(false);
+const isFirstChangeObject = ref(false);
+const isFirstChangeBlock = ref(false);
 
 const state = ref({
     userId: "",
@@ -90,20 +91,20 @@ const {
     isLoading: isLoadingObjects
 } = await useQuery({
     queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects(organizationId.value),
+    queryFn: () => manualGetObjects(),
 
 });
 
 const valueObject = computed(() => state.value.buildingObjectId);
 
-const isEnabled = computed(() => !!valueObject.value.length);
+const isEnabledBlocks = computed(() => !!valueObject.value.length);
 
-watch(valueObject, () => {
-    if (!isFirstChange.value && !isSubmit.value) {
+watch(valueObject, (value) => {
+    if (!isFirstChangeObject.value && !isSubmit.value) {
         state.value.buildingBlockId = [];
     }
 
-    isFirstChange.value = false;
+    isFirstChangeObject.value = false;
 }, { immediate: true });
 
 const {
@@ -113,16 +114,29 @@ const {
 } = await useQuery({
     queryKey: ["blocksList", { blockId: valueObject }],
     queryFn: () => manualGetBlocks(valueObject.value),
-    enabled: isEnabled
+    enabled: isEnabledBlocks
 });
+
+const valueBlock = computed(() => state.value.buildingBlockId);
+
+const isEnabledFloors = computed(() => !!valueBlock.value.length);
+
+watch(valueBlock, (value) => {
+    if (!isFirstChangeBlock.value && !isSubmit.value) {
+        state.value.floorId = [];
+    }
+
+    isFirstChangeBlock.value = false;
+}, { immediate: true });
 
 const {
     data: floors,
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floors", { organizationId }],
-    queryFn: () => manualGetFloors(organizationId.value)
+    queryKey: ["floors", { floorId: valueBlock }],
+    queryFn: () => manualGetFloors(valueBlock.value),
+    enabled: isEnabledFloors
 });
 
 const {
@@ -131,7 +145,7 @@ const {
     isLoading: isLoadingCosts
 } = await useQuery({
     queryKey: ["costs", { organizationId }],
-    queryFn: () => manualGetCost(organizationId.value)
+    queryFn: () => manualGetCost()
 });
 
 const {
@@ -140,7 +154,7 @@ const {
     isLoading: isLoadingMaterials
 } = await useQuery({
     queryKey: ["materials", { organizationId }],
-    queryFn: () => manualConstructionMaterial(organizationId.value)
+    queryFn: () => manualConstructionMaterial()
 });
 
 const {
@@ -180,37 +194,6 @@ const inputs = ref([
 const selects = ref([
     { 
         id: 1, 
-        model: "floorId", 
-        label: "floorsAppLabel", 
-        placeholder: "floorsAppPlaceholder", 
-        errorKey: "floorId",
-        options: floors,
-        success: isSuccessFloors,
-        loading: isLoadingFloors
-    },
-    { 
-        id: 2, 
-        model: "constructionMaterialIds", 
-        label: "materialsAppLabel", 
-        placeholder: "materialsAppPlaceholder",
-        errorKey: "constructionMaterialIds",
-        options: materials,
-        success: isSuccessMaterials,
-        loading: isLoadingMaterials,
-        multiple: true
-    },
-    { 
-        id: 3, 
-        model: "costId", 
-        label: "costAppLabel", 
-        placeholder: "costAppPlaceholder",
-        errorKey: "costId",
-        options: costs,
-        success: isSuccessCosts,
-        loading: isLoadingCosts
-    },
-    { 
-        id: 4, 
         model: "buildingObjectId", 
         label: "objectAppLabel", 
         placeholder: "objectAppPlaceholder",
@@ -220,7 +203,7 @@ const selects = ref([
         loading: isLoadingObjects
     },
     { 
-        id: 5, 
+        id: 2, 
         model: "buildingBlockId", 
         label: "blockAppLabel", 
         placeholder: "blockAppPlaceholder",
@@ -228,6 +211,37 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
+    },
+    { 
+        id: 3, 
+        model: "floorId", 
+        label: "floorsAppLabel", 
+        placeholder: "floorsAppPlaceholder", 
+        errorKey: "floorId",
+        options: floors,
+        success: isSuccessFloors,
+        loading: isLoadingFloors
+    },
+    { 
+        id: 4, 
+        model: "costId", 
+        label: "costAppLabel", 
+        placeholder: "costAppPlaceholder",
+        errorKey: "costId",
+        options: costs,
+        success: isSuccessCosts,
+        loading: isLoadingCosts
+    },
+    { 
+        id: 5, 
+        model: "constructionMaterialIds", 
+        label: "materialsAppLabel", 
+        placeholder: "materialsAppPlaceholder",
+        errorKey: "constructionMaterialIds",
+        options: materials,
+        success: isSuccessMaterials,
+        loading: isLoadingMaterials,
+        multiple: true
     },
     { 
         id: 6, 
@@ -256,7 +270,8 @@ const { isError } = await useQuery({
         state.value.costId = [data.costId];
         state.value.roleIds = [...data.roleIds];
 
-        isFirstChange.value = true;
+        isFirstChangeObject.value = true;
+        isFirstChangeBlock.value = true;
     }
 });
 

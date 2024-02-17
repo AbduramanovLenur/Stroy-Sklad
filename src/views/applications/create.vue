@@ -85,21 +85,12 @@ const state = ref({
 });
 
 const {
-    data: floors,
-    isSuccess: isSuccessFloors,
-    isLoading: isLoadingFloors
-} = await useQuery({
-    queryKey: ["floors", { organizationId }],
-    queryFn: () => manualGetFloors(organizationId.value)
-});
-
-const {
     data: costs,
     isSuccess: isSuccessCosts,
     isLoading: isLoadingCosts
 } = await useQuery({
     queryKey: ["costs", { organizationId }],
-    queryFn: () => manualGetCost(organizationId.value)
+    queryFn: () => manualGetCost()
 });
 
 const {
@@ -108,7 +99,7 @@ const {
     isLoading: isLoadingMaterials
 } = await useQuery({
     queryKey: ["materials", { organizationId }],
-    queryFn: () => manualConstructionMaterial(organizationId.value)
+    queryFn: () => manualConstructionMaterial()
 });
 
 const {
@@ -126,12 +117,12 @@ const {
     isLoading: isLoadingObjects
 } = await useQuery({
     queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects(organizationId.value)
+    queryFn: () => manualGetObjects()
 });
 
 const valueObject = computed(() => state.value.buildingObjectId);
 
-const isEnabled = computed(() => !!valueObject.value.length);
+const isEnabledBlocks = computed(() => !!valueObject.value.length);
 
 watch(valueObject, () => {
     if (!isSubmit.value) {
@@ -146,7 +137,27 @@ const {
 } = await useQuery({
     queryKey: ["blocksList", { blockId: valueObject }],
     queryFn: () => manualGetBlocks(valueObject.value),
-    enabled: isEnabled
+    enabled: isEnabledBlocks
+});
+
+const valueBlock = computed(() => state.value.buildingBlockId);
+
+const isEnabledFloors = computed(() => !!valueBlock.value.length);
+
+watch(valueBlock, () => {
+    if (!isSubmit.value) {
+        state.value.floorId = [];
+    }
+}, { immediate: true });
+
+const {
+    data: floors,
+    isSuccess: isSuccessFloors,
+    isLoading: isLoadingFloors
+} = await useQuery({
+    queryKey: ["floors", { floorId: valueBlock }],
+    queryFn: () => manualGetFloors(valueBlock.value),
+    enabled: isEnabledFloors
 });
 
 const rules = computed(() => ({

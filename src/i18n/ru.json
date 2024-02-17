@@ -200,5 +200,17 @@
   "editApplicationTitle": "Редактирование заявления",
   "appRoleLabel": "Получатель заявления",
   "appRolePlaceholder": "Получатель...",
-  "appButton": "Отправить"
+  "appButton": "Отправить",
+  "rolesTitle": "Роли",
+  "addNewRolesTitle": "Создание роли",
+  "fullNameRoleLabel": "Название роли",
+  "fullNameRolePlaceholder": "Роль...",
+  "shortNameRoleLabel": "Короткое название роли",
+  "shortNameRolePlaceholder": "Роль...",
+  "rolesName": "Название роли",
+  "rolesState": "Состояние",
+  "rolesAction": "Действия",
+  "editRolesTitle": "Редактирование роли",
+  "stateRoleLabel": "Состояние роли",
+  "stateRolePlaceholder": "Состояние..."
 }

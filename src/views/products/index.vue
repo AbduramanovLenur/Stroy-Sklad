@@ -77,10 +77,11 @@ const {
 
         productsList = productsList.map((elem) => {
             const product = {
-                ...elem
+                ...elem,
+                material: elem.fullName
             }
 
-            delete product.organizationName;
+            delete product.fullName;
 
             return product;
         })

@@ -70,13 +70,16 @@ import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { clearForm } from "@/utils/secondary-functions.js";
-
+import { useUserStore } from "@/store/userStore";
 import { useMutation } from "@tanstack/vue-query";
 import { loginUser } from "@/services/auth.services.js";
 
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const userStore = useUserStore();
+const { setUser } = userStore;
 
 const isShow = ref(false);
 
@@ -116,25 +119,10 @@ const inputs = ref([
 const { mutate: loginMutate } = useMutation({
     mutationFn: (body) => loginUser(body),
     onSuccess: (data) => {
-        const { 
-            token, 
-            user: {
-                id,
-                role, 
-                fullName, 
-                organizationName,
-                organizationId,
-                roleId
-            }
-        } = data;
 
-        localStorage.setItem("id", id);
-        localStorage.setItem("token", token);
-        localStorage.setItem("name", fullName);
-        localStorage.setItem("role", role);
-        localStorage.setItem("organization", organizationName);
-        localStorage.setItem("organizationId", organizationId);
-        localStorage.setItem("roleId", roleId);
+        if (!data) return;
+
+        setUser(data);
 
         router.push("/");
         // toast.success(t("signInToast"));

@@ -59,10 +59,9 @@ const warehouseId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "warehouseName", width: 340 },
-    { id: 2, label: "warehouseQuantity", width: 345 },
-    { id: 3, label: "warehouseQuantityType", width: 160 },
-    { id: 4, label: "warehouseOrganization", width: 345 },
+    { id: 1, label: "warehouseName", width: 440 },
+    { id: 2, label: "warehouseQuantity", width: 445 },
+    { id: 3, label: "warehouseQuantityType", width: 205 },
     { id: 5, label: "warehouseState" },
     { id: 6, label: "warehouseAction" }
 ]);

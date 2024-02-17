@@ -150,8 +150,8 @@ const selects = ref([
         model: "regionId", 
         label: "regionObjectLabel",
         placeholder: "regionObjectPlaceholder", 
-        options: regions,
         errorKey: "regionId",
+        options: regions,
         success: isSuccessRegions,
         loading: isLoadingRegions
     },
@@ -160,8 +160,8 @@ const selects = ref([
         model: "districtId", 
         label: "districtObjectLabel",
         placeholder: "districtObjectPlaceholder",  
-        options: districts,
         errorKey: "districtId",
+        options: districts,
         success: isSuccessDistricts,
         loading: isLoadingDistricts
     },
@@ -170,6 +170,7 @@ const selects = ref([
         model: "stateId", 
         label: "stateObjectLabel",
         placeholder: "stateObjectLabel",  
+        errorKey: "stateId",
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates

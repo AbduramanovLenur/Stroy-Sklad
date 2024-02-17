@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { routes as routesList } from "@/utils/routes.js";
+import { roles } from "@/utils/roles.js";
+import { useUserStore } from "@/store/userStore";
+import { storeToRefs } from "pinia";
 import DefaultLayouts from "@/layouts/DefaultLayouts.vue";
 import AuthLayouts from "@/layouts/AuthLayouts.vue";
 
@@ -8,13 +11,14 @@ const routes = [
     name: routesList.HOME.name,
     path: routesList.HOME.path,
     redirect: to => {
-      const roleId = localStorage.getItem("roleId");
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
 
-      if (roleId === '1') {
+      if (+user.value?.user?.roleId === +roles.SUPERADMIN_ID) {
         return { path: routesList.COMPANIES.path }
       }
 
-      return { path: routesList.OBJECTS.path }
+      return { path: routesList.ROLES.path }
     },
   },
   {
@@ -32,7 +36,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     },
   },
   {
@@ -42,7 +46,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     },
   },
   {
@@ -52,7 +56,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     },
   },
   {
@@ -62,7 +66,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     }
   },
   {
@@ -72,7 +76,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     },
   },
   {
@@ -82,8 +86,68 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "1",
+      roleId: roles.SUPERADMIN_ID,
     },
+  },
+  {
+    name: routesList.ROLES.name,
+    path: routesList.ROLES.path,
+    component: () => import("@/views/roles/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
+  },
+  {
+    name: routesList.CREATE_ROLES.name,
+    path: routesList.CREATE_ROLES.path,
+    component: () => import("@/views/roles/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
+  },
+  {
+    name: routesList.UPDATE_ROLES.name,
+    path: routesList.UPDATE_ROLES.path,
+    component: () => import("@/views/roles/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
+  },
+  {
+    name: routesList.ORG_USER.name,
+    path: routesList.ORG_USER.path,
+    component: () => import("@/views/org-user/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
+  },
+  {
+    name: routesList.CREATE_ORG_USER.name,
+    path: routesList.CREATE_ORG_USER.path,
+    component: () => import("@/views/org-user/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
+  },
+  {
+    name: routesList.UPDATE_ORG_USER.name,
+    path: routesList.UPDATE_ORG_USER.path,
+    component: () => import("@/views/org-user/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.ORGADMIN_ID,
+    }
   },
   {
     name: routesList.OBJECTS.name,
@@ -92,7 +156,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -102,7 +166,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   {
@@ -112,7 +176,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   {
@@ -122,7 +186,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -132,7 +196,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   {
@@ -142,7 +206,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   // {
@@ -155,46 +219,6 @@ const routes = [
   //     roleId: "2",
   //   }
   // },
-  // {
-  //   name: "Roles",
-  //   path: "/roles",
-  //   component: () => import("@/views/roles.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
-  {
-    name: routesList.ORG_USER.name,
-    path: routesList.ORG_USER.path,
-    component: () => import("@/views/org-user/index.vue"),
-    meta: {
-      layout: DefaultLayouts,
-      requiresAuth: true,
-      roleId: "2",
-    }
-  },
-  {
-    name: routesList.CREATE_ORG_USER.name,
-    path: routesList.CREATE_ORG_USER.path,
-    component: () => import("@/views/org-user/create.vue"),
-    meta: {
-      layout: DefaultLayouts,
-      requiresAuth: true,
-      roleId: "2",
-    }
-  },
-  {
-    name: routesList.UPDATE_ORG_USER.name,
-    path: routesList.UPDATE_ORG_USER.path,
-    component: () => import("@/views/org-user/update.vue"),
-    meta: {
-      layout: DefaultLayouts,
-      requiresAuth: true,
-      roleId: "2",
-    }
-  },
   {
     name: routesList.EXPENSES.name,
     path: routesList.EXPENSES.path,
@@ -202,7 +226,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -212,7 +236,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   {
@@ -222,7 +246,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     },
   },
   {
@@ -232,7 +256,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -242,7 +266,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -252,7 +276,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -262,7 +286,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -272,7 +296,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -282,7 +306,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -292,7 +316,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -302,7 +326,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
   {
@@ -312,7 +336,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: "2",
+      roleId: roles.ORGADMIN_ID,
     }
   },
 ];
@@ -320,24 +344,23 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes,
-
 });
 
 router.beforeEach((to, from, next) => {
-  const roleId = localStorage.getItem("roleId");
-  const token = localStorage.getItem("token");
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
-  if (to?.name !== routesList.AUTH.name && (!token || !roleId)) {
+  if (to?.name !== routesList.AUTH.name && (!user.value.token || !user.value?.user?.roleId)) {
     next({ name: routesList.AUTH.name });
     return;
   }
 
-  if (to?.name !== routesList.AUTH.name && to?.meta?.roleId !== roleId) {
+  if (to?.name !== routesList.AUTH.name && +to?.meta?.roleId !== +user.value?.user?.roleId) {
     next({ name: routesList.HOME.name });
     return;
   }
 
-  if (token && roleId && to?.name === routesList.AUTH.name) {
+  if (user.value.token && user.value?.user?.roleId && to?.name === routesList.AUTH.name) {
     next({ name: routesList.HOME.name });
     return
   }

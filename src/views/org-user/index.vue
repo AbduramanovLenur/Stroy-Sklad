@@ -59,10 +59,9 @@ const employeesId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "employeesFullName", width: 300 },
-    { id: 2, label: "employeesOrganization", width: 320 },
-    { id: 3, label: "employeesPhone", width: 255 },
-    { id: 4, label: "employeesRole", width: 195 },
+    { id: 1, label: "employeesFullName", width: 510 },
+    { id: 3, label: "employeesPhone", width: 290 },
+    { id: 4, label: "employeesRole", width: 210 },
     { id: 5, label: "employeesState" },
     { id: 8, label: "employeesAction" },
 ]);
@@ -81,13 +80,11 @@ const {
             const employee = {
                 ...elem,
                 phone: elem.phoneNumber,
-                company: elem.organizationName,
                 name: elem.fullName
             }
 
             delete employee.fullName;
             delete employee.phoneNumber;
-            delete employee.organizationName;
 
             return employee;
         })

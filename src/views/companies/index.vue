@@ -75,7 +75,23 @@ const {
     isError
 } = await useQuery({
     queryKey: ["companies", { page, limit, debouncedSearch }],
-    queryFn: () => getList("organization", page.value, limit.value, debouncedSearch.value)
+    queryFn: () => getList("organization", page.value, limit.value, debouncedSearch.value),
+    select: (data) => {
+        let companies = {...data};
+
+        companies.organizations = data?.organizations.map((elem) => {
+            const company = {
+                ...elem,
+                company: elem.organizationName,
+            }
+
+            delete company.organizationName;
+
+            return company;
+        })
+
+        return companies;
+    }
 });
 
 const { mutate: mutateDelete } = useMutation({

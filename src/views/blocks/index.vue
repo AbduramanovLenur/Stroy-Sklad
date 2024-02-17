@@ -59,12 +59,11 @@ const blocksId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "blockName", width: 185 },
-    { id: 2, label: "blockObject", width: 205 },
-    { id: 3, label: "blockOrganization", width: 260 },
-    { id: 4, label: "blockFloors", width: 230 },
-    { id: 5, label: "blockRooms", width: 235 },
-    { id: 6, label: "blockAddress", width: 150 },
+    { id: 1, label: "blockName", width: 225 },
+    { id: 2, label: "blockObject", width: 250 },
+    { id: 4, label: "blockFloors", width: 275 },
+    { id: 5, label: "blockRooms", width: 285 },
+    { id: 6, label: "blockAddress", width: 190 },
     { id: 7, label: "blockState" },
     { id: 8, label: "blockAction" }
 ]);

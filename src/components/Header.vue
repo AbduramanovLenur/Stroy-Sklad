@@ -4,10 +4,10 @@
             <Burger />
             <div class="header__info">
                 <div class="header__organization">
-                    {{ $t('organization') }} {{ organization }}
+                    {{ $t('organization') }} {{ user?.user?.organizationName }}
                 </div>
                 <div class="header__user">
-                    {{ role }} : {{ name }}
+                    {{ user?.user?.role }} : {{ user?.user?.fullName }}
                 </div>
             </div>
             <SwitcherLang className="header__langs" />
@@ -16,12 +16,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useUserStore } from "@/store/userStore";
+import { storeToRefs } from "pinia";
 import Burger from "@/components/Burger.vue";
 
-const organization = ref(localStorage.getItem("organization"));
-const name = ref(localStorage.getItem("name"));
-const role = ref(localStorage.getItem("role"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 </script>
 
 <style lang="scss" scoped>

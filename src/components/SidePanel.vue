@@ -38,6 +38,7 @@ import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { usePanelStore } from "@/store/panelStore";
+import { useUserStore } from "@/store/userStore";
 import { storeToRefs } from "pinia";
 import { routes } from "@/utils/routes.js";
 import Menu from "@/components/Menu.vue";
@@ -46,17 +47,14 @@ const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
+const userStore = useUserStore();
+const { resetUser } = userStore;
+
 const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);
 
 const logoutHandler = () => {
-    localStorage.removeItem("id");
-    localStorage.removeItem("token");
-    localStorage.removeItem("name");
-    localStorage.removeItem("role");
-    localStorage.removeItem("roleId");
-    localStorage.removeItem("organization");
-    localStorage.removeItem("organizationId");
+    resetUser();
 
     router.push("/auth");
     toast.success(t("logoutToast"));

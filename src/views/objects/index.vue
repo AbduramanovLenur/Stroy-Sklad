@@ -59,9 +59,8 @@ const objectsId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "objectName", width: 385 },
-    { id: 2, label: "objectOrganization", width: 480 },
-    { id: 3, label: "objectAddress", width: 185 },
+    { id: 1, label: "objectName", width: 495 },
+    { id: 3, label: "objectAddress", width: 270 },
     { id: 4, label: "objectState" },
     { id: 5, label: "objectAction" }
 ]);

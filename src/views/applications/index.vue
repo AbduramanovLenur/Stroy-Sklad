@@ -62,7 +62,6 @@ const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "applicationUserName", width: 130 },
-    { id: 2, label: "applicationOrganization", width: 185 },
     { id: 3, label: "applicationDocDate", width: 210 },
     { id: 4, label: "applicationDedline", width: 240 },
     { id: 5, label: "applicationObject", width: 100 },

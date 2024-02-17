@@ -116,7 +116,7 @@ const {
     isLoading: isLoadingObjectsList
 } = await useQuery({
     queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects(organizationId.value)
+    queryFn: () => manualGetObjects()
 });
 
 const {

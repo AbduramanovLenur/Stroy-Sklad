@@ -199,5 +199,17 @@
   "editApplicationTitle": "Ariza tahrirlash",
   "appRoleLabel": "Arizani oluvchi",
   "appRolePlaceholder": "Oluvchi...",
-  "appButton": "Yuborish"
+  "appButton": "Yuborish",
+  "rolesTitle": "Rollar",
+  "addNewRolesTitle": "Rol yaratish",
+  "fullNameRoleLabel": "Rol nomi",
+  "fullNameRolePlaceholder": "Rol...",
+  "shortNameRoleLabel": "Qisqa rol nomi",
+  "shortNameRolePlaceholder": "Rol...",
+  "rolesName": "Roli nomi",
+  "rolesState": "Holati",
+  "rolesAction": "Amallar",
+  "editRolesTitle": "Rolni tahrirlash",
+  "stateRoleLabel": "Roli holati",
+  "stateRolePlaceholder": "Holati..."
 }

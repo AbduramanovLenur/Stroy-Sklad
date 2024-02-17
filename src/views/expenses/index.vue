@@ -60,8 +60,8 @@ const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "expensesName", width: 635 },
-    { id: 7, label: "expensesState" },
-    { id: 8, label: "expensesAction" }
+    { id: 2, label: "expensesState" },
+    { id: 3, label: "expensesAction" }
 ]);
 
 const {

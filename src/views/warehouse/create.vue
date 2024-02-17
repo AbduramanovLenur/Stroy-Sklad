@@ -76,7 +76,7 @@ const {
     isLoading: isLoadingMaterials
 } = await useQuery({
     queryKey: ["materials", { organizationId }],
-    queryFn: () => manualConstructionMaterial(organizationId.value)
+    queryFn: () => manualConstructionMaterial()
 });
 
 const state = ref({

@@ -155,8 +155,9 @@ const selects = ref([
     { 
         id: 2, 
         model: "stateId", 
-        label: "employeesStatePlaceholder", 
+        label: "employeesStateLabel", 
         placeholder: "employeesStatePlaceholder", 
+        errorKey: "stateId", 
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates

@@ -7,6 +7,7 @@ import { i18n } from "@/i18n";
 import Toast from "vue-toastification";
 import VueAwesomePaginate from "vue-awesome-paginate";
 import router from "@/router/router";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
 import SwitcherLang from "@/components/SwitcherLang.vue";
 import HeadPage from "@/components/HeadPage.vue";
@@ -21,6 +22,7 @@ import Spinner from "@/components/Spinner.vue";
 import Icon from "@/components/Icon.vue";
 import Pagination from "@/components/Pagination.vue";
 import ManageHead from "@/components/ManageHead.vue";
+import ActionsModules from "@/components/ActionsModules.vue";
 import PrimeVue from "primevue/config";
 import App from "./App.vue";
 
@@ -35,6 +37,10 @@ const app = createApp(App, {
     return { t };
   },
 });
+
+const pinia = createPinia();
+
+pinia.use(piniaPluginPersistedstate);
 
 const options = {
   queryClientConfig: {
@@ -63,12 +69,13 @@ app
   .component("Icon", Icon)
   .component("Spinner", Spinner)
   .component("ManageHead", ManageHead)
-  .component("Pagination", Pagination);
+  .component("Pagination", Pagination)
+  .component("ActionsModules", ActionsModules);
 
 app
+  .use(pinia)
   .use(router)
   .use(i18n)
-  .use(createPinia())
   .use(VueQueryPlugin, options)
   .use(Toast)
   .use(VueAwesomePaginate)

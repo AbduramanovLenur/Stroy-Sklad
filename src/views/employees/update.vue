@@ -176,6 +176,7 @@ const selects = ref([
         model: "stateId", 
         label: "employeesStatePlaceholder", 
         placeholder: "employeesStatePlaceholder", 
+        errorKey: "stateId", 
         options: states,
         success: isSuccessStates,
         loading: isLoadingStates
@@ -213,8 +214,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         queryClient.invalidateQueries({ queryKey: ["employeesById", slugId] });
         
-        setPagePagination(1);
-        setLimitPagination(10);
+        // setPagePagination(1);
+        // setLimitPagination(10);
 
         router.push(routes.EMPLOYEES.path);
     }

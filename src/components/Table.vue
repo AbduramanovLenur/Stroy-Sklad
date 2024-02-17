@@ -58,9 +58,6 @@
                 <td v-if="info.cost" class="table-info" align="center">
                     {{ info.cost }}
                 </td>
-                <td v-if="info.organizationName" class="table-info" align="center">
-                    {{ info.organizationName }}
-                </td>
                 <td v-if="info.numberOnFloor" class="table-info" align="center">
                     {{ info.numberOnFloor }}
                 </td>

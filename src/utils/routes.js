@@ -124,4 +124,17 @@ export const routes = {
         name: "UpdateOrganizationUser",
         path: "/organization-employees/manage/:id"
     },
+
+    ROLES: {
+        name: "Roles",
+        path: "/roles"
+    },
+    CREATE_ROLES: {
+        name: "CreateRoles",
+        path: "/roles/manage"
+    },
+    UPDATE_ROLES: {
+        name: "UpdateRoles",
+        path: "/roles/manage/:id"
+    }
 }
