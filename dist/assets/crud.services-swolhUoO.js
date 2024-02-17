@@ -1,2 +1,0 @@
-import{r as d}from"./generic.services-2-3LJT-B.js";const $=(t,e,s,o,a)=>d({url:`${t}/GetList?page=${e}&limit=${s}${o?`&search=${o}`:""}`,method:"GET"}),i=(t,e)=>d({url:`${t}/GetById/id?id=${e}`,method:"GET"}),l=(t,e)=>d({url:`${t}/Create`,method:"POST",body:e}),m=(t,e)=>d({url:`${t}/Update`,method:"POST",body:e}),u=(t,e)=>d({url:`${t}/Delete/${e}`,method:"POST"});export{i as a,l as c,u as d,$ as g,m as u};
-//# sourceMappingURL=crud.services-swolhUoO.js.map

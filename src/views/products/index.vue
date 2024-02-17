@@ -82,6 +82,7 @@ const {
             }
 
             delete product.fullName;
+            delete product.quantityType;
 
             return product;
         })
