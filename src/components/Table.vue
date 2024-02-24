@@ -6,13 +6,26 @@
                     №
                 </th>
                 <th 
-                    class="table-title" 
-                    align="center" 
                     v-for="title in headers" 
                     :key="title.id" 
+                    class="table-title" 
+                    align="center" 
                     :style="`width: ${title.width}px;`"
                 >
                     {{ $t(title.label) }}
+                </th>
+                <th 
+                    class="table-title" 
+                    align="center" 
+                >
+                    {{ $t("state") }}
+                </th>
+                <th 
+                    v-if="isShowUpdate || isShowDelete"
+                    class="table-title" 
+                    align="center" 
+                >
+                    {{ $t("action") }}
                 </th>
             </tr>
             <tr class="table-line" v-for="(info, index) in table" :key="info.id">
@@ -91,20 +104,21 @@
                     </span>
                 </td>
                 <td v-if="info.status" class="table-info table-status" align="center">
-                    <span :class="`${info.statusId === 1 ? 'active' : 'no-active'}`">
+                    <span :class="`${(info.statusId === 1 || info.statusId === 7) ? 'active' : 'no-active'}`">
                         {{ info.status }}
                     </span>
                 </td>
-                <td class="table-info" align="center">
+                <td class="table-info" align="center" v-if="isShowUpdate || isShowDelete">
                     <router-link
+                        v-if="isShowUpdate"
                         :to="{ name: to, params: { id: info.id } }" 
                         class="table-edit"
                     >
-                        <Icon name="eye" v-if="isShow" />
+                        <Icon name="eye" v-if="isShowEye" />
                         <Icon name="edit" v-else />
                     </router-link>
                     <span 
-                        v-if="info.stateId === 1 || info.statusId === 1"
+                        v-if="(info.stateId === 1 || info.statusId === 1) && isShowDelete"
                         class="table-delete" 
                         @click="() => $emit('onActionDelete', info.id)"
                     >
@@ -119,7 +133,21 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["headers", "table", "to", "options", "isShow"]);
+const props = defineProps({
+    headers: Array,
+    table: Array,
+    to: String,
+    options: Object,
+    isShowEye: Boolean,
+    isShowUpdate: {
+        type: Boolean,
+        default: () => true
+    },
+    isShowDelete: {
+        type: Boolean,
+        default: () => true
+    }
+});
 
 const getId = computed(() => {
     return (id) => props.options.limit * (props.options.page - 1) + id + 1;
@@ -171,12 +199,6 @@ const getId = computed(() => {
         &:first-child {
             font-weight: 600;
         }
-        // &:last-child {
-        //     display: flex;
-        //     justify-content: center;
-        //     align-items: center;
-        //     gap: 30px;
-        // }
     }
     &-delete {
         margin-left: 30px;

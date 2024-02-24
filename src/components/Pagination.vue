@@ -1,14 +1,16 @@
 <template>
     <div class="pagination shadowed" v-if="isSucces && !!count">
         <vue-awesome-paginate
-            v-model="pageLocal"
+            v-model="page"
             :total-items="count"
-            :items-per-page="limit"
+            :items-per-page="+limit"
             :max-pages-shown="2"
+            :on-click="(page) => setPagePagination(page)"
         />
         <select 
-            v-model="limitLocal"
             class="pagination-select" 
+            :value="limit"
+            @change="($event) => onChangeLimit($event.target.value)"
         >
             <option 
                 v-for="option in options" 
@@ -22,28 +24,11 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 
-defineProps([
-    "count", 
-    "isSucces"
-]);
-
-const tableStore = useTableStore();
-const { setPagePagination, setLimitPagination } = tableStore;
-const { page, limit } = storeToRefs(tableStore);
-
-const pageLocal = ref(page.value);
-const limitLocal = ref(limit.value);
-
-onMounted(() => {
-    setPagePagination(1);
-    setLimitPagination(10);
-    pageLocal.value = 1;
-    limitLocal.value = 10;
-});
+defineProps(["count", "isSucces"]);
 
 const options = ref([
     { id: 1, number: 10 },
@@ -51,15 +36,19 @@ const options = ref([
     { id: 1, number: 50 },
 ]);
 
-watch(pageLocal, (value) => {
-    setPagePagination(value);
+const tableStore = useTableStore();
+const { setPagePagination, setLimitPagination } = tableStore;
+const { page, limit } = storeToRefs(tableStore);
+
+onMounted(() => {
+    setPagePagination(1);
+    setLimitPagination(10);
 });
 
-watch(limitLocal, (value) => {
-    setLimitPagination(value);
+const onChangeLimit = (limit) => {
+    setLimitPagination(limit);
     setPagePagination(1);
-    pageLocal.value = 1;
-});
+}
 </script>
 
 <style lang="scss" scoped>
@@ -80,6 +69,7 @@ watch(limitLocal, (value) => {
         box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
         padding: 10px;
         border-radius: 10px;
+        background-color: var(--white);
 
         @media (max-width: 480px) {
             font-size: 14px;

@@ -1,10 +1,10 @@
 <template>
-    <section class="employees">
+    <section class="employees" v-if="isShowList">
         <div class="employees__inner section-padding">
             <HeadPage
                 title="employeesTitle" 
                 :to="routes.CREATE_ORG_USER.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.EMPLOYEES.CREATE)"
             />
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
@@ -12,6 +12,8 @@
                 :table="employees?.users" 
                 :to="routes.UPDATE_ORG_USER.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.EMPLOYEES.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.EMPLOYEES.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,29 +32,31 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
 const organizationId = ref(localStorage.getItem("organizationId"));
 
-onMounted(() => {
-    setSearchValue("");
-});
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.READ));
 
 const employeesId = ref("");
 
@@ -61,9 +65,7 @@ const debouncedSearch = refDebounced(search, 500);
 const headers = ref([
     { id: 1, label: "employeesFullName", width: 510 },
     { id: 3, label: "employeesPhone", width: 290 },
-    { id: 4, label: "employeesRole", width: 210 },
-    { id: 5, label: "employeesState" },
-    { id: 8, label: "employeesAction" },
+    { id: 4, label: "employeesRole", width: 210 }
 ]);
 
 const {
@@ -90,7 +92,8 @@ const {
         })
 
         return employees;
-    }
+    },
+    enabled: isShowList
 });
 
 const { mutate: deleteMutate } = useMutation({

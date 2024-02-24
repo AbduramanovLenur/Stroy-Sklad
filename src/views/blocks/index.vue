@@ -1,10 +1,10 @@
 <template>
-    <section class="blocks">
+    <section class="blocks" v-if="isShowList">
         <div class="blocks__inner section-padding">
             <HeadPage 
                 title="blockTitle" 
                 :to="routes.CREATE_BLOCKS.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.BLOCK.CREATE)"
             />
             <Table 
                 v-if="isSuccessBlocks && blocks?.count"
@@ -12,6 +12,8 @@
                 :table="blocks?.blocks"
                 :to="routes.UPDATE_BLOCKS.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.BLOCK.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.BLOCK.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,29 +32,29 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.BLOCK.READ));
 
 const blocksId = ref("");
 
@@ -63,9 +65,7 @@ const headers = ref([
     { id: 2, label: "blockObject", width: 250 },
     { id: 4, label: "blockFloors", width: 275 },
     { id: 5, label: "blockRooms", width: 285 },
-    { id: 6, label: "blockAddress", width: 190 },
-    { id: 7, label: "blockState" },
-    { id: 8, label: "blockAction" }
+    { id: 6, label: "blockAddress", width: 190 }
 ]);
 
 const {
@@ -74,8 +74,9 @@ const {
     isSuccess: isSuccessBlocks,
     isError
 } = await useQuery({
-    queryKey: ["blocks", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value)
+    queryKey: ["blocks", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value),
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({
@@ -83,6 +84,7 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         queryClient.invalidateQueries({ queryKey: ["blocksById", blocksId] });
+        queryClient.invalidateQueries({ queryKey: ["blocksList"] });
     }
 });
 

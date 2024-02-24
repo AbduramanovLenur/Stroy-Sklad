@@ -3,11 +3,10 @@
         <slot />
         <span class="label-wrapper">
             <input 
+                v-model="model"
                 class="input" 
                 :type="type ? type : 'text'" 
                 :placeholder="placeholder" 
-                :value="modelValue" 
-                @input="($event) => $emit('update:modelValue', $event.target.value)"
                 :disabled="isDisabled"
             >
             <span class="label-icon">
@@ -24,8 +23,7 @@
 </template>
 
 <script setup>
-defineProps([
-    "modelValue", 
+defineProps([ 
     "width", 
     "name", 
     "placeholder", 
@@ -34,6 +32,8 @@ defineProps([
     "type",
     "isDisabled"
 ]);
+
+const model = defineModel();
 </script>
 
 <style lang="scss" scoped>
@@ -67,11 +67,14 @@ defineProps([
     padding: 10px 50px;
     border-radius: 20px;
     border: none;
-    -webkit-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 27px -7px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.2);
     @media (max-width: 480px) {
         font-size: 14px;
+    }
+    &:disabled {
+        background-color: var(--white);
     }
 }
 </style>

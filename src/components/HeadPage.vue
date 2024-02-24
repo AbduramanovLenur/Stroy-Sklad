@@ -3,13 +3,13 @@
         <Title>
             {{ $t(title) }}
         </Title>
-        <FormSearch 
-            @onSearch="($event) => $emit('onSearch', $event)" 
-        />
+        <FormSearch />
         <MyButton 
-            @onOpenFormModal="() => $emit('onOpenFormModal')" 
+            v-if="isShowCreate"
             :to="to"
             icon="add-company"
+            type="link"
+            color="black"
         >
             {{ $t("addButton") }}
         </MyButton>
@@ -17,7 +17,20 @@
 </template>
 
 <script setup>
-defineProps(["title", "to"]);
+defineProps({
+    title: {
+        type: String,
+        default: () => ""
+    },
+    to: {
+        type: String,
+        default: () => ""
+    }, 
+    isShowCreate: {
+        type: Boolean,
+        default: () => true
+    }
+});
 </script>
 
 <style lang="scss" scoped>

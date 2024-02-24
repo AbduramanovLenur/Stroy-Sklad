@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewProductTitle" 
@@ -49,35 +49,27 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { manualQuantityTypes, manualConstructionMaterial } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-const {
-    data: quantityTypes,
-    isSuccess: isSuccessQunatityTypes,
-    isLoading: isLoadingQunatityTypes
-} = await useQuery({
-    queryKey: ["types"],
-    queryFn: () => manualQuantityTypes()
-});
-
-const {
-    data: materials,
-    isSuccess: isSuccessMaterials,
-    isLoading: isLoadingMaterials
-} = await useQuery({
-    queryKey: ["materials", { organizationId }],
-    queryFn: () => manualConstructionMaterial()
-});
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.WAREHOUSE.CREATE));
 
 const state = ref({
     materialId: [],
@@ -92,6 +84,26 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
+
+const {
+    data: quantityTypes,
+    isSuccess: isSuccessQunatityTypes,
+    isLoading: isLoadingQunatityTypes
+} = await useQuery({
+    queryKey: ["types"],
+    queryFn: () => manualQuantityTypes(),
+    enabled: isShow
+});
+
+const {
+    data: materials,
+    isSuccess: isSuccessMaterials,
+    isLoading: isLoadingMaterials
+} = await useQuery({
+    queryKey: ["materialsList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualConstructionMaterial(),
+    enabled: isShow
+});
 
 const inputs = ref([
     { 
@@ -135,6 +147,7 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("warehouse", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
+        
         router.push(routes.WAREHOUSE.path);
     }
 });

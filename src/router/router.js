@@ -330,9 +330,9 @@ const routes = [
     }
   },
   {
-    name: routesList.UPDATE_APPLICATIONS.name,
-    path: routesList.UPDATE_APPLICATIONS.path,
-    component: () => import("@/views/applications/update.vue"),
+    name: routesList.VIEW_APPLICATIONS.name,
+    path: routesList.VIEW_APPLICATIONS.path,
+    component: () => import("@/views/applications/view.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -346,26 +346,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
+router.beforeEach(async (to, from, next) => {
+  const userStore = await useUserStore();
   const { user } = storeToRefs(userStore);
 
-  if (to?.name !== routesList.AUTH.name && (!user.value.token || !user.value?.user?.roleId)) {
-    next({ name: routesList.AUTH.name });
-    return;
+  if (to?.name !== routesList.AUTH.name && (!user.value?.token || !user.value?.user?.roleId)) {
+    return next({ name: routesList.AUTH.name });
   }
 
   if (to?.name !== routesList.AUTH.name && +to?.meta?.roleId !== +user.value?.user?.roleId) {
-    next({ name: routesList.HOME.name });
-    return;
+    return next({ name: routesList.HOME.name });
   }
 
-  if (user.value.token && user.value?.user?.roleId && to?.name === routesList.AUTH.name) {
-    next({ name: routesList.HOME.name });
-    return
+  if (user.value?.token && user.value?.user?.roleId && to?.name === routesList.AUTH.name) {
+    return next({ name: routesList.HOME.name });
   }
 
-  next();
+  return next();
 });
 
 export default router;

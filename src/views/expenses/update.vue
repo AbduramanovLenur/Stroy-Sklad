@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editExpensesTitle" 
@@ -45,14 +45,21 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -60,16 +67,12 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
-const slugId = ref(route.params.id);
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-const {
-    data: states,
-    isSuccess: isSuccessStates,
-    isLoading: isLoadingStates
-} = await useQuery({
-    queryKey: ["states"],
-    queryFn: () => manualGetStates()
-});
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.UPDATE));
+
+const slugId = ref(route.params.id);
 
 const state = ref({
     id: "",
@@ -84,6 +87,16 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
+
+const {
+    data: states,
+    isSuccess: isSuccessStates,
+    isLoading: isLoadingStates
+} = await useQuery({
+    queryKey: ["states"],
+    queryFn: () => manualGetStates(),
+    enabled: isShow
+});
 
 const inputs = ref([
 { 
@@ -116,7 +129,8 @@ const { isError } = await useQuery({
         state.value.id = data.id;
         state.value.fullName = data.fullname;
         state.value.stateId = [data.stateId];
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
@@ -133,6 +147,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["expensesById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["costsList"] });
+        
         router.push(routes.EXPENSES.path);
     }
 });

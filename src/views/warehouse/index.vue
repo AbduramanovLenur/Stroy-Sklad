@@ -1,10 +1,10 @@
 <template>
-    <section class="warehouse">
+    <section class="warehouse" v-if="isShowList">
         <div class="warehouse__inner section-padding">
             <HeadPage 
                 title="warehouseTitle" 
                 :to="routes.CREATE_WAREHOUSE.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.WAREHOUSE.CREATE)"
             />
             <Table 
                 v-if="isSuccessWarehouse && warehouse?.count"
@@ -12,6 +12,8 @@
                 :table="warehouse?.warehouse"
                 :to="routes.UPDATE_WAREHOUSE.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.WAREHOUSE.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.WAREHOUSE.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,29 +32,29 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.WAREHOUSE.READ));
 
 const warehouseId = ref("");
 
@@ -61,9 +63,7 @@ const debouncedSearch = refDebounced(search, 500);
 const headers = ref([
     { id: 1, label: "warehouseName", width: 440 },
     { id: 2, label: "warehouseQuantity", width: 445 },
-    { id: 3, label: "warehouseQuantityType", width: 205 },
-    { id: 5, label: "warehouseState" },
-    { id: 6, label: "warehouseAction" }
+    { id: 3, label: "warehouseQuantityType", width: 205 }
 ]);
 
 const {
@@ -72,8 +72,9 @@ const {
     isSuccess: isSuccessWarehouse,
     isError
 } = await useQuery({
-    queryKey: ["warehouse", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("warehouse", page.value, limit.value, debouncedSearch.value)
+    queryKey: ["warehouse", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryFn: () => getList("warehouse", page.value, limit.value, debouncedSearch.value),
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({

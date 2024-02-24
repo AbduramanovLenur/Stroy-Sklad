@@ -6,7 +6,10 @@
 
 <script setup>
 defineProps({
-    type: String, 
+    type: {
+        type: String,
+        default: () => "submit"
+    }, 
     width: String,
     className: {
         type: String,

@@ -23,6 +23,8 @@ import Icon from "@/components/Icon.vue";
 import Pagination from "@/components/Pagination.vue";
 import ManageHead from "@/components/ManageHead.vue";
 import ActionsModules from "@/components/ActionsModules.vue";
+import SubTable from "@/components/SubTable.vue";
+import FormTextarea from "@/components/FormTextarea.vue";
 import PrimeVue from "primevue/config";
 import App from "./App.vue";
 
@@ -70,7 +72,9 @@ app
   .component("Spinner", Spinner)
   .component("ManageHead", ManageHead)
   .component("Pagination", Pagination)
-  .component("ActionsModules", ActionsModules);
+  .component("ActionsModules", ActionsModules)
+  .component("SubTable", SubTable)
+  .component("FormTextarea", FormTextarea);
 
 app
   .use(pinia)

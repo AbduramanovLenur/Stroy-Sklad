@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editRolesTitle" 
@@ -52,14 +52,21 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetModules, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -67,7 +74,29 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ROLE.UPDATE));
+
 const slugId = ref(route.params.id);
+
+const state = ref({
+    id: "",
+    shortName: "",
+    fullName: "",
+    roleModules: [],
+    stateId: []
+});
+
+const rules = computed(() => ({
+    id: { required },
+    shortName: { required },
+    fullName: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
 
 const {
     data: modules,
@@ -75,7 +104,8 @@ const {
     isSuccess: isSuccessModules
 } = await useQuery({
     queryKey: ["modules"],
-    queryFn: () => manualGetModules()
+    queryFn: () => manualGetModules(),
+    enabled: isShow
 });
 
 const {
@@ -84,23 +114,9 @@ const {
     isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["states"],
-    queryFn: () => manualGetStates()
+    queryFn: () => manualGetStates(),
+    enabled: isShow
 });
-
-const state = ref({
-    shortName: "",
-    fullName: "",
-    roleModules: [],
-    stateId: []
-});
-
-const rules = computed(() => ({
-    shortName: { required },
-    fullName: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -138,11 +154,13 @@ const { isError } = await useQuery({
     queryKey: ["rolesById", slugId],
     queryFn: () => getWithId("Role", slugId.value),
     select: (data) => {
+        state.value.id = data.id;
         state.value.shortName = data.shortName;
         state.value.fullName = data.fullName;
         state.value.roleModules = [...data.roleModules];
         state.value.stateId = [data.stateId];
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
@@ -159,6 +177,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["roles"] });
         queryClient.invalidateQueries({ queryKey: ["rolesById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+        
         router.push(routes.ROLES.path);
     }
 });

@@ -32,12 +32,19 @@
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
+                <ActionsModules 
+                    v-if="isSuccessModules"
+                    v-model="state.roleModules"
+                    :actions="modules"
+                />
                 <CustomButton 
+                    v-if="isSuccessModules"
                     :className="`form__submit ${v$?.roleId.$errors[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
             </form>
+            <Spinner v-if="isLoadingModules" />
         </div>
     </section>
 </template>
@@ -49,15 +56,53 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required, minLength } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
-import { manualGetOrganizations, manualGetRoles } from "@/services/manual.services.js";
+import { 
+    manualGetOrganizations, 
+    manualGetRoles, 
+    manualGetModules 
+} from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const state = ref({
+    fullName: "",
+    userName: "",
+    password: "",
+    phoneNumber: "",
+    organizationId: [],
+    roleId: [],
+    roleModules: []
+});
+
+const rules = computed(() => ({
+    fullName: { required },
+    userName: { required },
+    password: { required, minLength },
+    phoneNumber: { required },
+    organizationId: { required },
+    roleId: { required },
+}));
+
+const v$ = useVuelidate(rules, state);
+
+const {
+    data: modules,
+    isLoading: isLoadingModules,
+    isSuccess: isSuccessModules
+} = await useQuery({
+    queryKey: ["modules"],
+    queryFn: () => manualGetModules()
+});
 
 const {
     data: organizations,
@@ -73,29 +118,9 @@ const {
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["roles"],
+    queryKey: ["adminRoles"],
     queryFn: () => manualGetRoles()
 });
-
-const state = ref({
-    fullName: "",
-    userName: "",
-    password: "",
-    phoneNumber: "",
-    organizationId: [],
-    roleId: [],
-});
-
-const rules = computed(() => ({
-    fullName: { required },
-    userName: { required },
-    password: { required, minLength },
-    phoneNumber: { required },
-    organizationId: { required },
-    roleId: { required },
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -163,6 +188,7 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("user", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["employees"] });
+        
         router.push(routes.EMPLOYEES.path);
     }
 });

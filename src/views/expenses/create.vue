@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewExpensesTitle" 
@@ -31,6 +31,8 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
@@ -38,11 +40,17 @@ import { required } from "@/utils/i18n-validators.js";
 import { useQueryClient, useMutation } from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.CREATE));
 
 const state = ref({
     fullName: "",
@@ -69,6 +77,8 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("cost", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["costsList"] });
+        
         router.push(routes.EXPENSES.path);
     }
 });

@@ -2,7 +2,17 @@
     <nav :class="`menu ${isOpenPanel ? 'centered' : ''}`">
         <ul class="menu-list">
             <template v-for="item in menu" :key="item.id">
-                <li v-if="+item?.roleId === +user?.user?.roleId" class="menu-item">
+                <li class="menu-item" v-if="+item?.roleId === +user?.user?.roleId">
+                    <router-link :to="item.to" :class="`menu-link ${isOpenPanel ? 'centered' : ''}`">
+                        <span class="menu-icon">
+                            <Icon :name="item.icon" />
+                        </span>
+                        <span :class="`menu-text ${isOpenPanel ? 'hide' : ''}`">
+                            {{ $t(item.label) }}
+                        </span>
+                    </router-link>
+                </li>
+                <li class="menu-item" v-if="user?.user?.modules?.includes(item?.moduleId)">
                     <router-link :to="item.to" :class="`menu-link ${isOpenPanel ? 'centered' : ''}`">
                         <span class="menu-icon">
                             <Icon :name="item.icon" />
@@ -24,23 +34,24 @@ import { useUserStore } from "@/store/userStore";
 import { storeToRefs } from "pinia";
 import { routes } from "@/utils/routes";
 import { roles } from "@/utils/roles";
+import { actionModules } from "@/utils/action-modules.js";
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const menu = ref([
     { id: 1, label: "itemAdminCompanies", icon: "companies", to: routes.COMPANIES.path, roleId: roles.SUPERADMIN_ID },
     { id: 2, label: "itemAdminEmployees", icon: "employees", to: routes.EMPLOYEES.path, roleId: roles.SUPERADMIN_ID },
-    { id: 3, label: "itemUserRoles", icon: "roles", to: routes.ROLES.path, roleId: roles.ORGADMIN_ID },
-    { id: 4, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, roleId: roles.ORGADMIN_ID },
-    { id: 5, label: "itemUserObjects", icon: "objects", to: routes.OBJECTS.path, roleId: roles.ORGADMIN_ID },
-    { id: 6, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCKS.path, roleId: roles.ORGADMIN_ID },
-    { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, roleId: roles.ORGADMIN_ID },
-    { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, roleId: roles.ORGADMIN_ID },
-    { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, roleId: roles.ORGADMIN_ID },
-    { id: 10, label: "itemUserApplications", icon: "info", to: routes.APPLICATIONS.path, roleId: roles.ORGADMIN_ID },
+    { id: 3, label: "itemUserRoles", icon: "roles", to: routes.ROLES.path, moduleId: actionModules.ROLE.READ },
+    { id: 4, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ROLE.READ },
+    { id: 5, label: "itemUserObjects", icon: "objects", to: routes.OBJECTS.path, moduleId: actionModules.OBJECT.READ },
+    { id: 6, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCKS.path, moduleId: actionModules.BLOCK.READ },
+    { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, moduleId: actionModules.EXPENS.READ },
+    { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, moduleId: actionModules.PRODUCT.READ },
+    { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, moduleId: actionModules.WAREHOUSE.READ },
+    { id: 10, label: "itemUserApplications", icon: "info", to: routes.APPLICATIONS.path, moduleId: actionModules.APPLICATION.READ },
     // { id: 11, label: "itemUserSmeta", icon: "smeta", to: "/smeta", roleId: "2" },
 ]);
-
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
 
 const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);

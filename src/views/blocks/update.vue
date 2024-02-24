@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editBlocksTitle" 
@@ -49,10 +49,22 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetRegions, manualGetDistricts, manualGetStates, manualGetObjects } from "@/services/manual.services.js";
+import { 
+    manualGetRegions, 
+    manualGetDistricts, 
+    manualGetStates, 
+    manualGetObjects 
+} from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -62,7 +74,10 @@ const { t } = useI18n();
 
 const slugId = ref(route.params.id);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.BLOCK.UPDATE));
 
 const isSubmit = ref(false);
 const isFirstChange = ref(false);
@@ -79,13 +94,28 @@ const state = ref({
     stateId: [],
 });
 
+const rules = computed(() => ({
+    id: { required },
+    fullname: { required },
+    numberOfFloors: { required },
+    roomsOnFloor: { required },
+    address: { required },
+    buildingObjectId: { required },
+    regionId: { required },
+    districtId: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
+
 const {
     data: regions,
     isSuccess: isSuccessRegions,
     isLoading: isLoadingRegions
 } = await useQuery({
     queryKey: ["regions"],
-    queryFn: () => manualGetRegions()
+    queryFn: () => manualGetRegions(),
+    enabled: isShow
 });
 
 const valueRegion = computed(() => state.value.regionId);
@@ -115,8 +145,9 @@ const {
     isSuccess: isSuccessObjectsList,
     isLoading: isLoadingObjectsList
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects()
+    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetObjects(),
+    enabled: isShow
 });
 
 const {
@@ -125,22 +156,9 @@ const {
     isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["states"],
-    queryFn: () => manualGetStates()
+    queryFn: () => manualGetStates(),
+    enabled: isShow
 });
-
-const rules = computed(() => ({
-    id: { required },
-    fullname: { required },
-    numberOfFloors: { required },
-    roomsOnFloor: { required },
-    address: { required },
-    buildingObjectId: { required },
-    regionId: { required },
-    districtId: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -235,7 +253,8 @@ const { isError } = await useQuery({
         state.value.stateId = [data.stateId];
 
         isFirstChange.value = true;
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
@@ -257,6 +276,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         queryClient.invalidateQueries({ queryKey: ["blocksById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["blocksList"] });
+
         router.push(routes.BLOCKS.path);
         // setTimeout(() => toast.success(t("updateToast")), 1000);
     }

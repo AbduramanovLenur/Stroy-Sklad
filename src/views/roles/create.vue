@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewRolesTitle" 
@@ -36,30 +36,33 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { manualGetModules } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const {
-    data: modules,
-    isLoading: isLoadingModules,
-    isSuccess: isSuccessModules
-} = await useQuery({
-    queryKey: ["modules"],
-    queryFn: () => manualGetModules()
-});
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ROLE.CREATE));
 
 const state = ref({
     shortName: "",
@@ -73,6 +76,16 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
+
+const {
+    data: modules,
+    isLoading: isLoadingModules,
+    isSuccess: isSuccessModules
+} = await useQuery({
+    queryKey: ["modules"],
+    queryFn: () => manualGetModules(),
+    enabled: isShow
+});
 
 const inputs = ref([
     { 
@@ -97,6 +110,8 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("Role", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["roles"] });
+        queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+        
         router.push(routes.ROLES.path);
     }
 });

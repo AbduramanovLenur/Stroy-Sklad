@@ -3,7 +3,7 @@
         <Title>
             {{ $t(title) }}
         </Title>
-        <MyButton :to="to" icon="back">
+        <MyButton :to="to" icon="back" type="link" color="black">
             {{ $t("backButton") }}
         </MyButton>
     </div>

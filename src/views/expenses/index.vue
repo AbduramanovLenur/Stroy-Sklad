@@ -1,10 +1,10 @@
 <template>
-    <section class="expenses">
+    <section class="expenses" v-if="isShowList">
         <div class="expenses__inner section-padding">
             <HeadPage 
                 title="expensesTitle" 
                 :to="routes.CREATE_EXPENSES.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.EXPENS.CREATE)"
             />
             <Table 
                 v-if="isSuccessExpenses && expenses?.count"
@@ -12,6 +12,8 @@
                 :table="expenses?.cost"
                 :to="routes.UPDATE_EXPENSES.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.EXPENS.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.EXPENS.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,38 +32,36 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.READ));
 
 const expensesId = ref("");
 
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "expensesName", width: 635 },
-    { id: 2, label: "expensesState" },
-    { id: 3, label: "expensesAction" }
+    { id: 1, label: "expensesName", width: 635 }
 ]);
 
 const {
@@ -70,8 +70,9 @@ const {
     isSuccess: isSuccessExpenses,
     isError
 } = await useQuery({
-    queryKey: ["expenses", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("cost", page.value, limit.value, debouncedSearch.value)
+    queryKey: ["expenses", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryFn: () => getList("cost", page.value, limit.value, debouncedSearch.value),
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({
@@ -79,6 +80,7 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["expensesById", expensesId] });
+        queryClient.invalidateQueries({ queryKey: ["costsList"] });
     }
 });
 

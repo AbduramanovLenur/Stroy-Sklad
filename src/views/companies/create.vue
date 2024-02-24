@@ -49,10 +49,15 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { manualGetRegions, manualGetDistricts } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -70,6 +75,18 @@ const state = ref({
     regionId: [],
     districtId: []
 });
+
+const rules = computed(() => ({
+    fullName: { required },
+    inn: { required },
+    address: { required },
+    phoneNumber: { required },
+    director: { required },
+    regionId: { required },
+    districtId: { required },
+}));
+
+const v$ = useVuelidate(rules, state);
 
 const {
     data: regions,
@@ -99,18 +116,6 @@ const {
     queryFn: () => manualGetDistricts(valueRegion.value),
     enabled: isEnabled
 });
-
-const rules = computed(() => ({
-    fullName: { required },
-    inn: { required },
-    address: { required },
-    phoneNumber: { required },
-    director: { required },
-    regionId: { required },
-    districtId: { required },
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -188,6 +193,7 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("organization", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["companies"] });
+        
         router.push(routes.COMPANIES.path);
         // setTimeout(() => toast.success(t("createToast")), 1000);
     }

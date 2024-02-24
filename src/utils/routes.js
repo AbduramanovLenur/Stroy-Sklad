@@ -107,8 +107,8 @@ export const routes = {
         name: "CreateApplications",
         path: "/applications/manage"
     },
-    UPDATE_APPLICATIONS: {
-        name: "UpdateApplications",
+    VIEW_APPLICATIONS: {
+        name: "ViewApplications",
         path: "/applications/manage/:id"
     },
 

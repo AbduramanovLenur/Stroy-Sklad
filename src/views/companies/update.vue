@@ -49,11 +49,20 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetRegions, manualGetDistricts, manualGetStates } from "@/services/manual.services.js";
+import { 
+    manualGetRegions, 
+    manualGetDistricts, 
+    manualGetStates 
+} from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
-import { useTableStore } from "@/store/tableStore";
+import { actionModules } from "@/utils/action-modules.js";
+// import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -61,8 +70,8 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
-const tableStore = useTableStore();
-const { setPagePagination, setLimitPagination } = tableStore;
+// const tableStore = useTableStore();
+// const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
 
@@ -80,6 +89,20 @@ const state = ref({
     districtId: [],
     stateId: []
 });
+
+const rules = computed(() => ({
+    id: { required },
+    fullName: { required },
+    inn: { required },
+    address: { required },
+    phoneNumber: { required },
+    director: { required },
+    regionId: { required },
+    districtId: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
 
 const {
     data: regions,
@@ -120,20 +143,6 @@ const {
     queryKey: ["states"],
     queryFn: () => manualGetStates()
 });
-
-const rules = computed(() => ({
-    id: { required },
-    fullName: { required },
-    inn: { required },
-    address: { required },
-    phoneNumber: { required },
-    director: { required },
-    regionId: { required },
-    districtId: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -248,8 +257,8 @@ const { mutate: updateMutate } = useMutation({
         await queryClient.invalidateQueries({ queryKey: ["companies"] });
         await queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
 
-        setPagePagination(1);
-        setLimitPagination(10);
+        // setPagePagination(1);
+        // setLimitPagination(10);
 
         router.push(routes.COMPANIES.path);
     }

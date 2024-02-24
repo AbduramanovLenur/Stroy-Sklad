@@ -32,11 +32,18 @@
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
+                <ActionsModules 
+                    v-if="isSuccessModules"
+                    v-model="state.roleModules"
+                    :actions="modules"
+                />
                 <CustomButton 
+                    v-if="isSuccessModules"
                     :className="`form__submit ${v$?.stateId.$errors[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
+                <Spinner v-if="isLoadingModules" />
             </form>
         </div>
     </section>
@@ -49,11 +56,21 @@ import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetOrganizations, manualGetRoles, manualGetStates } from "@/services/manual.services.js";
+import { 
+    manualGetOrganizations, 
+    manualGetRoles, 
+    manualGetStates,
+    manualGetModules
+} from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
-import { useTableStore } from "@/store/tableStore";
+import { actionModules } from "@/utils/action-modules.js";
+// import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -61,10 +78,34 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
-const tableStore = useTableStore();
-const { setPagePagination, setLimitPagination } = tableStore;
+// const tableStore = useTableStore();
+// const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
+
+const state = ref({
+    id: "",
+    fullName: "",
+    userName: "",
+    password: "",
+    phoneNumber: "",
+    organizationId: [],
+    roleId: [],
+    stateId: [],
+    roleModules: []
+});
+
+const rules = computed(() => ({
+    id: { required },
+    fullName: { required },
+    userName: { required },
+    phoneNumber: { required },
+    organizationId: { required },
+    roleId: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
 
 const {
     data: organizations,
@@ -80,7 +121,7 @@ const {
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["roles"],
+    queryKey: ["adminRoles"],
     queryFn: () => manualGetRoles()
 });
 
@@ -93,28 +134,14 @@ const {
     queryFn: () => manualGetStates()
 });
 
-const state = ref({
-    id: "",
-    fullName: "",
-    userName: "",
-    password: "",
-    phoneNumber: "",
-    organizationId: [],
-    roleId: [],
-    stateId: []
+const {
+    data: modules,
+    isLoading: isLoadingModules,
+    isSuccess: isSuccessModules
+} = await useQuery({
+    queryKey: ["modules"],
+    queryFn: () => manualGetModules()
 });
-
-const rules = computed(() => ({
-    id: { required },
-    fullName: { required },
-    userName: { required },
-    phoneNumber: { required },
-    organizationId: { required },
-    roleId: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -194,6 +221,7 @@ const { isError } = await useQuery({
         state.value.organizationId = [data.organizationId];
         state.value.roleId = [data.roleId];
         state.value.stateId = [data.stateId];
+        state.value.roleModules = [...data.roleModules]
     }
 });
 

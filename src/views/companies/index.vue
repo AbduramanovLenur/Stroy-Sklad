@@ -4,7 +4,6 @@
             <HeadPage 
                 title="comapnyTitle" 
                 :to="routes.CREATE_COMPANIES.path"
-                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessCompanies && companies?.count"
@@ -34,23 +33,19 @@ import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
-
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
 
 const companyId = ref("");
 
@@ -63,9 +58,7 @@ const headers = ref([
     { id: 4, label: "organizationDistrict", width: 155 },
     { id: 5, label: "organizationAddress", width: 200 },
     { id: 6, label: "organizationPhone", width: 170 },
-    { id: 7, label: "organizationDirector", width: 230 },
-    { id: 7, label: "organizationState" },
-    { id: 8, label: "organizationAction" },
+    { id: 7, label: "organizationDirector", width: 230 }
 ]);
 
 const {

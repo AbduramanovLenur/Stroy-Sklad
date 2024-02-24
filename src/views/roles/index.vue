@@ -1,10 +1,10 @@
 <template>
-    <section class="roles">
+    <section class="roles" v-if="isShowList">
         <div class="roles__inner section-padding">
             <HeadPage 
                 title="rolesTitle" 
                 :to="routes.CREATE_ROLES.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.ROLE.CREATE)"
             />
             <Table 
                 v-if="isSuccessRoles && roles?.count"
@@ -12,6 +12,8 @@
                 :table="roles?.roles"
                 :to="routes.UPDATE_ROLES.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.ROLE.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.ROLE.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,38 +32,36 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.ROLE.READ));
 
 const rolesId = ref("");
 
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "rolesName", width: 550 },
-    { id: 3, label: "rolesState" },
-    { id: 4, label: "rolesAction" }
+    { id: 1, label: "rolesName", width: 550 }
 ]);
 
 const {
@@ -70,8 +70,9 @@ const {
     isSuccess: isSuccessRoles,
     isError
 } = await useQuery({
-    queryKey: ["roles", { page, limit, debouncedSearch, organizationId }],
-    queryFn: () => getList("Role", page.value, limit.value, debouncedSearch.value)
+    queryKey: ["roles", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryFn: () => getList("Role", page.value, limit.value, debouncedSearch.value),
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({
@@ -79,6 +80,7 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["roles"] });
         queryClient.invalidateQueries({ queryKey: ["rolesById", rolesId] });
+        queryClient.invalidateQueries({ queryKey: ["rolesList"] });
     }
 });
 

@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editObjectTitle" 
@@ -45,20 +45,36 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetRegions, manualGetDistricts, manualGetStates } from "@/services/manual.services.js";
+import { 
+    manualGetRegions, 
+    manualGetDistricts, 
+    manualGetStates 
+} from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.OBJECT.UPDATE));
 
 const slugId = ref(route.params.id);
 
@@ -74,13 +90,25 @@ const state = ref({
     stateId: []
 });
 
+const rules = computed(() => ({
+    id: { required },
+    name: { required },
+    address: { required },
+    regionId: { required },
+    districtId: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
+
 const {
     data: regions,
     isSuccess: isSuccessRegions,
     isLoading: isLoadingRegions
 } = await useQuery({
     queryKey: ["regions"],
-    queryFn: () => manualGetRegions()
+    queryFn: () => manualGetRegions(),
+    enabled: isShow
 });
 
 const valueRegion = computed(() => state.value.regionId);
@@ -111,19 +139,9 @@ const {
     isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["states"],
-    queryFn: () => manualGetStates()
+    queryFn: () => manualGetStates(),
+    enabled: isShow
 });
-
-const rules = computed(() => ({
-    id: { required },
-    name: { required },
-    address: { required },
-    regionId: { required },
-    districtId: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -189,7 +207,8 @@ const { isError } = await useQuery({
         state.value.stateId = [data.stateId];
 
         isFirstChange.value = true;
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
@@ -211,6 +230,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
+        queryClient.invalidateQueries({ queryKey: ["blocks"] });
+        
         router.push(routes.OBJECTS.path);
     }
 });

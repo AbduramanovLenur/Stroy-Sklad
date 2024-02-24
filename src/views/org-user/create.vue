@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewEmployeesTitle" 
@@ -47,35 +47,36 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useI18n } from "vue-i18n";
 import { required, minLength } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { manualGetRoles } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["roles"],
-    queryFn: () => manualGetRoles()
-});
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.CREATE));
 
 const state = ref({
     fullName: "",
     userName: "",
     password: "",
     phoneNumber: "",
-    organizationId: organizationId.value,
+    organizationId: user.value.user.organizationId,
     roleId: [],
 });
 
@@ -89,6 +90,16 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
+
+const {
+    data: roles,
+    isSuccess: isSuccessRoles,
+    isLoading: isLoadingRoles
+} = await useQuery({
+    queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetRoles(),
+    enabled: isShow
+});
 
 const inputs = ref([
     { 

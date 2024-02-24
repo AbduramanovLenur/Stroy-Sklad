@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editProductTitle" 
@@ -45,14 +45,21 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetStates } from "@/services/manual.services.js";
+import { manualQuantityTypes, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -60,7 +67,38 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.PRODUCT.UPDATE));
+
 const slugId = ref(route.params.id);
+
+const state = ref({
+    id: "",
+    fullname: "",
+    quantityTypeId: [],
+    stateId: []
+});
+
+const rules = computed(() => ({
+    id: { required },
+    fullname: { required },
+    quantityTypeId: { required },
+    stateId: { required }
+}));
+
+const v$ = useVuelidate(rules, state);
+
+const {
+    data: quantityTypes,
+    isSuccess: isSuccessQunatityTypes,
+    isLoading: isLoadingQunatityTypes
+} = await useQuery({
+    queryKey: ["types"],
+    queryFn: () => manualQuantityTypes(),
+    enabled: isShow
+});
 
 const {
     data: states,
@@ -68,22 +106,9 @@ const {
     isLoading: isLoadingStates
 } = await useQuery({
     queryKey: ["states"],
-    queryFn: () => manualGetStates()
+    queryFn: () => manualGetStates(),
+    enabled: isShow
 });
-
-const state = ref({
-    id: "",
-    fullname: "",
-    stateId: []
-});
-
-const rules = computed(() => ({
-    id: { required },
-    fullname: { required },
-    stateId: { required }
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -99,6 +124,16 @@ const inputs = ref([
 const selects = ref([
     { 
         id: 1, 
+        model: "quantityTypeId", 
+        label: "qunatityTypesProductsLabel", 
+        placeholder: "qunatityTypesProductsPlaceholder",
+        errorKey: "quantityTypeId",
+        options: quantityTypes,
+        success: isSuccessQunatityTypes,
+        loading: isLoadingQunatityTypes
+    },
+    { 
+        id: 2, 
         model: "stateId", 
         label: "stateProductsLabel", 
         placeholder: "stateProductsPlaceholder",
@@ -115,8 +150,10 @@ const { isError } = await useQuery({
     select: (data) => {
         state.value.id = data.id;
         state.value.fullname = data.fullname;
+        state.value.quantityTypeId = [data.quantityTypeId];
         state.value.stateId = [data.stateId];
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
@@ -127,13 +164,15 @@ watch(isError, (value) => {
 
 const { mutate: updateMutate } = useMutation({
     onMutate: (body) => {
+        body.quantityTypeId = body.quantityTypeId[0];
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("construction_material", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["productsById", slugId] });
-        queryClient.invalidateQueries({ queryKey: ["materials"] });
+        queryClient.invalidateQueries({ queryKey: ["materialsList"] });
+        
         router.push(routes.PRODUCTS.path);
     }
 });

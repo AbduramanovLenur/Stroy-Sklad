@@ -4,7 +4,6 @@
             <HeadPage
                 title="employeesTitle" 
                 :to="routes.CREATE_EMPLOYEES.path"
-                @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
@@ -34,23 +33,19 @@ import { ref, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
-
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
 
 const employeesId = ref("");
 
@@ -60,9 +55,7 @@ const headers = ref([
     { id: 1, label: "employeesFullName", width: 300 },
     { id: 2, label: "employeesOrganization", width: 320 },
     { id: 3, label: "employeesPhone", width: 255 },
-    { id: 4, label: "employeesRole", width: 195 },
-    { id: 5, label: "employeesState" },
-    { id: 8, label: "employeesAction" },
+    { id: 4, label: "employeesRole", width: 195 }
 ]);
 
 const {

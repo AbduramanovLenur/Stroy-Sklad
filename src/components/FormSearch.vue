@@ -1,11 +1,11 @@
 <template>
     <form class="form" @submit.prevent="searchHandler">
-        <input 
-            v-model="search" 
+        <input
             class="form-input" 
             type="text" 
             :placeholder="$t('companySearchPlaceholder')"
-            @input="($event) => $emit('onSearch', $event.target.value)"
+            :value="search"
+            @input="($event) => setSearchValue($event.target.value)"
         >
         <button class="form-submit" type="submit">
             <Icon name="search" />
@@ -14,16 +14,21 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { watch, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useTableStore } from "@/store/tableStore";
 
-const emit = defineEmits(["onSearch"]);
+const tableStore = useTableStore();
+const { setPagePagination, setSearchValue } = tableStore;
+const { search } = storeToRefs(tableStore);
 
-const search = ref("");
+onMounted(() => {
+    setSearchValue("");
+});
 
-const searchHandler = () => {
-    emit("onSearch", search.value);
-    // search.value = "";
-}
+watch(search, () => {
+    setPagePagination(1);
+});
 </script>
 
 <style lang="scss" scoped>

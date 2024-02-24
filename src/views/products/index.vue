@@ -1,10 +1,10 @@
 <template>
-    <section class="products">
+    <section class="products" v-if="isShowList">
         <div class="products__inner section-padding">
             <HeadPage 
                 title="productsTitle" 
-                :to="routes.CREATE_PRODUCTS.path"
-                @onSearch="($event) => setSearchValue($event)"
+                :to="routes.CREATE_PRODUCTS.path"                
+                :isShowCreate="user?.user?.modules?.includes(actionModules.PRODUCT.CREATE)"
             />
             <Table 
                 v-if="isSuccessProducts && products?.count"
@@ -12,6 +12,8 @@
                 :table="products?.constructionMaterial"
                 :to="routes.UPDATE_PRODUCTS.name"
                 :options="{ page, limit }"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.PRODUCT.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.PRODUCT.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -30,38 +32,36 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
 const tableStore = useTableStore();
-const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
-onMounted(() => {
-    setSearchValue("");
-});
-
-watch(search, () => {
-    setPagePagination(1);
-});
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.PRODUCT.READ));
 
 const productsId = ref("");
 
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "productsName", width: 725 },
-    { id: 4, label: "productsState" },
-    { id: 5, label: "productsAction" }
+    { id: 1, label: "productsName", width: 725 }
 ]);
 
 const {
@@ -70,7 +70,7 @@ const {
     isSuccess: isSuccessProducts,
     isError
 } = await useQuery({
-    queryKey: ["products", { page, limit, debouncedSearch, organizationId }],
+    queryKey: ["products", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
     queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let productsList = [...data?.constructionMaterial];
@@ -91,7 +91,8 @@ const {
             constructionMaterial: productsList,
             count: data?.count
         }
-    }
+    },
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({
@@ -99,6 +100,7 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["productsById", productsId] });
+        queryClient.invalidateQueries({ queryKey: ["materialsList"] });
     }
 });
 

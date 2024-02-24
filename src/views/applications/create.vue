@@ -1,41 +1,72 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewApplicationTitle" 
                 :to="routes.APPLICATIONS.path"
             />
-            <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormInput 
-                    v-for="input in inputs"
+            <form class="manage__form" @submit.prevent="submitHandler">
+                <div class="manage__overlay">
+                    <FormInput 
+                        v-for="input in inputs"
+                        :key="input.id"
+                        v-model.trim="state[input.model]"
+                        :width="500" 
+                        :placeholder="$t(input.placeholder)"
+                        :name="input.icon"
+                        :error="v$?.[input.errorKey]?.$error" 
+                        :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
+                        :type="input?.type"
+                    >
+                        {{ $t(input.label) }}
+                    </FormInput>
+                    <FormSelect 
+                        v-for="select in selects"
+                        :key="select.id"
+                        v-model.trim="state[select.model]" 
+                        :width="500" 
+                        :options="select.options"
+                        :error="v$?.[select?.errorKey]?.$error" 
+                        :placeholder="select?.placeholder"
+                        :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
+                        :success="select.success"
+                        :loading="select.loading"
+                        :isMultiSelect="select?.multiple"
+                    >
+                        {{ $t(select.label) }}
+                    </FormSelect>
+                </div>
+                <ApplicationForm 
+                    :selects="selectsInfo"
+                    :buildingBlockId="state.buildingBlockId"
+                    :isSubmit="isSubmit"
+                    @onAddTable="addTableHandler"
+                />
+                <span 
+                    v-if="v$?.createApplicationTables?.$error" 
+                    class="error"
+                >
+                    {{ v$?.createApplicationTables?.$errors[0]?.$message }}
+                </span>
+                <SubTable
+                    :headers="headers"
+                    :table="subtableData"
+                    @onActionDelete="($event) => state.createApplicationTables.splice($event, 1)"
+                    :isShowDelete="true"
+                />
+                <FormTextarea 
+                    v-for="input in textareas"
                     :key="input.id"
-                    v-model="state[input.model]"
+                    v-model.trim="state[input.model]"
                     :width="500" 
                     :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
                     :error="v$?.[input.errorKey]?.$error" 
                     :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
-                    :type="input?.type"
                 >
                     {{ $t(input.label) }}
-                </FormInput>
-                <FormSelect 
-                    v-for="select in selects"
-                    :key="select.id"
-                    v-model="state[select.model]" 
-                    :width="500" 
-                    :options="select.options"
-                    :error="v$?.[select?.errorKey]?.$error" 
-                    :placeholder="select?.placeholder"
-                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
-                    :success="select.success"
-                    :loading="select.loading"
-                    :isMultiSelect="select?.multiple"
-                >
-                    {{ $t(select.label) }}
-                </FormSelect>
+                </FormTextarea>
                 <CustomButton 
-                    :className="`form__submit`"
+                    className="manage__submit"
                 >
                     {{ $t("appButton") }}
                 </CustomButton>
@@ -46,12 +77,19 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
+import ApplicationForm from "@/components/ApplicationForm.vue";
 import { useRouter } from "vue-router";
 import { useVuelidate } from "@vuelidate/core";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { 
     manualConstructionMaterial, 
@@ -62,53 +100,59 @@ import {
     manualGetRoles
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
+import { createIdMap } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
 
-const organizationId = ref(localStorage.getItem("organizationId"));
-const userId = ref(localStorage.getItem("id"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.CREATE));
 
 const isSubmit = ref(false);
 
+const subtableData = ref([]);
+
+const headers = ref([
+    { id: 1, label: "appFloor", width: 215 },
+    { id: 2, label: "appPrice", width: 275 },
+    { id: 4, label: "appMaterial", width: 275 },
+    { id: 5, label: "appCount", width: 250 },
+    { id: 3, label: "appCost" }
+]);
+
 const state = ref({
-    userId: userId.value,
     deadline: "",
-    constructionMaterialIds: [],
     buildingObjectId: [],
     buildingBlockId: [],
-    floorId: [],
-    costId: [],
-    roleIds: []
+    roleIds: [],
+    createApplicationTables: [],
+    details: ""
 });
 
-const {
-    data: costs,
-    isSuccess: isSuccessCosts,
-    isLoading: isLoadingCosts
-} = await useQuery({
-    queryKey: ["costs", { organizationId }],
-    queryFn: () => manualGetCost()
-});
+const rules = computed(() => ({
+    deadline: { required },
+    buildingObjectId: { required },
+    buildingBlockId: { required },
+    roleIds: { required },
+    createApplicationTables: { required },
+    details: { required },
+}));
 
-const {
-    data: materials,
-    isSuccess: isSuccessMaterials,
-    isLoading: isLoadingMaterials
-} = await useQuery({
-    queryKey: ["materials", { organizationId }],
-    queryFn: () => manualConstructionMaterial()
-});
+const v$ = useVuelidate(rules, state);
 
 const {
     data: roles,
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["roles"],
-    queryFn: () => manualGetRoles()
+    queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetRoles(),
+    enabled: isShow
 });
 
 const {
@@ -116,8 +160,9 @@ const {
     isSuccess: isSuccessObjects,
     isLoading: isLoadingObjects
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId }],
-    queryFn: () => manualGetObjects()
+    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetObjects(),
+    enabled: isShow
 });
 
 const valueObject = computed(() => state.value.buildingObjectId);
@@ -142,36 +187,37 @@ const {
 
 const valueBlock = computed(() => state.value.buildingBlockId);
 
-const isEnabledFloors = computed(() => !!valueBlock.value.length);
-
-watch(valueBlock, () => {
-    if (!isSubmit.value) {
-        state.value.floorId = [];
-    }
-}, { immediate: true });
+const isEnabled  = computed(() => !!valueBlock.value.length);
 
 const {
     data: floors,
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floors", { floorId: valueBlock }],
+    queryKey: ["floorsList", { floorId: valueBlock }],
     queryFn: () => manualGetFloors(valueBlock.value),
-    enabled: isEnabledFloors
+    enabled: isEnabled 
 });
 
-const rules = computed(() => ({
-    userId: { required },
-    deadline: { required },
-    constructionMaterialIds: { required },
-    buildingObjectId: { required },
-    buildingBlockId: { required },
-    floorId: { required },
-    costId: { required },
-    roleIds: { required }
-}));
+const {
+    data: costs,
+    isSuccess: isSuccessCosts,
+    isLoading: isLoadingCosts
+} = await useQuery({
+    queryKey: ["costsList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetCost(),
+    enabled: isEnabled 
+});
 
-const v$ = useVuelidate(rules, state);
+const {
+    data: materials,
+    isSuccess: isSuccessMaterials,
+    isLoading: isLoadingMaterials
+} = await useQuery({
+    queryKey: ["materialsList", { organizationId: user.value.user.organizationId }],
+    queryFn: () => manualConstructionMaterial(),
+    enabled: isEnabled 
+});
 
 const inputs = ref([
     { 
@@ -207,37 +253,6 @@ const selects = ref([
         loading: isLoadingBlocks
     },
     { 
-        id: 3, 
-        model: "floorId", 
-        label: "floorsAppLabel", 
-        placeholder: "floorsAppPlaceholder", 
-        errorKey: "floorId",
-        options: floors,
-        success: isSuccessFloors,
-        loading: isLoadingFloors
-    },
-    { 
-        id: 4, 
-        model: "costId", 
-        label: "costAppLabel", 
-        placeholder: "costAppPlaceholder",
-        errorKey: "costId",
-        options: costs,
-        success: isSuccessCosts,
-        loading: isLoadingCosts
-    },
-    { 
-        id: 5, 
-        model: "constructionMaterialIds", 
-        label: "materialsAppLabel", 
-        placeholder: "materialsAppPlaceholder",
-        errorKey: "constructionMaterialIds",
-        options: materials,
-        success: isSuccessMaterials,
-        loading: isLoadingMaterials,
-        multiple: true
-    },
-    { 
         id: 6, 
         model: "roleIds", 
         label: "appRoleLabel", 
@@ -247,8 +262,71 @@ const selects = ref([
         success: isSuccessRoles,
         loading: isLoadingRoles,
         multiple: true
-    },
+    }
 ]);
+
+const selectsInfo = ref([
+    { 
+        id: 1, 
+        model: "floorId", 
+        label: "floorsAppLabel", 
+        placeholder: "floorsAppPlaceholder", 
+        errorKey: "floorId",
+        options: floors,
+        success: isSuccessFloors,
+        loading: isLoadingFloors
+    },
+    { 
+        id: 2, 
+        model: "costId", 
+        label: "costAppLabel", 
+        placeholder: "costAppPlaceholder",
+        errorKey: "costId",
+        options: costs,
+        success: isSuccessCosts,
+        loading: isLoadingCosts
+    },
+    { 
+        id: 3, 
+        model: "constructionMaterialId", 
+        label: "materialsAppLabel", 
+        placeholder: "materialsAppPlaceholder",
+        errorKey: "constructionMaterialId",
+        options: materials,
+        success: isSuccessMaterials,
+        loading: isLoadingMaterials
+    },
+])
+
+const textareas = ref([
+    { 
+        id: 1, 
+        model: "details", 
+        label: "appCommentLabel", 
+        placeholder: "appCommentPlaceholder",
+        errorKey: "details"
+    }
+]);
+
+const floorMap = computed(() => createIdMap(floors.value));
+const costMap = computed(() => createIdMap(costs.value));
+const materialMap = computed(() => createIdMap(materials.value));
+
+const addTableHandler = (object) => {
+    const floorIdValue = floorMap.value[object.floorId]?.name;
+    const costIdValue = costMap.value[object.costId]?.name;
+    const constructionMaterialIdValue = materialMap.value[object.constructionMaterialId]?.name;
+
+    subtableData.value.push({
+        floorValue: floorIdValue,
+        costValue: costIdValue,
+        constructionMaterialValue: constructionMaterialIdValue,
+        count: object.count,
+        price: object.price
+    });
+
+    state.value.createApplicationTables.push(object);
+}
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
@@ -256,12 +334,11 @@ const { mutate: createMutate } = useMutation({
 
         body.buildingObjectId = body.buildingObjectId[0];
         body.buildingBlockId = body.buildingBlockId[0];
-        body.floorId = body.floorId[0];
-        body.costId = body.costId[0];
     },
     mutationFn: (body) => create("application", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["applications"] });
+        
         router.push(routes.APPLICATIONS.path);
     }
 });
@@ -278,4 +355,28 @@ const submitHandler = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.manage {
+    &__overlay {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px 50px;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        @media (max-width: 1536px) {
+            gap: 20px;
+        }
+        @media (max-width: 1152px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 864px) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+    &__submit {
+        margin-top: 30px;
+    }
+}
+</style>

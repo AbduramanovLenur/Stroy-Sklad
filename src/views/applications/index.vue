@@ -1,18 +1,21 @@
 <template>
-    <section class="applications">
+    <section class="applications" v-if="isShowList">
         <div class="applications__inner">
             <HeadPage 
                 title="applicationTitle" 
                 :to="routes.CREATE_APPLICATIONS.path"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.APPLICATION.CREATE)"
                 @onSearch="($event) => setSearchValue($event)"
             />
             <Table 
                 v-if="isSuccessApplications && applications?.count"
                 :headers="headers" 
                 :table="applications?.applications"
-                :to="routes.UPDATE_APPLICATIONS.name"
+                :to="routes.VIEW_APPLICATIONS.name"
                 :options="{ page, limit }"
-                :isShow="true"
+                :isShowEye="true"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.APPLICATION.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -31,13 +34,19 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
+import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
@@ -45,8 +54,10 @@ const tableStore = useTableStore();
 const { setSearchValue, setPagePagination } = tableStore;
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
-const roleId = ref(localStorage.getItem("roleId"));
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
 
 onMounted(() => {
     setSearchValue("");
@@ -61,14 +72,11 @@ const applicationId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "applicationUserName", width: 130 },
-    { id: 3, label: "applicationDocDate", width: 210 },
-    { id: 4, label: "applicationDedline", width: 240 },
-    { id: 5, label: "applicationObject", width: 100 },
-    { id: 6, label: "applicationBlock", width: 95 },
-    { id: 7, label: "applicationCost", width: 330 },
-    { id: 8, label: "applicationState" },
-    { id: 9, label: "applicationAction" }
+    { id: 1, label: "applicationUserName", width: 190 },
+    { id: 3, label: "applicationDocDate", width: 310 },
+    { id: 4, label: "applicationDedline", width: 355 },
+    { id: 5, label: "applicationObject", width: 155 },
+    { id: 6, label: "applicationBlock", width: 140 }
 ]);
 
 const {
@@ -77,7 +85,7 @@ const {
     isSuccess: isSuccessApplications,
     isError
 } = await useQuery({
-    queryKey: ["applications", { page, limit, debouncedSearch, organizationId, roleId }],
+    queryKey: ["applications", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId, roleId: user.value.user.roleId }],
     queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let applications = {...data};
@@ -86,7 +94,6 @@ const {
             const application = {
                 ...elem,
                 name: elem.userName,
-                company: elem.organizationName,
             }
 
             delete application.userName;
@@ -98,7 +105,8 @@ const {
         })
 
         return applications;
-    }
+    },
+    enabled: isShowList
 });
 
 const { mutate: mutateDelete } = useMutation({

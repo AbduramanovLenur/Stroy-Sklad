@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewObjectTitle" 
@@ -45,19 +45,31 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { manualGetRegions, manualGetDistricts } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const toast = useToast();
 const { t } = useI18n();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.OBJECT.CREATE));
 
 const isSubmit = ref(false);
 
@@ -68,13 +80,23 @@ const state = ref({
     districtId: [],
 });
 
+const rules = computed(() => ({
+    name: { required },
+    address: { required },
+    regionId: { required },
+    districtId: { required },
+}));
+
+const v$ = useVuelidate(rules, state);
+
 const {
     data: regions,
     isSuccess: isSuccessRegions,
     isLoading: isLoadingRegions
 } = await useQuery({
     queryKey: ["regions"],
-    queryFn: () => manualGetRegions()
+    queryFn: () => manualGetRegions(),
+    enabled: isShow
 });
 
 const valueRegion = computed(() => state.value.regionId);
@@ -96,15 +118,6 @@ const {
     queryFn: () => manualGetDistricts(valueRegion.value),
     enabled: isEnabled
 });
-
-const rules = computed(() => ({
-    name: { required },
-    address: { required },
-    regionId: { required },
-    districtId: { required },
-}));
-
-const v$ = useVuelidate(rules, state);
 
 const inputs = ref([
     { 
@@ -159,6 +172,7 @@ const { mutate: createMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
+        
         router.push(routes.OBJECTS.path);
     }
 });

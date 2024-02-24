@@ -1,5 +1,5 @@
 <template>
-    <section class="manage section-height shadowed">
+    <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editEmployeesTitle" 
@@ -45,15 +45,22 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 import { required } from "@/utils/i18n-validators.js";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
+import { 
+    useQueryClient, 
+    useQuery, 
+    useMutation 
+} from "@tanstack/vue-query";
 import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetRoles, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
-import { useTableStore } from "@/store/tableStore";
+import { actionModules } from "@/utils/action-modules.js";
+// import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -61,28 +68,15 @@ const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
 
-const tableStore = useTableStore();
-const { setPagePagination, setLimitPagination } = tableStore;
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.UPDATE));
+
+// const tableStore = useTableStore();
+// const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
-
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["roles"],
-    queryFn: () => manualGetRoles()
-});
-
-const {
-    data: states,
-    isSuccess: isSuccessStates,
-    isLoading: isLoadingStates
-} = await useQuery({
-    queryKey: ["states"],
-    queryFn: () => manualGetStates()
-});
 
 const state = ref({
     id: "",
@@ -106,6 +100,26 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
+
+const {
+    data: roles,
+    isSuccess: isSuccessRoles,
+    isLoading: isLoadingRoles
+} = await useQuery({
+    queryKey: ["rolesList", { organizationId: state.value.organizationId }],
+    queryFn: () => manualGetRoles(),
+    enabled: isShow
+});
+
+const {
+    data: states,
+    isSuccess: isSuccessStates,
+    isLoading: isLoadingStates
+} = await useQuery({
+    queryKey: ["states"],
+    queryFn: () => manualGetStates(),
+    enabled: isShow
+});
 
 const inputs = ref([
     { 
@@ -175,7 +189,8 @@ const { isError } = await useQuery({
         state.value.organizationId = data.organizationId;
         state.value.roleId = [data.roleId];
         state.value.stateId = [data.stateId];
-    }
+    },
+    enabled: isShow
 });
 
 watch(isError, (value) => {
