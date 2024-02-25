@@ -10,15 +10,15 @@ const routes = [
   {
     name: routesList.HOME.name,
     path: routesList.HOME.path,
-    redirect: to => {
+    redirect: (to) => {
       const userStore = useUserStore();
       const { user } = storeToRefs(userStore);
 
       if (+user.value?.user?.roleId === +roles.SUPERADMIN_ID) {
-        return { path: routesList.COMPANIES.path }
+        return { path: routesList.COMPANIES.path };
       }
 
-      return { path: routesList.ROLES.path }
+      return { path: routesList.ROLES.path };
     },
   },
   {
@@ -27,6 +27,16 @@ const routes = [
     component: () => import("@/views/auth.vue"),
     meta: {
       layout: AuthLayouts,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (to.name === routesList.AUTH.name && user.value?.token) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -38,6 +48,20 @@ const routes = [
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_COMPANIES.name,
@@ -47,6 +71,20 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -58,6 +96,20 @@ const routes = [
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.EMPLOYEES.name,
@@ -67,7 +119,21 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
-    }
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_EMPLOYEES.name,
@@ -77,6 +143,20 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -88,6 +168,20 @@ const routes = [
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId !== +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.ROLES.name,
@@ -96,8 +190,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_ROLES.name,
@@ -106,8 +214,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.UPDATE_ROLES.name,
@@ -116,8 +238,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.ORG_USER.name,
@@ -126,8 +262,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_ORG_USER.name,
@@ -136,8 +286,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.UPDATE_ORG_USER.name,
@@ -146,8 +310,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.OBJECTS.name,
@@ -156,8 +334,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_OBJECTS.name,
@@ -166,7 +358,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -176,7 +382,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -186,8 +406,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_BLOCKS.name,
@@ -196,7 +430,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -206,7 +454,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   // {
@@ -226,8 +488,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_EXPENSES.name,
@@ -236,7 +512,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -246,7 +536,21 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
     },
   },
   {
@@ -256,8 +560,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_PRODUCTS.name,
@@ -266,8 +584,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.UPDATE_PRODUCTS.name,
@@ -276,8 +608,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.WAREHOUSE.name,
@@ -286,8 +632,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_WAREHOUSE.name,
@@ -296,8 +656,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.UPDATE_WAREHOUSE.name,
@@ -306,8 +680,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.APPLICATIONS.name,
@@ -316,8 +704,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.CREATE_APPLICATIONS.name,
@@ -326,8 +728,22 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
   {
     name: routesList.VIEW_APPLICATIONS.name,
@@ -336,33 +752,28 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
-      roleId: roles.ORGADMIN_ID,
-    }
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_BASE_URL),
   routes,
-});
-
-router.beforeEach(async (to, from, next) => {
-  const userStore = await useUserStore();
-  const { user } = storeToRefs(userStore);
-
-  if (to?.name !== routesList.AUTH.name && (!user.value?.token || !user.value?.user?.roleId)) {
-    return next({ name: routesList.AUTH.name });
-  }
-
-  if (to?.name !== routesList.AUTH.name && +to?.meta?.roleId !== +user.value?.user?.roleId) {
-    return next({ name: routesList.HOME.name });
-  }
-
-  if (user.value?.token && user.value?.user?.roleId && to?.name === routesList.AUTH.name) {
-    return next({ name: routesList.HOME.name });
-  }
-
-  return next();
 });
 
 export default router;
