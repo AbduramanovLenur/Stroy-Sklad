@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editBlocksTitle" 
-                :to="routes.BLOCKS.path"
+                :to="routes.BLOCK.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -278,7 +278,7 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["blocksById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["blocksList"] });
 
-        router.push(routes.BLOCKS.path);
+        router.push(routes.BLOCK.path);
         // setTimeout(() => toast.success(t("updateToast")), 1000);
     }
 });

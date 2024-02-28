@@ -1,8 +1,11 @@
+import { actionModules } from "@/utils/action-modules";
+
 export const routes = {
     HOME: {
         name: "Home",
         path: "/"
     },
+
     AUTH: {
         name: "Auth",
         path: "/auth"
@@ -34,61 +37,94 @@ export const routes = {
         path: "/employees/manage/:id"
     },
 
-    OBJECTS: {
-        name: "Objects",
-        path: "/objects"
+    APPLICATION: {
+        name: "Applications",
+        path: "/applications",
+        module: actionModules.APPLICATION.READ
     },
-    CREATE_OBJECTS: {
+    CREATE_APPLICATION: {
+        name: "CreateApplications",
+        path: "/applications/manage"
+    },
+    VIEW_APPLICATION: {
+        name: "ViewApplications",
+        path: "/applications/manage/:id"
+    },
+
+    ESTIMATE: {
+        name: "Estimate",
+        path: "/estimate",
+        module: actionModules.ESTIMATE.READ
+    },
+    CREATE_ESTIMATE: {
+        name: "CreateEstimate",
+        path: "/estimate/manage"
+    },
+    UPDATE_ESTIMATE: {
+        name: "UpdateEstimate",
+        path: "/estimate/manage/:id"
+    },
+
+    OBJECT: {
+        name: "Objects",
+        path: "/objects",
+        module: actionModules.OBJECT.READ
+    },
+    CREATE_OBJECT: {
         name: "CreateObjects",
         path: "/objects/manage"
     },
-    UPDATE_OBJECTS: {
+    UPDATE_OBJECT: {
         name: "UpdateObjects",
         path: "/objects/manage/:id"
     },
 
-    BLOCKS: {
+    BLOCK: {
         name: "Blocks",
-        path: "/blocks"
+        path: "/blocks",
+        module: actionModules.BLOCK.READ
     },
-    CREATE_BLOCKS: {
+    CREATE_BLOCK: {
         name: "CreateBlocks",
         path: "/blocks/manage"
     },
-    UPDATE_BLOCKS: {
+    UPDATE_BLOCK: {
         name: "UpdateBlocks",
         path: "/blocks/manage/:id"
     },
 
-    PRODUCTS: {
-        name: "Products",
-        path: "/products"
-    },
-    CREATE_PRODUCTS: {
-        name: "CreateProducts",
-        path: "/products/manage"
-    },
-    UPDATE_PRODUCTS: {
-        name: "UpdateProducts",
-        path: "/products/manage/:id"
-    },
-
-    EXPENSES: {
+    EXPENS: {
         name: "Expenses",
-        path: "/expenses"
+        path: "/expenses",
+        module: actionModules.EXPENS.READ
     },
-    CREATE_EXPENSES: {
+    CREATE_EXPENS: {
         name: "CreateExpenses",
         path: "/expenses/manage"
     },
-    UPDATE_EXPENSES: {
+    UPDATE_EXPENS: {
         name: "UpdateExpenses",
         path: "/expenses/manage/:id"
     },
 
+    PRODUCT: {
+        name: "Products",
+        path: "/products",
+        module: actionModules.PRODUCT.READ
+    },
+    CREATE_PRODUCT: {
+        name: "CreateProducts",
+        path: "/products/manage"
+    },
+    UPDATE_PRODUCT: {
+        name: "UpdateProducts",
+        path: "/products/manage/:id"
+    },
+
     WAREHOUSE: {
         name: "Warehouse",
-        path: "/warehouse"
+        path: "/warehouse",
+        module: actionModules.WAREHOUSE.READ
     },
     CREATE_WAREHOUSE: {
         name: "CreateWarehouse",
@@ -99,22 +135,24 @@ export const routes = {
         path: "/warehouse/manage/:id"
     },
 
-    APPLICATIONS: {
-        name: "Applications",
-        path: "/applications"
+    ROLE: {
+        name: "Roles",
+        path: "/roles",
+        module: actionModules.ROLE.READ
     },
-    CREATE_APPLICATIONS: {
-        name: "CreateApplications",
-        path: "/applications/manage"
+    CREATE_ROLE: {
+        name: "CreateRoles",
+        path: "/roles/manage"
     },
-    VIEW_APPLICATIONS: {
-        name: "ViewApplications",
-        path: "/applications/manage/:id"
+    UPDATE_ROLE: {
+        name: "UpdateRoles",
+        path: "/roles/manage/:id"
     },
 
     ORG_USER: {
         name: "OrganizationUser",
-        path: "/organization-employees"
+        path: "/organization-employees",
+        module: actionModules.ORG_USER.READ
     },
     CREATE_ORG_USER: {
         name: "CreateOrganizationUser",
@@ -123,31 +161,5 @@ export const routes = {
     UPDATE_ORG_USER: {
         name: "UpdateOrganizationUser",
         path: "/organization-employees/manage/:id"
-    },
-
-    ROLES: {
-        name: "Roles",
-        path: "/roles"
-    },
-    CREATE_ROLES: {
-        name: "CreateRoles",
-        path: "/roles/manage"
-    },
-    UPDATE_ROLES: {
-        name: "UpdateRoles",
-        path: "/roles/manage/:id"
-    },
-
-    ESTIMATE: {
-        name: "Estimate",
-        path: "/estimate"
-    },
-    CREATE_ESTIMATE: {
-        name: "CreateEstimate",
-        path: "/estimate/manage"
-    },
-    UPDATE_ESTIMATE: {
-        name: "UpdateEstimate",
-        path: "/estimate/manage/:id"
     }
 }

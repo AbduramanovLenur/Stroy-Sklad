@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editExpensesTitle" 
-                :to="routes.EXPENSES.path"
+                :to="routes.EXPENS.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -149,7 +149,7 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["expensesById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
         
-        router.push(routes.EXPENSES.path);
+        router.push(routes.EXPENS.path);
     }
 });
 

@@ -3,14 +3,14 @@
         <div class="expenses__inner section-padding">
             <HeadPage 
                 title="expensesTitle" 
-                :to="routes.CREATE_EXPENSES.path"
+                :to="routes.CREATE_EXPENS.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.EXPENS.CREATE)"
             />
             <Table 
                 v-if="isSuccessExpenses && expenses?.count"
                 :headers="headers" 
                 :table="expenses?.cost"
-                :to="routes.UPDATE_EXPENSES.name"
+                :to="routes.UPDATE_EXPENS.name"
                 :options="{ page, limit }"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.EXPENS.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.EXPENS.DELETE)"

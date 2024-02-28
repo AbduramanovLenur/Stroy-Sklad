@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewProductTitle" 
-                :to="routes.PRODUCTS.path"
+                :to="routes.PRODUCT.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -126,7 +126,7 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 
-        router.push(routes.PRODUCTS.path);
+        router.push(routes.PRODUCT.path);
     }
 });
 

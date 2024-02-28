@@ -3,7 +3,9 @@ export const actionModules = {
         READ: 1,
         CREATE: 2,
         UPDATE: 3,
-        DELETE: 4
+        DELETE: 4,
+        CONFIRM: 37,
+        REFUSAL: 38
     },
     ESTIMATE: {
         READ: 5,
@@ -23,17 +25,23 @@ export const actionModules = {
         UPDATE: 15,
         DELETE: 16
     },
+    EXPENS: {
+        READ: 21,
+        CREATE: 22,
+        UPDATE: 23,
+        DELETE: 24
+    },
     PRODUCT: {
         READ: 17,
         CREATE: 18,
         UPDATE: 19,
         DELETE: 20
     },
-    EXPENS: {
-        READ: 21,
-        CREATE: 22,
-        UPDATE: 23,
-        DELETE: 24
+    WAREHOUSE: {
+        READ: 33,
+        CREATE: 34,
+        UPDATE: 35,
+        DELETE: 36
     },
     ROLE: {
         READ: 25,
@@ -41,16 +49,10 @@ export const actionModules = {
         UPDATE: 27,
         DELETE: 28
     },
-    EMPLOYEES: {
+    ORG_USER: {
         READ: 29,
         CREATE: 30,
         UPDATE: 31,
         DELETE: 32
-    },
-    WAREHOUSE: {
-        READ: 33,
-        CREATE: 34,
-        UPDATE: 35,
-        DELETE: 36
     }
 }

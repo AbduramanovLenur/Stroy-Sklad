@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editObjectTitle" 
-                :to="routes.OBJECTS.path"
+                :to="routes.OBJECT.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -232,7 +232,7 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         
-        router.push(routes.OBJECTS.path);
+        router.push(routes.OBJECT.path);
     }
 });
 

@@ -3,14 +3,14 @@
         <div class="blocks__inner section-padding">
             <HeadPage 
                 title="blockTitle" 
-                :to="routes.CREATE_BLOCKS.path"
+                :to="routes.CREATE_BLOCK.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.BLOCK.CREATE)"
             />
             <Table 
                 v-if="isSuccessBlocks && blocks?.count"
                 :headers="headers" 
                 :table="blocks?.blocks"
-                :to="routes.UPDATE_BLOCKS.name"
+                :to="routes.UPDATE_BLOCK.name"
                 :options="{ page, limit }"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.BLOCK.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.BLOCK.DELETE)"

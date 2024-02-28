@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewApplicationTitle" 
-                :to="routes.APPLICATIONS.path"
+                :to="routes.APPLICATION.path"
             />
             <form class="manage__form" @submit.prevent>
                 <div class="manage__overlay">
@@ -54,10 +54,24 @@
                     class="manage__triggers" 
                     v-if="(isSuccessCosts && isSuccessMaterials && isSuccessFloors) && (state.statusId !== 7 && state.statusId !== 15)"
                 >
-                    <MyButton icon="approve" type="submit" color="green" :width="180" @click="acceptHandler">
+                    <MyButton 
+                        v-if="user?.user?.modules?.includes(actionModules.APPLICATION.CONFIRM)"
+                        icon="approve" 
+                        type="submit" 
+                        color="green" 
+                        :width="180" 
+                        @click="acceptHandler"
+                    >
                         {{ $t("acceptButton") }}
                     </MyButton>
-                    <MyButton icon="refusal" type="submit" color="red" :width="180" @click="cancelHandler">
+                    <MyButton 
+                        v-if="user?.user?.modules?.includes(actionModules.APPLICATION.REFUSAL)"
+                        icon="refusal" 
+                        type="submit" 
+                        color="red" 
+                        :width="180" 
+                        @click="cancelHandler"
+                    >
                         {{ $t("cancelButton") }}
                     </MyButton>
                 </div>
@@ -301,7 +315,7 @@ const { mutate: cancelMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 
-        router.push(routes.APPLICATIONS.path);
+        router.push(routes.APPLICATION.path);
     }
 });
 
@@ -311,7 +325,7 @@ const { mutate: acceptMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 
-        router.push(routes.APPLICATIONS.path);
+        router.push(routes.APPLICATION.path);
     }
 });
 

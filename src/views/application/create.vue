@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewApplicationTitle" 
-                :to="routes.APPLICATIONS.path"
+                :to="routes.APPLICATION.path"
             />
             <form class="manage__form" @submit.prevent="submitHandler">
                 <div class="manage__overlay">
@@ -350,7 +350,7 @@ const { mutate: createMutate } = useMutation({
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         
-        router.push(routes.APPLICATIONS.path);
+        router.push(routes.APPLICATION.path);
     }
 });
 

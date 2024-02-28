@@ -3,14 +3,14 @@
         <div class="object__inner section-padding">
             <HeadPage 
                 title="objectTitle" 
-                :to="routes.CREATE_OBJECTS.path"
+                :to="routes.CREATE_OBJECT.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.OBJECT.CREATE)"
             />
             <Table 
                 v-if="isSuccessObjects && objects?.count"
                 :headers="headers" 
                 :table="objects?.objects"
-                :to="routes.UPDATE_OBJECTS.name"
+                :to="routes.UPDATE_OBJECT.name"
                 :options="{ page, limit }"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.OBJECT.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.OBJECT.DELETE)"

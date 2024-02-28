@@ -3,14 +3,14 @@
         <div class="products__inner section-padding">
             <HeadPage 
                 title="productsTitle" 
-                :to="routes.CREATE_PRODUCTS.path"                
+                :to="routes.CREATE_PRODUCT.path"                
                 :isShowCreate="user?.user?.modules?.includes(actionModules.PRODUCT.CREATE)"
             />
             <Table 
                 v-if="isSuccessProducts && products?.count"
                 :headers="headers" 
                 :table="products?.constructionMaterial"
-                :to="routes.UPDATE_PRODUCTS.name"
+                :to="routes.UPDATE_PRODUCT.name"
                 :options="{ page, limit }"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.PRODUCT.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.PRODUCT.DELETE)"

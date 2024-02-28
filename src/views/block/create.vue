@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewBlocksTitle" 
-                :to="routes.BLOCKS.path"
+                :to="routes.BLOCK.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -220,7 +220,7 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         queryClient.invalidateQueries({ queryKey: ["blocksList"] });
 
-        router.push(routes.BLOCKS.path);
+        router.push(routes.BLOCK.path);
     }
 });
 

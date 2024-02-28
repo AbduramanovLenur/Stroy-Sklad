@@ -1,2 +1,0 @@
-import{r as d}from"./generic.services-nPQjChLr.js";const c=(t,e,a,s)=>d({url:`${t}/GetList?page=${e}&limit=${a}${s?`&search=${s}`:""}`,method:"GET"}),$=(t,e)=>d({url:`${t}/GetById/id?id=${e}`,method:"GET"}),r=(t,e)=>d({url:`${t}/Create`,method:"POST",body:e}),l=(t,e)=>d({url:`${t}/Update`,method:"POST",body:e}),h=(t,e)=>d({url:`${t}/Delete/${e}`,method:"POST"}),i=(t,e)=>d({url:`${t}/Cancel/${e}`,method:"POST"}),m=(t,e)=>d({url:`${t}/Accept/${e}`,method:"POST"});export{$ as a,i as b,r as c,h as d,m as e,c as g,l as u};
-//# sourceMappingURL=crud.services-ysnFdDpK.js.map

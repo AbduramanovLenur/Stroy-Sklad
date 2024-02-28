@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="addNewObjectTitle" 
-                :to="routes.OBJECTS.path"
+                :to="routes.OBJECT.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -173,7 +173,7 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         
-        router.push(routes.OBJECTS.path);
+        router.push(routes.OBJECT.path);
     }
 });
 

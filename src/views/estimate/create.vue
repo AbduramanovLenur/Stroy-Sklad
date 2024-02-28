@@ -317,7 +317,7 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-const isNotAllEmptyData = computed(() => state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
+const isNotAllEmptyData = computed(() => Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
 
 const addTableHandler = (object) => {
     if (!!isNotAllEmptyData) {

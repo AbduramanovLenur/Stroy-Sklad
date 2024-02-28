@@ -71,7 +71,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.UPDATE));
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ORG_USER.UPDATE));
 
 // const tableStore = useTableStore();
 // const { setPagePagination, setLimitPagination } = tableStore;

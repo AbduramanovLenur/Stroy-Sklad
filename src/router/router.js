@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { routes as routesList } from "@/utils/routes.js";
+import { actionModules } from "@/utils/action-modules.js";
 import { roles } from "@/utils/roles.js";
 import { useUserStore } from "@/store/userStore";
 import { storeToRefs } from "pinia";
@@ -18,7 +19,11 @@ const routes = [
         return { path: routesList.COMPANIES.path };
       }
 
-      return { path: routesList.ROLES.path };
+      const keys = Object.keys(routesList);
+
+      const route = keys?.find((elem) => user?.value.user?.modules?.includes(actionModules?.[elem]?.READ));
+
+      return { path: routesList?.[route]?.path };
     },
   },
   {
@@ -184,13 +189,14 @@ const routes = [
     },
   },
   {
-    name: routesList.ROLES.name,
-    path: routesList.ROLES.path,
+    name: routesList.ROLE.name,
+    path: routesList.ROLE.path,
     component: () => import("@/views/role/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ROLE.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -200,6 +206,10 @@ const routes = [
         return next({ name: routesList.AUTH.name });
       }
 
+      // if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+      //   return next({ name: routesList.HOME.name });
+      // }
+
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
         return next({ name: routesList.HOME.name });
       }
@@ -208,13 +218,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_ROLES.name,
-    path: routesList.CREATE_ROLES.path,
+    name: routesList.CREATE_ROLE.name,
+    path: routesList.CREATE_ROLE.path,
     component: () => import("@/views/role/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ROLE.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -222,6 +233,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -232,13 +247,14 @@ const routes = [
     },
   },
   {
-    name: routesList.UPDATE_ROLES.name,
-    path: routesList.UPDATE_ROLES.path,
+    name: routesList.UPDATE_ROLE.name,
+    path: routesList.UPDATE_ROLE.path,
     component: () => import("@/views/role/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ROLE.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -246,6 +262,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -263,6 +283,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ORG_USER.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -270,6 +291,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -287,6 +312,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ORG_USER.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -294,6 +320,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -311,6 +341,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ORG_USER.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -318,6 +349,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -328,13 +363,14 @@ const routes = [
     },
   },
   {
-    name: routesList.OBJECTS.name,
-    path: routesList.OBJECTS.path,
+    name: routesList.OBJECT.name,
+    path: routesList.OBJECT.path,
     component: () => import("@/views/object/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.OBJECT.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -342,6 +378,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -352,13 +392,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_OBJECTS.name,
-    path: routesList.CREATE_OBJECTS.path,
+    name: routesList.CREATE_OBJECT.name,
+    path: routesList.CREATE_OBJECT.path,
     component: () => import("@/views/object/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.OBJECT.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -366,6 +407,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -376,13 +421,14 @@ const routes = [
     },
   },
   {
-    name: routesList.UPDATE_OBJECTS.name,
-    path: routesList.UPDATE_OBJECTS.path,
+    name: routesList.UPDATE_OBJECT.name,
+    path: routesList.UPDATE_OBJECT.path,
     component: () => import("@/views/object/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.OBJECT.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -390,6 +436,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -400,13 +450,14 @@ const routes = [
     },
   },
   {
-    name: routesList.BLOCKS.name,
-    path: routesList.BLOCKS.path,
+    name: routesList.BLOCK.name,
+    path: routesList.BLOCK.path,
     component: () => import("@/views/block/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.BLOCK.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -414,6 +465,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -424,13 +479,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_BLOCKS.name,
-    path: routesList.CREATE_BLOCKS.path,
+    name: routesList.CREATE_BLOCK.name,
+    path: routesList.CREATE_BLOCK.path,
     component: () => import("@/views/block/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.BLOCK.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -438,6 +494,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -448,13 +508,14 @@ const routes = [
     },
   },
   {
-    name: routesList.UPDATE_BLOCKS.name,
-    path: routesList.UPDATE_BLOCKS.path,
+    name: routesList.UPDATE_BLOCK.name,
+    path: routesList.UPDATE_BLOCK.path,
     component: () => import("@/views/block/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.BLOCK.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -462,6 +523,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -479,6 +544,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ESTIMATE.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -486,6 +552,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -503,6 +573,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ESTIMATE.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -510,6 +581,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -527,6 +602,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.ESTIMATE.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -534,6 +610,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -544,13 +624,14 @@ const routes = [
     },
   },
   {
-    name: routesList.EXPENSES.name,
-    path: routesList.EXPENSES.path,
+    name: routesList.EXPENS.name,
+    path: routesList.EXPENS.path,
     component: () => import("@/views/cost/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -558,6 +639,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -568,13 +653,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_EXPENSES.name,
-    path: routesList.CREATE_EXPENSES.path,
+    name: routesList.CREATE_EXPENS.name,
+    path: routesList.CREATE_EXPENS.path,
     component: () => import("@/views/cost/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -582,6 +668,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -592,13 +682,14 @@ const routes = [
     },
   },
   {
-    name: routesList.UPDATE_EXPENSES.name,
-    path: routesList.UPDATE_EXPENSES.path,
+    name: routesList.UPDATE_EXPENS.name,
+    path: routesList.UPDATE_EXPENS.path,
     component: () => import("@/views/cost/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -606,6 +697,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -616,13 +711,14 @@ const routes = [
     },
   },
   {
-    name: routesList.PRODUCTS.name,
-    path: routesList.PRODUCTS.path,
+    name: routesList.PRODUCT.name,
+    path: routesList.PRODUCT.path,
     component: () => import("@/views/product/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.PRODUCT.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -630,6 +726,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -640,13 +740,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_PRODUCTS.name,
-    path: routesList.CREATE_PRODUCTS.path,
+    name: routesList.CREATE_PRODUCT.name,
+    path: routesList.CREATE_PRODUCT.path,
     component: () => import("@/views/product/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.PRODUCT.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -654,6 +755,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -664,13 +769,14 @@ const routes = [
     },
   },
   {
-    name: routesList.UPDATE_PRODUCTS.name,
-    path: routesList.UPDATE_PRODUCTS.path,
+    name: routesList.UPDATE_PRODUCT.name,
+    path: routesList.UPDATE_PRODUCT.path,
     component: () => import("@/views/product/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.PRODUCT.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -678,6 +784,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -695,6 +805,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.WAREHOUSE.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -702,6 +813,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -719,6 +834,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.WAREHOUSE.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -726,6 +842,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -743,6 +863,7 @@ const routes = [
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.WAREHOUSE.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -750,6 +871,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -760,13 +885,14 @@ const routes = [
     },
   },
   {
-    name: routesList.APPLICATIONS.name,
-    path: routesList.APPLICATIONS.path,
+    name: routesList.APPLICATION.name,
+    path: routesList.APPLICATION.path,
     component: () => import("@/views/application/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.APPLICATION.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -774,6 +900,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -784,13 +914,14 @@ const routes = [
     },
   },
   {
-    name: routesList.CREATE_APPLICATIONS.name,
-    path: routesList.CREATE_APPLICATIONS.path,
+    name: routesList.CREATE_APPLICATION.name,
+    path: routesList.CREATE_APPLICATION.path,
     component: () => import("@/views/application/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.APPLICATION.CREATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -798,6 +929,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
@@ -808,13 +943,14 @@ const routes = [
     },
   },
   {
-    name: routesList.VIEW_APPLICATIONS.name,
-    path: routesList.VIEW_APPLICATIONS.path,
+    name: routesList.VIEW_APPLICATION.name,
+    path: routesList.VIEW_APPLICATION.path,
     component: () => import("@/views/application/view.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
+      module: actionModules.APPLICATION.UPDATE
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
@@ -822,6 +958,10 @@ const routes = [
 
       if (!user.value?.token) {
         return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
       }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {

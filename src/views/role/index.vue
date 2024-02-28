@@ -3,14 +3,14 @@
         <div class="roles__inner section-padding">
             <HeadPage 
                 title="rolesTitle" 
-                :to="routes.CREATE_ROLES.path"
+                :to="routes.CREATE_ROLE.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.ROLE.CREATE)"
             />
             <Table 
                 v-if="isSuccessRoles && roles?.count"
                 :headers="headers" 
                 :table="roles?.roles"
-                :to="routes.UPDATE_ROLES.name"
+                :to="routes.UPDATE_ROLE.name"
                 :options="{ page, limit }"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.ROLE.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.ROLE.DELETE)"

@@ -3,14 +3,14 @@
         <div class="applications__inner">
             <HeadPage 
                 title="applicationTitle" 
-                :to="routes.CREATE_APPLICATIONS.path"
+                :to="routes.CREATE_APPLICATION.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.APPLICATION.CREATE)"
             />
             <Table 
                 v-if="isSuccessApplications && applications?.count"
                 :headers="headers" 
                 :table="applications?.applications"
-                :to="routes.VIEW_APPLICATIONS.name"
+                :to="routes.VIEW_APPLICATION.name"
                 :options="{ page, limit }"
                 :isShowEye="true"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.UPDATE)"

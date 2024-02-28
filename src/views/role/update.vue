@@ -3,7 +3,7 @@
         <div class="manage__inner section-padding">
             <ManageHead 
                 title="editRolesTitle" 
-                :to="routes.ROLES.path"
+                :to="routes.ROLE.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <FormInput 
@@ -179,7 +179,7 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["rolesById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });
         
-        router.push(routes.ROLES.path);
+        router.push(routes.ROLE.path);
     }
 });
 

@@ -42,14 +42,14 @@ const { user } = storeToRefs(userStore);
 const menu = ref([
     { id: 1, label: "itemAdminCompanies", icon: "companies", to: routes.COMPANIES.path, roleId: roles.SUPERADMIN_ID },
     { id: 2, label: "itemAdminEmployees", icon: "employees", to: routes.EMPLOYEES.path, roleId: roles.SUPERADMIN_ID },
-    { id: 3, label: "itemUserApplications", icon: "info", to: routes.APPLICATIONS.path, moduleId: actionModules.APPLICATION.READ },
+    { id: 3, label: "itemUserApplications", icon: "info", to: routes.APPLICATION.path, moduleId: actionModules.APPLICATION.READ },
     { id: 4, label: "itemUserEstimate", icon: "estimate", to: routes.ESTIMATE.path, moduleId: actionModules.ESTIMATE.READ },  
-    { id: 5, label: "itemUserObjects", icon: "objects", to: routes.OBJECTS.path, moduleId: actionModules.OBJECT.READ },
-    { id: 6, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCKS.path, moduleId: actionModules.BLOCK.READ },
-    { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENSES.path, moduleId: actionModules.EXPENS.READ },
-    { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCTS.path, moduleId: actionModules.PRODUCT.READ },
+    { id: 5, label: "itemUserObjects", icon: "objects", to: routes.OBJECT.path, moduleId: actionModules.OBJECT.READ },
+    { id: 6, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCK.path, moduleId: actionModules.BLOCK.READ },
+    { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENS.path, moduleId: actionModules.EXPENS.READ },
+    { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCT.path, moduleId: actionModules.PRODUCT.READ },
     { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, moduleId: actionModules.WAREHOUSE.READ },
-    { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLES.path, moduleId: actionModules.ROLE.READ },
+    { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLE.path, moduleId: actionModules.ROLE.READ },
     { id: 11, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ROLE.READ },
 ]);
 

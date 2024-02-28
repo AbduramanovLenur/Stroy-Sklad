@@ -69,7 +69,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.CREATE));
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ORG_USER.CREATE));
 
 const state = ref({
     fullName: "",

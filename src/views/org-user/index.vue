@@ -4,7 +4,7 @@
             <HeadPage
                 title="employeesTitle" 
                 :to="routes.CREATE_ORG_USER.path"
-                :isShowCreate="user?.user?.modules?.includes(actionModules.EMPLOYEES.CREATE)"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.ORG_USER.CREATE)"
             />
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
@@ -12,8 +12,8 @@
                 :table="employees?.users" 
                 :to="routes.UPDATE_ORG_USER.name"
                 :options="{ page, limit }"
-                :isShowUpdate="user?.user?.modules?.includes(actionModules.EMPLOYEES.UPDATE)"
-                :isShowDelete="user?.user?.modules?.includes(actionModules.EMPLOYEES.DELETE)"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.ORG_USER.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.ORG_USER.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
@@ -56,7 +56,7 @@ const organizationId = ref(localStorage.getItem("organizationId"));
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.EMPLOYEES.READ));
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.ORG_USER.READ));
 
 const employeesId = ref("");
 
