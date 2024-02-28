@@ -26,25 +26,34 @@
                 <td class="subtable-info" align="center">
                     {{ index + 1 }}
                 </td>
+                <td v-if="info.blockValue" class="subtable-info" align="center">
+                    {{ info.blockValue }}
+                </td>
                 <td v-if="info.floorValue" class="subtable-info" align="center">
                     {{ info.floorValue }}
                 </td>
-                <td v-if="info.costValue" class="subtable-info" align="center">
-                    {{ info.costValue }}
-                </td>
+                
                 <td v-if="info.constructionMaterialValue" class="subtable-info" align="center">
                     {{ info.constructionMaterialValue }}
+                </td>
+                <td v-if="info.constructionMaterialIdsValue" class="subtable-info" align="center">
+                    <div class="subtable-box">
+                        {{ info.constructionMaterialIdsValue.map((elem) => elem.name).join(', ') }}
+                    </div>
                 </td>
                 <td v-if="info.count" class="subtable-info" align="center">
                     {{ info.count }}
                 </td>
                 <td v-if="info.price" class="subtable-info" align="center">
-                    {{ info.price }}
+                    {{ priceSeperator(info.price) }}
+                </td>
+                <td v-if="info.costValue" class="subtable-info" align="center">
+                    {{ info.costValue }}
                 </td>
                 <td class="subtable-info" align="center" v-if="isShowDelete">
                     <span 
                         class="subtable-delete" 
-                        @click="() => $emit('onActionDelete', info.id)"
+                        @click="() => $emit('onActionDelete', info.delId)"
                     >
                         <Icon name="delete" />
                     </span>
@@ -55,7 +64,9 @@
 </template>
 
 <script setup>
-const props = defineProps({
+import { priceSeperator } from "@/utils/secondary-functions.js";
+
+defineProps({
     headers: Array, 
     table: Array,
     isShowDelete: {
@@ -111,6 +122,13 @@ const props = defineProps({
         &:first-child {
             font-weight: 600;
         }
+    }
+    &-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     }
     &-status {
         white-space: nowrap;

@@ -36,12 +36,10 @@ const model = defineModel();
 .modules {
     gap: 20px;
     grid-column: 1/4;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     width: 100%;
-    @media (max-width: 1152px) {
-        grid-template-columns: repeat(1, 1fr);
-    }
     &__action {
         &-box {
             display: flex;
@@ -72,10 +70,21 @@ const model = defineModel();
         &-list {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
             gap: 15px;
             // width: 100%;
             @media (max-width: 1350px) {
                 gap: 10px;
+            }
+            @media (max-width: 1024px) {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+            }
+            @media (max-width: 864px) {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            @media (max-width: 768px) {
+                justify-content: flex-start;
             }
             @media (max-width: 480px) {
                 display: grid;

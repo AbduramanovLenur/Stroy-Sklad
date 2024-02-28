@@ -5,7 +5,7 @@ export const actionModules = {
         UPDATE: 3,
         DELETE: 4
     },
-    SMETA: {
+    ESTIMATE: {
         READ: 5,
         CREATE: 6,
         UPDATE: 7,

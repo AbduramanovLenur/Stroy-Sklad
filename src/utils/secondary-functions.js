@@ -1,12 +1,14 @@
-export const clearForm = (formValues) => {
-  const form = { ...formValues };
-
-  for (const key in form) {
-    form[key] = "";
+export function clearForm(formData, exceptions = []) {
+  const clearedFormData = {};
+  for (const key in formData) {
+    if (!exceptions.includes(key)) {
+      clearedFormData[key] = Array.isArray(formData[key]) ? [] : "";
+    } else {
+      clearedFormData[key] = formData[key];
+    }
   }
-
-  return form;
-};
+  return clearedFormData;
+}
 
 export const isFormDataEmpty = (formData) => {
   for (let key in formData) {
@@ -23,20 +25,6 @@ export const isFormDataEmpty = (formData) => {
   return true;
 };
 
-export const getFirstValue = (formData) => {
-  const result = {};
-
-  for (const key in formData) {
-    if (Array.isArray(formData[key])) {
-      result[key] = formData[key][0];
-    } else {
-      result[key] = formData[key];
-    }
-  }
-
-  return result;
-};
-
 export const createIdMap = (items) => {
   const idMap = {};
   items.forEach((item) => {
@@ -44,3 +32,6 @@ export const createIdMap = (items) => {
   });
   return idMap;
 };
+
+export const priceSeperator = (price = 0) =>
+  price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");

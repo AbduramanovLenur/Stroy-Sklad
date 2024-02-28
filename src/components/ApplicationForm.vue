@@ -41,11 +41,7 @@
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { 
-    clearForm, 
-    isFormDataEmpty, 
-    getFirstValue 
-} from "@/utils/secondary-functions.js";
+import { clearForm, isFormDataEmpty } from "@/utils/secondary-functions.js";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
 
@@ -66,12 +62,8 @@ const formData = ref({
 
 const valueBlock = computed(() => props.buildingBlockId);
 
-const isSubmit = computed(() => props?.isSubmit);
-
 watch(valueBlock, () => {
-    if (!isSubmit.value) {
-        formData.value.floorId = [];
-    }
+    formData.value.floorId = [];
 })
 
 const inputs = ref([
@@ -80,16 +72,14 @@ const inputs = ref([
         model: "count", 
         label: "countAppLabel", 
         placeholder: "countAppPlaceholder", 
-        icon: "list",
-        type: "text"
+        icon: "list"
     },
     { 
         id: 2, 
         model: "price", 
         label: "priceAppLabel", 
         placeholder: "priceAppPlaceholder", 
-        icon: "money",
-        type: "text"
+        icon: "money"
     }
 ]);
 
@@ -101,9 +91,17 @@ const addHandler = () => {
         return;
     }
 
-    formData.value = getFirstValue(formData.value);
+    formData.value = {
+        floorId: formData.value.floorId[0],
+        costId: formData.value.costId[0],
+        constructionMaterialId: formData.value.constructionMaterialId[0],
+        count: formData.value.count,
+        price: formData.value.price
+    }
 
     emit("onAddTable", formData.value);
+
+    console.log(formData.value);
 
     formData.value = clearForm(formData.value);
 }

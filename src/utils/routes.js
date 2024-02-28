@@ -136,5 +136,18 @@ export const routes = {
     UPDATE_ROLES: {
         name: "UpdateRoles",
         path: "/roles/manage/:id"
+    },
+
+    ESTIMATE: {
+        name: "Estimate",
+        path: "/estimate"
+    },
+    CREATE_ESTIMATE: {
+        name: "CreateEstimate",
+        path: "/estimate/manage"
+    },
+    UPDATE_ESTIMATE: {
+        name: "UpdateEstimate",
+        path: "/estimate/manage/:id"
     }
 }

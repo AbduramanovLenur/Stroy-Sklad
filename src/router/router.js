@@ -42,7 +42,7 @@ const routes = [
   {
     name: routesList.COMPANIES.name,
     path: routesList.COMPANIES.path,
-    component: () => import("@/views/companies/index.vue"),
+    component: () => import("@/views/company/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -66,7 +66,7 @@ const routes = [
   {
     name: routesList.CREATE_COMPANIES.name,
     path: routesList.CREATE_COMPANIES.path,
-    component: () => import("@/views/companies/create.vue"),
+    component: () => import("@/views/company/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -90,7 +90,7 @@ const routes = [
   {
     name: routesList.UPDATE_COMPANIES.name,
     path: routesList.UPDATE_COMPANIES.path,
-    component: () => import("@/views/companies/update.vue"),
+    component: () => import("@/views/company/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -114,7 +114,7 @@ const routes = [
   {
     name: routesList.EMPLOYEES.name,
     path: routesList.EMPLOYEES.path,
-    component: () => import("@/views/employees/index.vue"),
+    component: () => import("@/views/employee/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -138,7 +138,7 @@ const routes = [
   {
     name: routesList.CREATE_EMPLOYEES.name,
     path: routesList.CREATE_EMPLOYEES.path,
-    component: () => import("@/views/employees/create.vue"),
+    component: () => import("@/views/employee/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -162,7 +162,7 @@ const routes = [
   {
     name: routesList.UPDATE_EMPLOYEES.name,
     path: routesList.UPDATE_EMPLOYEES.path,
-    component: () => import("@/views/employees/update.vue"),
+    component: () => import("@/views/employee/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -186,7 +186,7 @@ const routes = [
   {
     name: routesList.ROLES.name,
     path: routesList.ROLES.path,
-    component: () => import("@/views/roles/index.vue"),
+    component: () => import("@/views/role/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -210,7 +210,7 @@ const routes = [
   {
     name: routesList.CREATE_ROLES.name,
     path: routesList.CREATE_ROLES.path,
-    component: () => import("@/views/roles/create.vue"),
+    component: () => import("@/views/role/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -234,7 +234,7 @@ const routes = [
   {
     name: routesList.UPDATE_ROLES.name,
     path: routesList.UPDATE_ROLES.path,
-    component: () => import("@/views/roles/update.vue"),
+    component: () => import("@/views/role/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -330,7 +330,7 @@ const routes = [
   {
     name: routesList.OBJECTS.name,
     path: routesList.OBJECTS.path,
-    component: () => import("@/views/objects/index.vue"),
+    component: () => import("@/views/object/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -354,7 +354,7 @@ const routes = [
   {
     name: routesList.CREATE_OBJECTS.name,
     path: routesList.CREATE_OBJECTS.path,
-    component: () => import("@/views/objects/create.vue"),
+    component: () => import("@/views/object/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -378,7 +378,7 @@ const routes = [
   {
     name: routesList.UPDATE_OBJECTS.name,
     path: routesList.UPDATE_OBJECTS.path,
-    component: () => import("@/views/objects/update.vue"),
+    component: () => import("@/views/object/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -402,7 +402,7 @@ const routes = [
   {
     name: routesList.BLOCKS.name,
     path: routesList.BLOCKS.path,
-    component: () => import("@/views/blocks/index.vue"),
+    component: () => import("@/views/block/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -426,7 +426,7 @@ const routes = [
   {
     name: routesList.CREATE_BLOCKS.name,
     path: routesList.CREATE_BLOCKS.path,
-    component: () => import("@/views/blocks/create.vue"),
+    component: () => import("@/views/block/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -450,7 +450,7 @@ const routes = [
   {
     name: routesList.UPDATE_BLOCKS.name,
     path: routesList.UPDATE_BLOCKS.path,
-    component: () => import("@/views/blocks/update.vue"),
+    component: () => import("@/views/block/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -471,20 +471,82 @@ const routes = [
       return next();
     },
   },
-  // {
-  //   name: "Smeta",
-  //   path: "/smeta",
-  //   component: () => import("@/views/smeta.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     requiresAuth: true,
-  //     roleId: "2",
-  //   }
-  // },
+  {
+    name: routesList.ESTIMATE.name,
+    path: routesList.ESTIMATE.path,
+    component: () => import("@/views/estimate/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  },
+  {
+    name: routesList.CREATE_ESTIMATE.name,
+    path: routesList.CREATE_ESTIMATE.path,
+    component: () => import("@/views/estimate/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  },
+  {
+    name: routesList.UPDATE_ESTIMATE.name,
+    path: routesList.UPDATE_ESTIMATE.path,
+    component: () => import("@/views/estimate/update.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.SUPERADMIN_ID,
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  },
   {
     name: routesList.EXPENSES.name,
     path: routesList.EXPENSES.path,
-    component: () => import("@/views/expenses/index.vue"),
+    component: () => import("@/views/cost/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -508,7 +570,7 @@ const routes = [
   {
     name: routesList.CREATE_EXPENSES.name,
     path: routesList.CREATE_EXPENSES.path,
-    component: () => import("@/views/expenses/create.vue"),
+    component: () => import("@/views/cost/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -532,7 +594,7 @@ const routes = [
   {
     name: routesList.UPDATE_EXPENSES.name,
     path: routesList.UPDATE_EXPENSES.path,
-    component: () => import("@/views/expenses/update.vue"),
+    component: () => import("@/views/cost/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -556,7 +618,7 @@ const routes = [
   {
     name: routesList.PRODUCTS.name,
     path: routesList.PRODUCTS.path,
-    component: () => import("@/views/products/index.vue"),
+    component: () => import("@/views/product/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -580,7 +642,7 @@ const routes = [
   {
     name: routesList.CREATE_PRODUCTS.name,
     path: routesList.CREATE_PRODUCTS.path,
-    component: () => import("@/views/products/create.vue"),
+    component: () => import("@/views/product/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -604,7 +666,7 @@ const routes = [
   {
     name: routesList.UPDATE_PRODUCTS.name,
     path: routesList.UPDATE_PRODUCTS.path,
-    component: () => import("@/views/products/update.vue"),
+    component: () => import("@/views/product/update.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -700,7 +762,7 @@ const routes = [
   {
     name: routesList.APPLICATIONS.name,
     path: routesList.APPLICATIONS.path,
-    component: () => import("@/views/applications/index.vue"),
+    component: () => import("@/views/application/index.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -724,7 +786,7 @@ const routes = [
   {
     name: routesList.CREATE_APPLICATIONS.name,
     path: routesList.CREATE_APPLICATIONS.path,
-    component: () => import("@/views/applications/create.vue"),
+    component: () => import("@/views/application/create.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,
@@ -748,7 +810,7 @@ const routes = [
   {
     name: routesList.VIEW_APPLICATIONS.name,
     path: routesList.VIEW_APPLICATIONS.path,
-    component: () => import("@/views/applications/view.vue"),
+    component: () => import("@/views/application/view.vue"),
     meta: {
       layout: DefaultLayouts,
       requiresAuth: true,

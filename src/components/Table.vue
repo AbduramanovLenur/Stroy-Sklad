@@ -62,6 +62,9 @@
                 <td v-if="info.fullName" class="table-info" align="center">
                     {{ info.fullName }}
                 </td>
+                <td v-if="info.buildingObject" class="table-info" align="center">
+                    {{ info.buildingObject }}
+                </td>
                 <td v-if="info.objectName" class="table-info" align="center">
                     {{ info.objectName }}
                 </td>
@@ -91,6 +94,9 @@
                 </td>
                 <td v-if="info.address" class="table-info no-wraped" align="center">
                     {{ info.address }}
+                </td>
+                <td v-if="info.price" class="table-info no-wraped" align="center">
+                    {{ info.price }}
                 </td>
                 <td v-if="info.phoneNumber" class="table-info" align="center">
                     {{ info.phoneNumber }}
@@ -138,7 +144,10 @@ const props = defineProps({
     table: Array,
     to: String,
     options: Object,
-    isShowEye: Boolean,
+    isShowEye: {
+        type: Boolean,
+        default: () => false
+    },
     isShowUpdate: {
         type: Boolean,
         default: () => true
