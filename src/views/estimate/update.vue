@@ -176,9 +176,8 @@ const isSubmit = ref(false);
 const isFirstChange = ref(false);
 
 const blockId = ref("");
-const subtable = ref([]);
 
-const filteredSubtable = computed(() => subtable.value.filter((elem) => +elem.blockId === +blockId.value));
+const filteredSubtable = computed(() => state.value.budgetTables.filter((elem) => +elem.buildingBlockId === +blockId.value));
 
 const rules = computed(() => ({
     id: { required },
@@ -209,7 +208,6 @@ const isEnabledBlocks = computed(() => !!valueObject.value.length);
 watch(valueObject, () => {
     if (!isFirstChange.value && !isSubmit.value) {
         state.value.budgetTables = [];
-        subtable.value = [];
         blockId.value = "";
     }
 
@@ -354,17 +352,14 @@ const isNotAllEmptyData = computed(() => state.value.budgetTables.length && Obje
 
 const addTableHandler = (object) => {
     if (!!isNotAllEmptyData) {
-        subtable.value.push({
+        state.value.budgetTables.push({
+            ...object, 
             delId: uuidv4(),
             blockValue: getBlockIdValue(object),
-            blockId: object.buildingBlockId,
             floorValue: getFloorIdValue(object),
             costValue: getCostIdValue(object),
-            constructionMaterialIdsValue: getConstructionMaterialIdsValue(object),
-            price: object.price
+            constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
         });
-
-        state.value.budgetTables.push({ delId: uuidv4(), ...object });
 
         state.value.price = +state.value.price + +object.price;
         return;
@@ -377,16 +372,17 @@ const isInitialRender = ref(true);
 
 watch(isNotAllEmptyData, (newValue) => {
     if (!!newValue && isInitialRender.value) {
-        state.value.budgetTables.forEach((elem) => {
-            subtable.value.push({
+        state.value.budgetTables = state.value.budgetTables.map((elem) => {
+            const object = {
+                ...elem,
                 delId: uuidv4(),
                 blockValue: getBlockIdValue(elem),
-                blockId: elem.buildingBlockId,
                 floorValue: getFloorIdValue(elem),
                 costValue: getCostIdValue(elem),
-                constructionMaterialIdsValue: getConstructionMaterialIdsValue(elem),
-                price: elem.price
-            });
+                constructionMaterialIdsValue: getConstructionMaterialIdsValue(elem)
+            }
+
+            return object;
         });
 
         isInitialRender.value = false;
@@ -395,7 +391,6 @@ watch(isNotAllEmptyData, (newValue) => {
 
 const deleteHandler = (idx) => {
     state.value.budgetTables = state.value.budgetTables.filter((elem) => elem.delId !== idx);
-    subtable.value = subtable.value.filter((elem) => elem.delId !== idx);
 }
 
 const { isError } = await useQuery({
@@ -430,6 +425,10 @@ const { mutate: updateMutate } = useMutation({
             let object = { ...elem };
 
             delete object.delId;
+            delete object.blockValue;
+            delete object.floorValue;
+            delete object.costValue;
+            delete object.constructionMaterialIdsValue;
 
             return object;
         });

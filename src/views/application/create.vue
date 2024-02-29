@@ -50,7 +50,7 @@
                 </span>
                 <SubTable
                     :headers="headers"
-                    :table="subtable"
+                    :table="state.createApplicationTables"
                     @onActionDelete="deleteHandler"
                     :isShowDelete="true"
                 />
@@ -115,8 +115,6 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.CREATE));
 
 const isSubmit = ref(false);
-
-const subtable = ref([]);
 
 const headers = ref([
     { id: 1, label: "appFloor", width: 215 },
@@ -318,16 +316,16 @@ const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && O
 
 const addTableHandler = (object) => {
     if (!!isNotAllEmptyData) {
-        subtable.value.push({
-            delId: uuidv4(),
+        state.value.createApplicationTables.push({ 
+            ...object,
+            delId: uuidv4(), 
             floorValue: getFloorIdValue(object),
             costValue: getCostIdValue(object),
             constructionMaterialValue: getConstructionMaterialIdValue(object),
-            count: object.count,
-            price: object.price
+            // count: object.count,
+            // price: object.price
         });
-    
-        state.value.createApplicationTables.push({ delId: uuidv4(), ...object});
+
         return;
     }
 
@@ -336,7 +334,6 @@ const addTableHandler = (object) => {
 
 const deleteHandler = (idx) => {
     state.value.createApplicationTables = state.value.createApplicationTables.filter((elem) => elem.delId !== idx);
-    subtable.value = subtable.value.filter((elem) => elem.delId !== idx);
 }
 
 const { mutate: createMutate } = useMutation({
@@ -345,6 +342,15 @@ const { mutate: createMutate } = useMutation({
 
         body.buildingObjectId = body.buildingObjectId[0];
         body.buildingBlockId = body.buildingBlockId[0];
+
+        body.createApplicationTables = body.createApplicationTables.map((elem) => {
+            delete elem.delId;
+            delete elem.floorValue;
+            delete elem.costValue;
+            delete elem.constructionMaterialValue;
+
+            return elem;
+        })
     },
     mutationFn: (body) => create("application", body),
     onSuccess: () => {

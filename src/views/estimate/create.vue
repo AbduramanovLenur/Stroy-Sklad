@@ -157,9 +157,8 @@ const state = ref({
 const isSubmit = ref(false);
 
 const blockId = ref("");
-const subtable = ref([]);
 
-const filteredSubtable = computed(() => subtable.value.filter((elem) => +elem.blockId === +blockId.value));
+const filteredSubtable = computed(() => state.value.tables.filter((elem) => +elem.buildingBlockId === +blockId.value));
 
 const rules = computed(() => ({
     fullname: { required },
@@ -188,7 +187,6 @@ const isEnabledBlocks = computed(() => !!valueObject.value.length);
 watch(valueObject, () => {
     if (!isSubmit.value) {
         state.value.tables = [];
-        subtable.value = [];
         blockId.value = "";
     }
 }, { immediate: true });
@@ -321,17 +319,14 @@ const isNotAllEmptyData = computed(() => Object.keys(blockMap.value).length && O
 
 const addTableHandler = (object) => {
     if (!!isNotAllEmptyData) {
-        subtable.value.push({
+        state.value.tables.push({ 
+            ...object, 
             delId: uuidv4(),
             blockValue: getBlockIdValue(object),
-            blockId: object.buildingBlockId,
             floorValue: getFloorIdValue(object),
             costValue: getCostIdValue(object),
-            constructionMaterialIdsValue: getConstructionMaterialIdsValue(object),
-            price: object.price
+            constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
         });
-
-        state.value.tables.push({ delId: uuidv4(), ...object });
 
         state.value.price = +state.value.price + +object.price;
         return;
@@ -342,7 +337,6 @@ const addTableHandler = (object) => {
 
 const deleteHandler = (idx) => {
     state.value.tables = state.value.tables.filter((elem) => elem.delId !== idx);
-    subtable.value = subtable.value.filter((elem) => elem.delId !== idx);
 }
 
 const { mutate: createMutate } = useMutation({
@@ -350,10 +344,15 @@ const { mutate: createMutate } = useMutation({
         isSubmit.value = true;
 
         body.tables = body.tables.map((elem) => {
-            console.log(elem);
-            let object = { ...elem };
+            let object = { 
+                ...elem
+            };
 
             delete object.delId;
+            delete object.blockValue;
+            delete object.floorValue;
+            delete object.costValue;
+            delete object.constructionMaterialIdsValue;
 
             return object;
         });

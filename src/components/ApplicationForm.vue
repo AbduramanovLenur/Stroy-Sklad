@@ -101,8 +101,6 @@ const addHandler = () => {
 
     emit("onAddTable", formData.value);
 
-    console.log(formData.value);
-
     formData.value = clearForm(formData.value);
 }
 </script>

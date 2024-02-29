@@ -35,11 +35,11 @@
                     </FormSelect>
                 </div>
                 <SubTable
-                    v-if="isSuccessCosts && isSuccessMaterials && isSuccessFloors && subtable"
+                    v-if="isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.applicationTables.length"
                     :headers="headers"
-                    :table="subtable"
+                    :table="state.applicationTables"
                 />
-                <Spinner v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !subtable.length" />
+                <Spinner v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables.length" />
                 <FormTextarea 
                     v-for="input in textareas"
                     :key="input.id"
@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect } from "vue";
+import { ref, computed, watch } from "vue";
 import FormTextarea from "@/components/FormTextarea.vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -114,8 +114,6 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
-
-const subtable = ref([]);
 
 const headers = ref([
     { id: 1, label: "appFloor", width: 215 },
@@ -288,18 +286,16 @@ const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && O
 
 watch(isNotAllEmptyData, (newValue) => {
     if (!!newValue) {
-        state.value.applicationTables.forEach((elem) => {
-            subtable.value.push({
+        state.value.applicationTables = state.value.applicationTables.map((elem) => {
+            const object = { 
+                ...elem,
                 floorValue: getFloorIdValue(elem),
                 costValue: getCostIdValue(elem),
-                constructionMaterialValue: getConstructionMaterialIdValue(elem),
-                count: elem.count,
-                price: elem.price
-            });
-        });
+                constructionMaterialValue: getConstructionMaterialIdValue(elem)
+            };
 
-        console.log(state.value.applicationTables);
-        console.log(subtable.value);
+            return object;
+        });
     }
 }, { immediate: true });
 

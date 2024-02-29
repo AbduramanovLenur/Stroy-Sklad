@@ -32,7 +32,6 @@
                 <td v-if="info.floorValue" class="subtable-info" align="center">
                     {{ info.floorValue }}
                 </td>
-                
                 <td v-if="info.constructionMaterialValue" class="subtable-info" align="center">
                     {{ info.constructionMaterialValue }}
                 </td>
