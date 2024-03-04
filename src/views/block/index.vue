@@ -61,8 +61,8 @@ const blocksId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "blockName", width: 225 },
-    { id: 2, label: "blockObject", width: 250 },
+    { id: 1, label: "blockName", width: 260 },
+    { id: 2, label: "blockObject", width: 340 },
     { id: 4, label: "blockFloors", width: 200 },
     { id: 5, label: "blockRooms", width: 200 },
     { id: 6, label: "blockAddress", width: 250 }

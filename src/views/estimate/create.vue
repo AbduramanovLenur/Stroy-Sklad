@@ -45,12 +45,19 @@
                         {{ $t("estimatePriceLabel") }}
                     </FormInput>
                 </div>
-                <h3 class="manage__title" v-if="isSuccessBlocks && blocks?.length">
+                <h3 
+                    v-if="isSuccessBlocks && blocks?.length"
+                    class="manage__title"
+                >
                     {{ $t("blockEstimateLabel") }}
                 </h3>
-                <ul class="manage__blocks" v-if="isSuccessBlocks && blocks?.length">
+                <ul 
+                    v-if="isSuccessBlocks && blocks?.length"
+                    class="manage__blocks"
+                >
                     <li 
-                        v-for="block in blocks" :key="block.id"
+                        v-for="block in blocks" 
+                        :key="block.id"
                         class="manage__block" 
                         @click="() => blockId = block.id"
                     >
@@ -61,7 +68,7 @@
                 </ul>
                 <Spinner v-if="isLoadingBlocks" />
                 <EstimateForm 
-                    v-if="blockId && blocks?.length"
+                    v-if="blockId"
                     :selects="selectsInfo"
                     :blockId="blockId"
                     @onAddTable="addTableHandler"
@@ -74,25 +81,26 @@
                     {{ v$?.tables?.$errors[0]?.$message }}
                 </span>
                 <SubTable
-                    v-if="blockId && blocks?.length"
+                    v-if="blockId"
                     :headers="headers"
                     :table="filteredSubtable"
                     @onActionDelete="deleteHandler"
                     :isShowDelete="true"
                 />
                 <FormTextarea 
-                    v-if="blockId && blocks?.length"
-                    v-for="input in textareas"
-                    :key="input.id"
-                    v-model.trim="state[input.model]"
+                    v-if="blockId"
+                    v-model.trim="state.details"
                     :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :error="v$?.[input.errorKey]?.$error" 
-                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
+                    :placeholder="$t('estimateCommentPlaceholder')"
+                    :error="v$?.details?.$error" 
+                    :textError="v$?.details?.$errors[0]?.$message"
                 >
-                    {{ $t(input.label) }}
+                    {{ $t("estimateCommentLabel") }}
                 </FormTextarea>
-                <CustomButton v-if="blockId && blocks?.length" className="manage__submit">
+                <CustomButton 
+                    v-if="blockId" 
+                    className="manage__submit"
+                >
                     {{ $t("formButton") }}
                 </CustomButton>
             </form>
@@ -288,16 +296,6 @@ const selectsInfo = ref([
         loading: isLoadingMaterials,
         multiple: true
     }
-])
-
-const textareas = ref([
-    { 
-        id: 1, 
-        model: "details", 
-        label: "estimateCommentLabel", 
-        placeholder: "estimateCommentPlaceholder",
-        errorKey: "details"
-    }
 ]);
 
 const blockMap = computed(() => createIdMap(blocks.value || []));
@@ -315,10 +313,10 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-const isNotAllEmptyData = computed(() => Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
+const isNotAllEmptyData = computed(() => !!(Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
 
 const addTableHandler = (object) => {
-    if (!!isNotAllEmptyData) {
+    if (isNotAllEmptyData) {
         state.value.tables.push({ 
             ...object, 
             delId: uuidv4(),

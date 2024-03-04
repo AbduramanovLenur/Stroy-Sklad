@@ -215,8 +215,8 @@ const getId = computed(() => {
     &-status {
         white-space: nowrap;
         span {
+            font-size: 14px;
             position: relative;
-            padding: 10px 10px 10px 30px;
             border-radius: 10px;
             &::after {
                 content: "";
@@ -231,6 +231,7 @@ const getId = computed(() => {
             &.active {
                 background-color: rgba(0, 128, 0, 0.2);
                 color: var(--green);
+                padding: 6px 15px 6px 35px;
                 &::after {
                     background-color: var(--green);
                 }
@@ -238,6 +239,7 @@ const getId = computed(() => {
             &.no-active {
                 background-color: rgba(255, 0, 0, 0.2);
                 color: var(--red);
+                padding: 6px 8px 6px 30px;
                 &::after {
                     background-color: var(--red);
                 }

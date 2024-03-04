@@ -61,7 +61,7 @@ const expensesId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "expensesName", width: 635 }
+    { id: 1, label: "expensesName", width: 1040 }
 ]);
 
 const {

@@ -17,6 +17,18 @@
                 </span>
             </router-link>
             <Menu />
+            <router-link 
+                v-if="managementModules.some(value => user?.user?.modules?.includes(value))"
+                :class="`sidepanel__management ${isOpenPanel ? 'centered' : ''}`" 
+                :to="routes.MANAGEMENT"
+            >
+                <span class="sidepanel__management-icon">
+                    <Icon name="setting" />
+                </span>
+                <span :class="`sidepanel__management-text ${isOpenPanel ? 'hide' : ''}`">
+                    {{ $t("moreLink") }}
+                </span>
+            </router-link>
             <button 
                 :class="`sidepanel__logout ${isOpenPanel ? 'centered' : ''}`"
                 type="button" 
@@ -34,6 +46,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
@@ -42,6 +55,7 @@ import { useUserStore } from "@/store/userStore";
 import { storeToRefs } from "pinia";
 import { routes } from "@/utils/routes.js";
 import Menu from "@/components/Menu.vue";
+import { actionModules } from "@/utils/action-modules.js";
 
 const router = useRouter();
 const toast = useToast();
@@ -49,9 +63,12 @@ const { t } = useI18n();
 
 const userStore = useUserStore();
 const { resetUser } = userStore;
+const { user } = storeToRefs(userStore);
 
 const panelStore = usePanelStore();
 const { isOpenPanel } = storeToRefs(panelStore);
+
+const managementModules = computed(() => [actionModules.ROLE.READ, actionModules.ORG_USER.READ, actionModules.MANAGEMENT_ROLE.READ]);
 
 const logoutHandler = () => {
     resetUser();
@@ -139,11 +156,53 @@ const logoutHandler = () => {
         }
     }
 
+    &__management {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-top: 40px;
+        padding: 10px 15px;
+        border: 1px solid transparent;
+        border-radius:  0 20px 20px 0;
+        transition: 0.5s;
+        @media (max-width: 768px) {
+            gap: 10px;
+        }
+        &.router-link-active  {
+            border-color: var(--white);
+        }
+        &.centered {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        &-icon {
+            display: flex;
+            align-items: center;
+        }
+        &-text {
+            transition: 0.5s;
+            @media (max-width: 768px) {
+                font-size: 14px;
+            }
+            @media (max-width: 720px) {
+                display: none;
+            }
+            &.hide {
+                display: none;
+            }
+        }
+    }
+
     &__logout {
         display: flex;
         align-items: center;
         gap: 25px;
-        margin-top: 45px;
+        margin-top: 15px;
+        padding: 10px 15px;
+        border: 1px solid transparent;
+        border-radius:  0 20px 20px 0;
+        transition: 0.5s;
         @media (max-width: 768px) {
             gap: 10px;
         }
@@ -167,6 +226,21 @@ const logoutHandler = () => {
             }
             &.hide {
                 display: none;
+            }
+        }
+    }
+}
+
+@media (hover: hover) {
+    .sidepanel {
+        &__management {
+            &:hover {
+                border-color: var(--white);
+            }
+        }
+        &__logout {
+            &:hover {
+                border-color: var(--white);
             }
         }
     }

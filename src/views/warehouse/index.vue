@@ -61,9 +61,9 @@ const warehouseId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "warehouseName", width: 440 },
+    { id: 1, label: "warehouseName", width: 540 },
     { id: 2, label: "warehouseQuantity", width: 445 },
-    { id: 3, label: "warehouseQuantityType", width: 205 }
+    { id: 3, label: "warehouseQuantityType", width: 305 }
 ]);
 
 const {

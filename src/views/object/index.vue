@@ -61,8 +61,8 @@ const objectsId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "objectName", width: 400 },
-    { id: 3, label: "objectAddress", width: 330 }
+    { id: 1, label: "objectName", width: 600 },
+    { id: 3, label: "objectAddress", width: 600 }
 ]);
 
 const {

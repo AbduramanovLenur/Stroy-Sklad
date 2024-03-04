@@ -15,6 +15,10 @@ const routes = [
       const userStore = useUserStore();
       const { user } = storeToRefs(userStore);
 
+      if (!user.value?.token) {
+        return { path: routesList.AUTH.path };
+      }
+
       if (+user.value?.user?.roleId === +roles.SUPERADMIN_ID) {
         return { path: routesList.COMPANIES.path };
       }
@@ -206,9 +210,9 @@ const routes = [
         return next({ name: routesList.AUTH.name });
       }
 
-      // if (!user?.value.user?.modules?.includes(+to.meta.module)) {
-      //   return next({ name: routesList.HOME.name });
-      // }
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
 
       if (+to.meta?.roleId === +user.value?.user?.roleId) {
         return next({ name: routesList.HOME.name });
@@ -971,6 +975,64 @@ const routes = [
       return next();
     },
   },
+  {
+    name: routesList.MANAGEMENT.name,
+    path: routesList.MANAGEMENT.path,
+    component: () => import("@/views/management.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.SUPERADMIN_ID,
+      modules: [actionModules.ROLE.READ, actionModules.ORG_USER.READ, actionModules.MANAGEMENT_ROLE.READ]
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (!to.meta?.modules.some(value => user?.value?.user?.modules?.includes(value))) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  },
+  {
+    name: routesList.MANAGEMENT_ROLE.name,
+    path: routesList.MANAGEMENT_ROLE.path,
+    component: () => import("@/views/management-role.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      requiresAuth: true,
+      roleId: roles.SUPERADMIN_ID,
+      module: actionModules.MANAGEMENT_ROLE.READ
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  }
 ];
 
 const router = createRouter({

@@ -54,5 +54,11 @@ export const actionModules = {
         CREATE: 30,
         UPDATE: 31,
         DELETE: 32
+    },
+    MANAGEMENT_ROLE: {
+        READ: 39,
+        CREATE: 40,
+        UPDATE: 41,
+        DELETE: 42
     }
 }

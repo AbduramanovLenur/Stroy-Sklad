@@ -49,8 +49,8 @@ const menu = ref([
     { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENS.path, moduleId: actionModules.EXPENS.READ },
     { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCT.path, moduleId: actionModules.PRODUCT.READ },
     { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, moduleId: actionModules.WAREHOUSE.READ },
-    { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLE.path, moduleId: actionModules.ROLE.READ },
-    { id: 11, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ROLE.READ },
+    // { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLE.path, moduleId: actionModules.ROLE.READ },
+    // { id: 11, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ORG_USER.READ },
 ]);
 
 const panelStore = usePanelStore();

@@ -33,16 +33,41 @@
                     {{ $t(select.label) }}
                 </FormSelect>
                 <CustomButton 
-                    :className="`form__submit ${v$?.quantityTypeId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :className="`form__submit ${v$?.quantityTypeId?.$errors?.[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
+            </form>
+            <form class="manage__file-form" @submit.prevent="submitWithExcelFile">
+                <div class="manage__file-head">
+                    <FormFile
+                        :width="240" 
+                        @onChangFile="handleFileUpload"
+                    >
+                        {{ $t("fileLabel") }}
+                    </FormFile>
+                    <CustomButton
+                        v-if="state.data.length"
+                        :width="240" 
+                        className="form__submit"
+                    >
+                        {{ $t("formButton") }}
+                    </CustomButton>
+                </div>
+                <SubTable
+                    v-if="state.data.length"
+                    :headers="headers"
+                    :table="state.data"
+                    @onActionDelete="deleteHandler"
+                    :isShowDelete="true"
+                />
             </form>
         </div>
     </section>
 </template>
 
 <script setup>
+import { v4 as uuidv4 } from "uuid";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -56,10 +81,12 @@ import {
     useQuery, 
     useMutation 
 } from "@tanstack/vue-query";
-import { create } from "@/services/crud.services.js";
+import { create, createWithExcel } from "@/services/crud.services.js";
 import { manualQuantityTypes } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
+import { createIdMap } from "@/utils/secondary-functions.js";
+import FormFile from "@/components/FormFile.vue";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -71,9 +98,15 @@ const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.PRODUCT.CREATE));
 
+const headers = ref([
+    { id: 1, label: "productName", width: 1000 },
+    { id: 2, label: "quantityName", width: 200 }
+]);
+
 const state = ref({
     fullname: "",
-    quantityTypeId: []
+    quantityTypeId: [],
+    data: []
 });
 
 const rules = computed(() => ({
@@ -92,6 +125,10 @@ const {
     queryFn: () => manualQuantityTypes(),
     enabled: isShow
 });
+
+const quantityTypesMap = computed(() => createIdMap(quantityTypes.value));
+
+const getTypesIdValue = (elem) => quantityTypesMap?.value[elem]?.name;
 
 const inputs = ref([
     { 
@@ -117,11 +154,35 @@ const selects = ref([
     }
 ]);
 
+const handleFileUpload = (value) => {
+    state.value.data = value.map((elem, index) => ({ 
+        id: index, 
+        delId: uuidv4(), 
+        fullname: elem[1], 
+        quantityTypeId: elem[2], 
+        quantityTypeValue: getTypesIdValue(elem[2])
+    })).slice(1);
+};
+
+const deleteHandler = (idx) => {
+    state.value.data = state.value.data.filter((elem) => elem.delId !== idx);
+}
+
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
         body.quantityTypeId = body.quantityTypeId[0];
     },
     mutationFn: (body) => create("construction_material", body),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["products"] });
+        queryClient.invalidateQueries({ queryKey: ["materialsList"] });
+
+        router.push(routes.PRODUCT.path);
+    }
+});
+
+const { mutate: createWithExcelMutate } = useMutation({
+    mutationFn: (body) => createWithExcel("construction_material", body),
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
@@ -137,9 +198,47 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate(state.value);
+    createMutate({ fullname: state.value.fullname, quantityTypeId: state.value.quantityTypeId });
     v$.value.$reset();
+}
+
+const submitWithExcelFile = () => {
+    const isAllExist = state.value.data.every((elem) => elem.fullname && elem.quantityTypeId);
+
+    if (!isAllExist) {
+        toast.error(t("isEmptyExcelFile"));
+        return;
+    }
+
+    state.value.data =  state.value.data.map((elem) => {
+        const object = { ...elem };
+
+        delete object?.id;
+        delete object?.delId;
+        delete object?.quantityTypeValue;
+
+        return object;
+    });
+
+    createWithExcelMutate(state.value.data);
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.manage {
+    &__form {
+        margin-bottom: 30px;
+    }
+    &__file {
+        &-form {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        &-head {
+            display: flex;
+            gap: 10px;
+        }
+    }
+}
+</style>

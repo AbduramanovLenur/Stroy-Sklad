@@ -19,40 +19,46 @@
                     class="subtable-title" 
                     align="center"
                 >
-                    {{ $t("appAction") }}
+                    {{ $t("subtableAction") }}
                 </th>
             </tr>
             <tr class="subtable-line" v-for="(info, index) in table" :key="info.id">
                 <td class="subtable-info" align="center">
                     {{ index + 1 }}
                 </td>
-                <td v-if="info.blockValue" class="subtable-info" align="center">
+                <td v-if="info?.fullname" class="subtable-info" align="center">
+                    {{ info.fullname }}
+                </td>
+                <td v-if="info?.quantityTypeValue" class="subtable-info" align="center">
+                    {{ info.quantityTypeValue }}
+                </td>
+                <td v-if="info?.blockValue" class="subtable-info" align="center">
                     {{ info.blockValue }}
                 </td>
-                <td v-if="info.floorValue" class="subtable-info" align="center">
+                <td v-if="info?.floorValue" class="subtable-info" align="center">
                     {{ info.floorValue }}
                 </td>
-                <td v-if="info.constructionMaterialValue" class="subtable-info" align="center">
+                <td v-if="info?.constructionMaterialValue" class="subtable-info" align="center">
                     {{ info.constructionMaterialValue }}
                 </td>
-                <td v-if="info.constructionMaterialIdsValue" class="subtable-info" align="center">
+                <td v-if="info?.constructionMaterialIdsValue" class="subtable-info" align="center">
                     <div class="subtable-box">
                         {{ info.constructionMaterialIdsValue.map((elem) => elem.name).join(', ') }}
                     </div>
                 </td>
-                <td v-if="info.count" class="subtable-info" align="center">
+                <td v-if="info?.count" class="subtable-info" align="center">
                     {{ info.count }}
                 </td>
-                <td v-if="info.price" class="subtable-info" align="center">
+                <td v-if="info?.price" class="subtable-info" align="center">
                     {{ priceSeperator(info.price) }}
                 </td>
-                <td v-if="info.costValue" class="subtable-info" align="center">
+                <td v-if="info?.costValue" class="subtable-info" align="center">
                     {{ info.costValue }}
                 </td>
                 <td class="subtable-info" align="center" v-if="isShowDelete">
                     <span 
                         class="subtable-delete" 
-                        @click="() => $emit('onActionDelete', info.delId)"
+                        @click="() => $emit('onActionDelete', info?.delId)"
                     >
                         <Icon name="delete" />
                     </span>

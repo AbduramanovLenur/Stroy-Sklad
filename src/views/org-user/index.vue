@@ -51,8 +51,6 @@ const queryClient = useQueryClient();
 const tableStore = useTableStore();
 const { page, limit, search } = storeToRefs(tableStore);
 
-const organizationId = ref(localStorage.getItem("organizationId"));
-
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
@@ -63,9 +61,9 @@ const employeesId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "employeesFullName", width: 510 },
+    { id: 1, label: "employeesFullName", width: 570 },
     { id: 3, label: "employeesPhone", width: 290 },
-    { id: 4, label: "employeesRole", width: 210 }
+    { id: 4, label: "employeesRole", width: 310 }
 ]);
 
 const {
@@ -74,7 +72,7 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["orgUsers", { page, limit, debouncedSearch, organizationId }],
+    queryKey: ["orgUsers", { page, limit, debouncedSearch, organizationId: user.value?.user?.organizationId }],
     queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};
@@ -110,19 +108,4 @@ const deleteHandler = (idx) => {
 }
 </script>
 
-<style lang="scss" scoped>
-.employees {
-    &__form {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-        @media (max-width: 1024px) {
-            gap: 10px;
-        }
-        @media (max-width: 768px) {
-            grid-template-columns: repeat(1, 1fr);
-            gap: 20px;
-        }
-    }
-}
-</style>
+<style lang="scss" scoped></style>

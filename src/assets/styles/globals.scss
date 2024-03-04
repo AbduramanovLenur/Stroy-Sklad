@@ -344,3 +344,13 @@ svg {
 .p-checkbox-input {
     display: none;
 }
+
+.management-icon {
+    height: 50px;
+    @media (max-width: 480px) {
+        height: 40px;
+    }
+    @media (max-width: 480px) {
+        height: 30px;
+    }
+}

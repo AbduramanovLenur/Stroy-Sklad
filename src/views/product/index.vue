@@ -61,7 +61,7 @@ const productsId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "productsName", width: 725 }
+    { id: 1, label: "productsName", width: 1030 }
 ]);
 
 const {

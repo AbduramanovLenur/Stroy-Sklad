@@ -57,7 +57,7 @@ const formData = ref({
     costId: [],
     constructionMaterialId: [],
     count: "",
-    price: ""
+    // price: ""
 });
 
 const valueBlock = computed(() => props.buildingBlockId);
@@ -74,13 +74,13 @@ const inputs = ref([
         placeholder: "countAppPlaceholder", 
         icon: "list"
     },
-    { 
-        id: 2, 
-        model: "price", 
-        label: "priceAppLabel", 
-        placeholder: "priceAppPlaceholder", 
-        icon: "money"
-    }
+    // { 
+    //     id: 2, 
+    //     model: "price", 
+    //     label: "priceAppLabel", 
+    //     placeholder: "priceAppPlaceholder", 
+    //     icon: "money"
+    // }
 ]);
 
 const addHandler = () => {

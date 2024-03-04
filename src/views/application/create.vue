@@ -55,19 +55,15 @@
                     :isShowDelete="true"
                 />
                 <FormTextarea 
-                    v-for="input in textareas"
-                    :key="input.id"
-                    v-model.trim="state[input.model]"
+                    v-model.trim="state.details"
                     :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :error="v$?.[input.errorKey]?.$error" 
-                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
+                    :placeholder="$t('appCommentPlaceholder')"
+                    :error="v$?.details?.$error" 
+                    :textError="v$?.details?.$errors[0]?.$message"
                 >
-                    {{ $t(input.label) }}
+                    {{ $t("appCommentLabel") }}
                 </FormTextarea>
-                <CustomButton 
-                    className="manage__submit"
-                >
+                <CustomButton className="manage__submit">
                     {{ $t("appButton") }}
                 </CustomButton>
             </form>
@@ -98,7 +94,7 @@ import {
     manualGetCost, 
     manualGetObjects, 
     manualGetBlocks,
-    manualGetRoles
+    // manualGetRoles
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
@@ -117,18 +113,17 @@ const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModule
 const isSubmit = ref(false);
 
 const headers = ref([
-    { id: 1, label: "appFloor", width: 215 },
-    { id: 2, label: "appMaterial", width: 290 },
-    { id: 3, label: "appCount", width: 250 },
-    { id: 4, label: "appPrice", width: 300 },
-    { id: 5, label: "appCost" }
+    { id: 1, label: "appFloor", width: 350 },
+    { id: 2, label: "appMaterial", width: 370 },
+    { id: 3, label: "appCount", width: 260 },
+    { id: 4, label: "appPrice", width: 350 }
 ]);
 
 const state = ref({
     deadline: "",
     buildingObjectId: [],
     buildingBlockId: [],
-    roleIds: [],
+    // roleIds: [],
     createApplicationTables: [],
     details: ""
 });
@@ -137,22 +132,22 @@ const rules = computed(() => ({
     deadline: { required },
     buildingObjectId: { required },
     buildingBlockId: { required },
-    roleIds: { required },
+    // roleIds: { required },
     createApplicationTables: { required },
     details: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
 
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
-    queryFn: () => manualGetRoles(),
-    enabled: isShow
-});
+// const {
+//     data: roles,
+//     isSuccess: isSuccessRoles,
+//     isLoading: isLoadingRoles
+// } = await useQuery({
+//     queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
+//     queryFn: () => manualGetRoles(),
+//     enabled: isShow
+// });
 
 const {
     data: objects,
@@ -251,17 +246,17 @@ const selects = ref([
         success: isSuccessBlocks,
         loading: isLoadingBlocks
     },
-    { 
-        id: 6, 
-        model: "roleIds", 
-        label: "appRoleLabel", 
-        placeholder: "appRolePlaceholder", 
-        errorKey: "roleIds", 
-        options: roles, 
-        success: isSuccessRoles,
-        loading: isLoadingRoles,
-        multiple: true
-    }
+    // { 
+    //     id: 6, 
+    //     model: "roleIds", 
+    //     label: "appRoleLabel", 
+    //     placeholder: "appRolePlaceholder", 
+    //     errorKey: "roleIds", 
+    //     options: roles, 
+    //     success: isSuccessRoles,
+    //     loading: isLoadingRoles,
+    //     multiple: true
+    // }
 ]);
 
 const selectsInfo = ref([
@@ -294,15 +289,15 @@ const selectsInfo = ref([
     },
 ])
 
-const textareas = ref([
-    { 
-        id: 1, 
-        model: "details", 
-        label: "appCommentLabel", 
-        placeholder: "appCommentPlaceholder",
-        errorKey: "details"
-    }
-]);
+// const textareas = ref([
+//     { 
+//         id: 1, 
+//         model: "details", 
+//         label: "appCommentLabel", 
+//         placeholder: "appCommentPlaceholder",
+//         errorKey: "details"
+//     }
+// ]);
 
 const floorMap = computed(() => createIdMap(floors.value));
 const costMap = computed(() => createIdMap(costs.value));

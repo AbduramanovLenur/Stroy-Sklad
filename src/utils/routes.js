@@ -161,5 +161,15 @@ export const routes = {
     UPDATE_ORG_USER: {
         name: "UpdateOrganizationUser",
         path: "/organization-employees/manage/:id"
+    },
+
+    MANAGEMENT: {
+        name: "Management",
+        path: "/management"
+    },
+
+    MANAGEMENT_ROLE: {
+        name: "ManagementRole",
+        path: "/management-role"
     }
 }

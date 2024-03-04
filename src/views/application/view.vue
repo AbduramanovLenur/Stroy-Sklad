@@ -11,7 +11,7 @@
                         v-for="input in inputs"
                         :key="input.id"
                         v-model="state[input.model]"
-                        :width="500" 
+                        :width="500"
                         :placeholder="$t(input.placeholder)"
                         :name="input.icon"
                         :type="input?.type"
@@ -35,12 +35,23 @@
                     </FormSelect>
                 </div>
                 <SubTable
-                    v-if="isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.applicationTables.length"
+                    v-if="isAllSuccessData"
                     :headers="headers"
                     :table="state.applicationTables"
                 />
-                <Spinner v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables.length" />
+                <Spinner 
+                    v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables.length" 
+                />
                 <FormTextarea 
+                    v-if="isAllSuccessData"
+                    v-model.trim="state.details"
+                    :width="500" 
+                    :placeholder="$t('appCommentPlaceholder')"
+                    :isDisabled="true"
+                >
+                    {{ $t("appCommentLabel") }}
+                </FormTextarea>
+                <!-- <FormTextarea 
                     v-for="input in textareas"
                     :key="input.id"
                     v-model="state[input.model]"
@@ -49,10 +60,10 @@
                     :isDisabled="true"
                 >
                     {{ $t(input.label) }}
-                </FormTextarea>
+                </FormTextarea> -->
                 <div 
+                    v-if="isAllSuccessData && (state.statusId !== 7 && state.statusId !== 15)"
                     class="manage__triggers" 
-                    v-if="(isSuccessCosts && isSuccessMaterials && isSuccessFloors) && (state.statusId !== 7 && state.statusId !== 15)"
                 >
                     <MyButton 
                         v-if="user?.user?.modules?.includes(actionModules.APPLICATION.CONFIRM)"
@@ -116,11 +127,10 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
 
 const headers = ref([
-    { id: 1, label: "appFloor", width: 215 },
-    { id: 2, label: "appMaterial", width: 290 },
-    { id: 3, label: "appCount", width: 250 },
-    { id: 4, label: "appPrice", width: 300 },
-    { id: 5, label: "appCost" }
+    { id: 1, label: "appFloor", width: 350 },
+    { id: 2, label: "appMaterial", width: 370 },
+    { id: 3, label: "appCount", width: 260 },
+    { id: 4, label: "appPrice", width: 350 },
 ]);
 
 const state = ref({
@@ -128,21 +138,21 @@ const state = ref({
     deadline: "",
     buildingObjectId: [],
     buildingBlockId: [],
-    roleIds: [],
+    // roleIds: [],
     applicationTables: [],
     details: "",
     statusId: ""
 });
 
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
-    queryFn: () => manualGetRoles(),
-    enabled: isShow
-});
+// const {
+//     data: roles,
+//     isSuccess: isSuccessRoles,
+//     isLoading: isLoadingRoles
+// } = await useQuery({
+//     queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
+//     queryFn: () => manualGetRoles(),
+//     enabled: isShow
+// });
 
 const {
     data: objects,
@@ -202,6 +212,8 @@ const {
     enabled: isEnabled
 });
 
+const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.applicationTables.length));
+
 const inputs = ref([
     { 
         id: 1, 
@@ -235,17 +247,17 @@ const selects = ref([
         success: isSuccessBlocks,
         loading: isLoadingBlocks
     },
-    { 
-        id: 6, 
-        model: "roleIds", 
-        label: "appRoleLabel", 
-        placeholder: "appRolePlaceholder", 
-        errorKey: "roleIds", 
-        options: roles, 
-        success: isSuccessRoles,
-        loading: isLoadingRoles,
-        multiple: true
-    }
+    // { 
+    //     id: 6, 
+    //     model: "roleIds", 
+    //     label: "appRoleLabel", 
+    //     placeholder: "appRolePlaceholder", 
+    //     errorKey: "roleIds", 
+    //     options: roles, 
+    //     success: isSuccessRoles,
+    //     loading: isLoadingRoles,
+    //     multiple: true
+    // }
 ]);
 
 const textareas = ref([
@@ -266,7 +278,7 @@ const { isError } = await useQuery({
         state.value.deadline = data.deadline;
         state.value.buildingObjectId = [data.buildingObjectId];
         state.value.buildingBlockId = [data.buildingBlockId];
-        state.value.roleIds = [...data.roleIds];
+        // state.value.roleIds = [...data.roleIds];
         state.value.applicationTables = [...data.applicationTables];
         state.value.details = data.details;
         state.value.statusId = data.statusId;

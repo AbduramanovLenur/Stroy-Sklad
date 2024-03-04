@@ -10,7 +10,10 @@ defineProps({
         type: String,
         default: () => "submit"
     }, 
-    width: String,
+    width: {
+        type: Number,
+        default: () => 500
+    },
     className: {
         type: String,
         default: () => ""
@@ -31,7 +34,6 @@ defineProps({
     background-color: var(--black);
     color: var(--white);
     width: 100%;
-    max-width: 500px;
     &.form__submit {
         margin-top: auto;
         &.centered {
