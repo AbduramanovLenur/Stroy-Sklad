@@ -40,7 +40,7 @@
                     :table="state.applicationTables"
                 />
                 <Spinner 
-                    v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables.length" 
+                    v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables?.length" 
                 />
                 <FormTextarea 
                     v-if="isAllSuccessData"
@@ -62,7 +62,7 @@
                     {{ $t(input.label) }}
                 </FormTextarea> -->
                 <div 
-                    v-if="isAllSuccessData && (state.statusId !== 7 && state.statusId !== 15)"
+                    v-if="isAllSuccessData && (state.statusId !== 7 && state.statusId !== 15) && state.allowedActionRoleIds.includes(user?.user?.roleId)"
                     class="manage__triggers" 
                 >
                     <MyButton 
@@ -107,7 +107,7 @@ import {
     manualGetCost, 
     manualGetObjects, 
     manualGetBlocks,
-    manualGetRoles
+    // manualGetRoles
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
@@ -141,7 +141,8 @@ const state = ref({
     // roleIds: [],
     applicationTables: [],
     details: "",
-    statusId: ""
+    statusId: "",
+    allowedActionRoleIds: []
 });
 
 // const {
@@ -166,7 +167,7 @@ const {
 
 const valueObject = computed(() => state.value.buildingObjectId);
 
-const isEnabledBlocks = computed(() => !!valueObject.value.length);
+const isEnabledBlocks = computed(() => !!valueObject.value?.length);
 
 const {
     data: blocks,
@@ -180,7 +181,7 @@ const {
 
 const valueBlock = computed(() => state.value.buildingBlockId);
 
-const isEnabled = computed(() => !!valueBlock.value.length);
+const isEnabled = computed(() => !!valueBlock.value?.length);
 
 const {
     data: floors,
@@ -212,7 +213,7 @@ const {
     enabled: isEnabled
 });
 
-const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.applicationTables.length));
+const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.value.applicationTables?.length));
 
 const inputs = ref([
     { 
@@ -282,6 +283,7 @@ const { isError } = await useQuery({
         state.value.applicationTables = [...data.applicationTables];
         state.value.details = data.details;
         state.value.statusId = data.statusId;
+        state.value.allowedActionRoleIds = data.allowedActionRoleIds;
     },
     enabled: isShow
 });
@@ -294,7 +296,7 @@ const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
 
-const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
+const isNotAllEmptyData = computed(() => Object.keys(floorMap.value)?.length && Object.keys(costMap.value)?.length && Object.keys(materialMap.value)?.length);
 
 watch(isNotAllEmptyData, (newValue) => {
     if (!!newValue) {

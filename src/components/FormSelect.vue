@@ -11,6 +11,9 @@
             optionValue="id"
             :placeholder="$t(placeholder)"
             :loading="loading"
+            :internal-search="false"
+            :taggable="true"
+            :hideSelected="true"
             :disabled="loading || !options?.length || isDisabled"
         />
         <span 

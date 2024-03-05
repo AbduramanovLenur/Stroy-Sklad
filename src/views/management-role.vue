@@ -25,7 +25,7 @@
                             <FormSelect 
                                 v-model="state[index].roleIds" 
                                 :width="500" 
-                                :options="roles"
+                                :options="filteredOptions"
                                 placeholder="managementRolePlaceholder"
                                 :success="isSuccess"
                                 :loading="isLoading"
@@ -62,7 +62,7 @@
 
 <script setup>
 import { v4 as uuidv4 } from "uuid";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
@@ -89,8 +89,8 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.CREATE));
 
 const state = ref([
-    { id: null, uuid: uuidv4(), roleIds: [], label: "creatorApp" },
-    { id: null, uuid: uuidv4(), roleIds: [], label: "confirmApp" }
+    { uuid: uuidv4(), roleIds: [], label: "creatorApp" },
+    { uuid: uuidv4(), roleIds: [], label: "confirmApp" }
 ]);
 
 const {
@@ -103,7 +103,16 @@ const {
     enabled: isShow
 });
 
+// const filteredOptions = computed(() => {
+//   let opt = roles.value;
+//   state.value.forEach(value => {
+//     opt = opt?.filter(option => !value.roleIds.includes(option.id));
+//   });
+//   return opt;
+// });
+
 const {
+    data: positions,
     isSuccess: isSuccessPositions,
     isLoading: isLoadingPositions
 } = await useQuery({
@@ -116,15 +125,17 @@ const {
             let object = {};
 
             if (index === 0) {
-                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "creatorApp" }
+                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "creatorApp" }
             } else if (index + 1 === data.length) {
-                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "confirmApp" }
+                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "confirmApp" }
             } else {
-                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "inspectorApp" }
+                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "inspectorApp" }
             }
 
             return object;
         });
+
+        return data;
     },
     enabled: isShow
 });
@@ -133,7 +144,7 @@ const isSuccess = computed(() => isSuccessRoles.value && isSuccessPositions.valu
 const isLoading = computed(() => isLoadingRoles.value && isLoadingPositions.value);
 
 const addItem = (idx) => {
-    state.value.splice(idx, 0, { id: null, uuid: uuidv4(), roleIds: [], label: "inspectorApp" });
+    state.value.splice(idx, 0, { uuid: uuidv4(), roleIds: [], label: "inspectorApp" });
 }
 
 const deleteItem = (idx) => {

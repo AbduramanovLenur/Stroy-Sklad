@@ -23,3 +23,5 @@ export const manualGetCost = () => request({ url: "manual/CostSelectList", metho
 export const manualGetBlocks = (idx) => request({ url: `manual/BuildingBlockSelectList?buildingObjectId=${idx}`, method: "GET" });
 
 export const manualGetModules = () => request({ url: "manual/ModuleSubGroupSelectList", method: "GET" });
+
+export const manualGetPositionRoles = (body) => request({ url: "manual/RoleForPositionSelectList", method: "POST", body });

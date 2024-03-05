@@ -170,6 +170,7 @@ export const routes = {
 
     MANAGEMENT_ROLE: {
         name: "ManagementRole",
-        path: "/management-role"
+        path: "/management-role",
+        module: actionModules.MANAGEMENT_ROLE.READ
     }
 }

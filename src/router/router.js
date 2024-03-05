@@ -27,6 +27,10 @@ const routes = [
 
       const route = keys?.find((elem) => user?.value.user?.modules?.includes(actionModules?.[elem]?.READ));
 
+      if (!route) {
+        return { path: routesList.AUTH.path };
+      }
+
       return { path: routesList?.[route]?.path };
     },
   },
