@@ -134,7 +134,7 @@ const headers = ref([
     { id: 1, label: "appFloor", width: 350 },
     { id: 2, label: "appMaterial", width: 370 },
     { id: 3, label: "appCount", width: 260 },
-    { id: 4, label: "appPrice", width: 350 },
+    { id: 4, label: "appPrice" },
 ]);
 
 const state = ref({
