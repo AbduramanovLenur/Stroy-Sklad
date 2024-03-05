@@ -25,7 +25,7 @@
                             <FormSelect 
                                 v-model="state[index].roleIds" 
                                 :width="500" 
-                                :options="filteredOptions"
+                                :options="roles"
                                 placeholder="managementRolePlaceholder"
                                 :success="isSuccess"
                                 :loading="isLoading"
