@@ -87,6 +87,9 @@
                     </MyButton>
                 </div>
             </form>
+            <Histories 
+                :histories="state.histories" 
+            />
         </div>
     </section>
 </template>
@@ -112,6 +115,7 @@ import {
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
 import { createIdMap } from "@/utils/secondary-functions.js";
+import Histories from "@/components/Histories.vue";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -142,7 +146,8 @@ const state = ref({
     applicationTables: [],
     details: "",
     statusId: "",
-    allowedActionRoleIds: []
+    allowedActionRoleIds: [],
+    histories: []
 });
 
 // const {
@@ -261,15 +266,15 @@ const selects = ref([
     // }
 ]);
 
-const textareas = ref([
-    { 
-        id: 1, 
-        model: "details", 
-        label: "appCommentLabel", 
-        placeholder: "appCommentPlaceholder",
-        errorKey: "details"
-    }
-]);
+// const textareas = ref([
+//     { 
+//         id: 1, 
+//         model: "details", 
+//         label: "appCommentLabel", 
+//         placeholder: "appCommentPlaceholder",
+//         errorKey: "details"
+//     }
+// ]);
 
 const { isError } = await useQuery({
     queryKey: ["applicationsById", slugId],
@@ -284,6 +289,7 @@ const { isError } = await useQuery({
         state.value.details = data.details;
         state.value.statusId = data.statusId;
         state.value.allowedActionRoleIds = data.allowedActionRoleIds;
+        state.value.histories = data.applicationHistories;
     },
     enabled: isShow
 });

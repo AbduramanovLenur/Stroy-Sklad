@@ -200,7 +200,7 @@
   "stateRoleLabel": "Roli holati",
   "stateRolePlaceholder": "Holati...",
   "appCommentLabel": "Sizning fikringiz",
-  "appCommentPlaceholder": "Firk...",
+  "appCommentPlaceholder": "Fikr...",
   "appFloor": "Qavat",
   "appCost": "Turi",
   "appMaterial": "Material",
@@ -227,7 +227,7 @@
   "objectEstimateLabel": "Obyekt nomi",
   "objectEstimatePlaceholder": "Obyekt...",
   "estimateCommentLabel": "Sizning fikringiz",
-  "estimateCommentPlaceholder": "Firk...",
+  "estimateCommentPlaceholder": "Fikr...",
   "estimatePriceLabel": "Qurilish byudjeti",
   "estimatePricePlaceholder": "Byudjeti...",
   "floorsEstimateLabel": "Bino qavati",
@@ -264,5 +264,6 @@
   "positionTitle": "Rol pozitsiyalari",
   "fileLabel": "Mahsulotlarni excel dan import qilish",
   "quantityName": "Birlik",
-  "isEmptyExcelFile": "Faylda bo'sh hujayralar mavjud"
+  "isEmptyExcelFile": "Faylda bo'sh hujayralar mavjud",
+  "historiesLabel": "Ariza tarixi"
 }

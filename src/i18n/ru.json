@@ -264,5 +264,6 @@
   "positionTitle": "Позиции ролей",
   "fileLabel": "Импорт товаров из Excel",
   "quantityName": "Величина",
-  "isEmptyExcelFile": "В файле есть пустые ячейки"
+  "isEmptyExcelFile": "В файле есть пустые ячейки",
+  "historiesLabel": "История заявки"
 }
