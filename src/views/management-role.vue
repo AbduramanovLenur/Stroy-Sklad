@@ -23,9 +23,9 @@
                     >
                         <div class="management-role__select-box">
                             <FormSelect 
-                                v-model="state[index].roleIds" 
+                                v-model="select.roleIds" 
                                 :width="500" 
-                                :options="roles"
+                                :options="filteredRoles(index)"
                                 placeholder="managementRolePlaceholder"
                                 :success="isSuccess"
                                 :loading="isLoading"
@@ -103,14 +103,6 @@ const {
     enabled: isShow
 });
 
-// const filteredOptions = computed(() => {
-//   let opt = roles.value;
-//   state.value.forEach(value => {
-//     opt = opt?.filter(option => !value.roleIds.includes(option.id));
-//   });
-//   return opt;
-// });
-
 const {
     data: positions,
     isSuccess: isSuccessPositions,
@@ -149,6 +141,17 @@ const addItem = (idx) => {
 
 const deleteItem = (idx) => {
     state.value.splice(idx, 1);
+}
+
+const filteredRoles = (index) => {
+    const usedRoles = state.value.reduce((acc, cur, idx) => {
+        if (idx !== index) {
+            acc.push(...cur.roleIds);
+        }
+        return acc;
+    }, []);
+
+    return roles.value?.filter(role => !usedRoles.includes(role.id));
 }
 
 const { mutate: createMutate } = useMutation({
