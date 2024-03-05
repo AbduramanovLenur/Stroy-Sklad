@@ -14,9 +14,9 @@
                         <div class="histories__name">
                             {{ history?.userName }}
                         </div>
-                        <div class="histories__role-name">
+                        <!-- <div class="histories__role-name">
                             {{ history?.role }}
-                        </div>
+                        </div> -->
                         <div class="histories__divider">
                             -
                         </div>
