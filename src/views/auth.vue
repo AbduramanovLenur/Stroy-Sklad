@@ -122,7 +122,7 @@ const { mutate: loginMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
-        setUser(data);
+        setUser(response);
         // toast.success(t("signInToast"));
 
         formData.value = clearForm(formData.value);

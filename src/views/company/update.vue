@@ -256,8 +256,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: async (response) => {
         // if (!response?.success) return;
         
-        await queryClient.invalidateQueries({ queryKey: ["companies"] });
-        await queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["companies"] });
+        queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
 
         // setPagePagination(1);
         // setLimitPagination(10);
