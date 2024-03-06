@@ -70,11 +70,11 @@ const { isOpenPanel } = storeToRefs(panelStore);
 
 const managementModules = computed(() => [actionModules.ROLE.READ, actionModules.ORG_USER.READ, actionModules.MANAGEMENT_ROLE.READ]);
 
-const logoutHandler = () => {
+const logoutHandler = async () => {
+    toast.success(t("logoutToast"));
     resetUser();
 
-    router.push("/auth");
-    toast.success(t("logoutToast"));
+    router.push(routes.AUTH.path);
 }
 </script>
 

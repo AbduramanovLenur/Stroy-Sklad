@@ -95,26 +95,26 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, formData);
 
-const inputs = ref([
-    { 
-        id: 1, 
-        label: "loginLabel", 
-        type: "text", 
-        model: "userName", 
-        name: "login", 
-        placeholder: "loginPlaceholder",
-        errorKey: "userName" 
-    },
-    { 
-        id: 2, 
-        label: "passwordLabel", 
-        type: "password", 
-        model: "password", 
-        name: "password", 
-        placeholder: "passwordPlaceholder",
-        errorKey: "password"  
-    },
-]);
+// const inputs = ref([
+//     { 
+//         id: 1, 
+//         label: "loginLabel", 
+//         type: "text", 
+//         model: "userName", 
+//         name: "login", 
+//         placeholder: "loginPlaceholder",
+//         errorKey: "userName" 
+//     },
+//     { 
+//         id: 2, 
+//         label: "passwordLabel", 
+//         type: "password", 
+//         model: "password", 
+//         name: "password", 
+//         placeholder: "passwordPlaceholder",
+//         errorKey: "password"  
+//     },
+// ]);
 
 const { mutate: loginMutate } = useMutation({
     mutationFn: (body) => loginUser(body),
