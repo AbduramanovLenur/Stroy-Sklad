@@ -238,7 +238,9 @@ const { mutate: updateMutate } = useMutation({
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("user", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         queryClient.invalidateQueries({ queryKey: ["employeesById", slugId] });
         

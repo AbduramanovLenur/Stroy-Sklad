@@ -186,7 +186,9 @@ const { mutate: createMutate } = useMutation({
         body.roleId = body.roleId[0];
     },
     mutationFn: (body) => create("user", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         
         router.push(routes.EMPLOYEES.path);

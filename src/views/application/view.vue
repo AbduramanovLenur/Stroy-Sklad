@@ -327,7 +327,9 @@ watch(isError, (value) => {
 
 const { mutate: cancelMutate } = useMutation({
     mutationFn: (idx) => cancelWithId("application", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 
@@ -337,7 +339,9 @@ const { mutate: cancelMutate } = useMutation({
 
 const { mutate: acceptMutate } = useMutation({
     mutationFn: (idx) => acceptWithId("application", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 

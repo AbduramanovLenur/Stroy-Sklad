@@ -191,7 +191,9 @@ const { mutate: createMutate } = useMutation({
         body.districtId = body.districtId[0];
     },
     mutationFn: (body) => create("organization", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         
         router.push(routes.COMPANIES.path);

@@ -226,7 +226,9 @@ const { mutate: updateMutate } = useMutation({
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("building_object", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });

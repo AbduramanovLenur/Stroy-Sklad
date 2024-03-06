@@ -253,7 +253,9 @@ const { mutate: updateMutate } = useMutation({
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("organization", body),
-    onSuccess: async () => {
+    onSuccess: async (response) => {
+        // if (!response?.success) return;
+        
         await queryClient.invalidateQueries({ queryKey: ["companies"] });
         await queryClient.invalidateQueries({ queryKey: ["companiesById", slugId] });
 

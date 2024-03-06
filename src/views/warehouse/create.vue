@@ -145,7 +145,9 @@ const { mutate: createMutate } = useMutation({
         body.quantityTypeId = body.quantityTypeId[0];
     },
     mutationFn: (body) => create("warehouse", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
         
         router.push(routes.WAREHOUSE.path);

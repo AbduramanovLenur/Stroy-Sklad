@@ -118,9 +118,8 @@ const v$ = useVuelidate(rules, formData);
 
 const { mutate: loginMutate } = useMutation({
     mutationFn: (body) => loginUser(body),
-    onSuccess: (data) => {
-
-        if (!data) return;
+    onSuccess: (response) => {
+        // if (!response?.success) return;
 
         setUser(data);
 

@@ -77,7 +77,9 @@ const {
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("Role", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["roles"] });
         queryClient.invalidateQueries({ queryKey: ["rolesById", rolesId] });
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });

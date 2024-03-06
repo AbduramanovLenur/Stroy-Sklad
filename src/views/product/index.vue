@@ -97,7 +97,9 @@ const {
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("construction_material", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["productsById", productsId] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });

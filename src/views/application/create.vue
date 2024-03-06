@@ -348,7 +348,9 @@ const { mutate: createMutate } = useMutation({
         })
     },
     mutationFn: (body) => create("application", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         
         router.push(routes.APPLICATION.path);

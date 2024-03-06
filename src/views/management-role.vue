@@ -168,7 +168,9 @@ const { mutate: createMutate } = useMutation({
         });
     },
     mutationFn: (body) => createPositionRoles("application_position", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["positions"] });
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById"] });

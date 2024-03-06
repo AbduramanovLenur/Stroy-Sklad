@@ -79,7 +79,9 @@ const {
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("warehouse", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
         queryClient.invalidateQueries({ queryKey: ["warehouseById", warehouseId] });
     }

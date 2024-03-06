@@ -96,7 +96,9 @@ const {
 
 const { mutate: deleteMutate } = useMutation({
     mutationFn: (idx) => deleteWithId("user", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         queryClient.invalidateQueries({ queryKey: ["orgUserById", employeesId] });
     }

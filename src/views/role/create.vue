@@ -108,7 +108,9 @@ const inputs = ref([
 
 const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("Role", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["roles"] });
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });
         

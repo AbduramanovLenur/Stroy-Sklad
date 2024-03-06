@@ -173,7 +173,9 @@ const { mutate: createMutate } = useMutation({
         body.quantityTypeId = body.quantityTypeId[0];
     },
     mutationFn: (body) => create("construction_material", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 
@@ -183,7 +185,9 @@ const { mutate: createMutate } = useMutation({
 
 const { mutate: createWithExcelMutate } = useMutation({
     mutationFn: (body) => createWithExcel("construction_material", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 

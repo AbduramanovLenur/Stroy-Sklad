@@ -101,7 +101,9 @@ const {
 
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("application", idx),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", applicationId] });
     }

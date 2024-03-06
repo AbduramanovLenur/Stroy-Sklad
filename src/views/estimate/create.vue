@@ -358,7 +358,9 @@ const { mutate: createMutate } = useMutation({
         body.buildingObjectId = body.buildingObjectId[0];
     },
     mutationFn: (body) => create("budget", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
         
         router.push(routes.ESTIMATE.path);

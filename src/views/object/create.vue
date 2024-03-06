@@ -169,7 +169,9 @@ const { mutate: createMutate } = useMutation({
         body.districtId = body.districtId[0];
     },
     mutationFn: (body) => create("building_object", body),
-    onSuccess: () => {
+    onSuccess: (response) => {
+        // if (!response?.success) return;
+
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         
