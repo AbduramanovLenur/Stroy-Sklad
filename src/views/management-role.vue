@@ -143,16 +143,20 @@ const deleteItem = (idx) => {
     state.value.splice(idx, 1);
 }
 
-const filteredRoles = (index) => {
-    const usedRoles = state.value.reduce((acc, cur, idx) => {
-        if (idx !== index) {
-            acc.push(...cur.roleIds);
-        }
-        return acc;
-    }, []);
+const filteredRoles = computed(() => {
+    return (index) => {
+        const usedRoles = state.value.reduce((acc, cur, idx) => {
+            if (idx !== index) {
+                acc.push(...cur.roleIds);
+            }
+            return acc;
+        }, []);
 
-    return roles.value?.filter(role => !usedRoles.includes(role.id));
-}
+        console.log(index, usedRoles);
+
+        return roles.value?.filter(role => !usedRoles.includes(role.id));
+    }
+})
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
