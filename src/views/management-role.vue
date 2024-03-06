@@ -152,8 +152,6 @@ const filteredRoles = computed(() => {
             return acc;
         }, []);
 
-        console.log(index, usedRoles);
-
         return roles.value?.filter(role => !usedRoles.includes(role.id));
     }
 })

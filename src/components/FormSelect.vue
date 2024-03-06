@@ -2,6 +2,8 @@
     <div class="label" :style="`max-width: ${width}px;`">
         <slot />
         <MultiSelect 
+            :taggable="true"
+            :hideSelected="true"
             ref="multiselectRef"
             @change="changeValue"
             :options="options" 
@@ -9,7 +11,9 @@
             filter 
             optionLabel="name" 
             optionValue="id"
+            track-by="id"
             :placeholder="$t(placeholder)"
+
             :loading="loading"
             :disabled="loading || !options?.length || isDisabled"
         />

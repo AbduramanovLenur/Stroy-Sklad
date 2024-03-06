@@ -18,6 +18,8 @@ export const request = async ({ url, method, body = {} }) => {
 
     const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
 
+    console.log(response);
+
     const { data, statusText } = response;
 
     if (method.toLowerCase() === 'post') {
