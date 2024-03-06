@@ -73,6 +73,7 @@ import { clearForm } from "@/utils/secondary-functions.js";
 import { useUserStore } from "@/store/userStore";
 import { useMutation } from "@tanstack/vue-query";
 import { loginUser } from "@/services/auth.services.js";
+import { routes } from "@/utils/routes.js";
 
 const router = useRouter();
 const toast = useToast();
@@ -122,12 +123,12 @@ const { mutate: loginMutate } = useMutation({
         // if (!response?.success) return;
 
         setUser(data);
-
-        router.push("/");
         // toast.success(t("signInToast"));
 
         formData.value = clearForm(formData.value);
         v$.value.$reset();
+
+        router.push(routes.HOME.path);
     }
 });
 
