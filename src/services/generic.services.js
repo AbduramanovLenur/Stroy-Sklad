@@ -18,8 +18,6 @@ export const request = async ({ url, method, body = {} }) => {
 
     const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
 
-    console.log(response);
-
     const { data, statusText } = response;
 
     if (method.toLowerCase() === 'post') {
@@ -28,7 +26,8 @@ export const request = async ({ url, method, body = {} }) => {
 
     return data;
   } catch (error) {
-    console.log(error);
+    console.error("error", error);
+    
     if (error?.response?.status === 401) {
       router.push(routes.AUTH.path);
     }
