@@ -40,7 +40,6 @@ import {
 } from "@tanstack/vue-query";
 import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
 
@@ -93,7 +92,7 @@ const { mutate: deleteMutate } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["employeesById", employeesId] });
+        queryClient.invalidateQueries({ queryKey: ["employeeById", employeesId] });
     }
 });
 

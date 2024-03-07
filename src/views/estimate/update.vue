@@ -349,7 +349,7 @@ const getConstructionMaterialIdsValue = (elem) => {
 const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
 
 const addTableHandler = (object) => {
-    if (isNotAllEmptyData) {
+    // if (isNotAllEmptyData) {
         state.value.budgetTables.push({
             ...object, 
             delId: uuidv4(),
@@ -360,10 +360,10 @@ const addTableHandler = (object) => {
         });
 
         state.value.price = +state.value.price + +object.price;
-        return;
-    }
+        // return;
+    // }
 
-    toast.error(t("estimateEmptyData"));
+    // toast.error(t("estimateEmptyData"));
 }
 
 const isInitialRender = ref(true);
@@ -392,7 +392,7 @@ const deleteHandler = (idx) => {
 }
 
 const { isError } = await useQuery({
-    queryKey: ["budgetsById", slugId],
+    queryKey: ["budgetById", slugId],
     queryFn: () => getWithId("budget", slugId.value),
     select: (data) => {
         state.value.id = data.id;
@@ -439,7 +439,7 @@ const { mutate: updateMutate } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
-        queryClient.invalidateQueries({ queryKey: ["budgetsById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["budgetById", slugId] });
         
         router.push(routes.ESTIMATE.path);
     }

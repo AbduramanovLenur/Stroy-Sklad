@@ -145,7 +145,7 @@ const selects = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["productsById", slugId],
+    queryKey: ["productById", slugId],
     queryFn: () => getWithId("construction_material", slugId.value),
     select: (data) => {
         state.value.id = data.id;
@@ -172,7 +172,7 @@ const { mutate: updateMutate } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["products"] });
-        queryClient.invalidateQueries({ queryKey: ["productsById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["productById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
         
         router.push(routes.PRODUCT.path);

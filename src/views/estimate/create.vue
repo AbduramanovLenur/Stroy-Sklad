@@ -313,10 +313,10 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-const isNotAllEmptyData = computed(() => !!(Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
+// const isNotAllEmptyData = computed(() => !!(Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
 
 const addTableHandler = (object) => {
-    if (isNotAllEmptyData) {
+    // if (isNotAllEmptyData) {
         state.value.tables.push({ 
             ...object, 
             delId: uuidv4(),
@@ -328,9 +328,9 @@ const addTableHandler = (object) => {
 
         state.value.price = +state.value.price + +object.price;
         return;
-    }
+    // }
 
-    toast.error(t("estimateEmptyData"));
+    // toast.error(t("estimateEmptyData"));
 }
 
 const deleteHandler = (idx) => {

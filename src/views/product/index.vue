@@ -56,7 +56,7 @@ const { user } = storeToRefs(userStore);
 
 const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.PRODUCT.READ));
 
-const productsId = ref("");
+const productId = ref("");
 
 const debouncedSearch = refDebounced(search, 500);
 
@@ -101,13 +101,13 @@ const { mutate: mutateDelete } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["products"] });
-        queryClient.invalidateQueries({ queryKey: ["productsById", productsId] });
+        queryClient.invalidateQueries({ queryKey: ["productById", productId] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
     }
 });
 
 const deleteHandler = async (idx) => {
-    productsId.value = idx;
+    productId.value = idx;
     mutateDelete(idx);
 }
 </script>

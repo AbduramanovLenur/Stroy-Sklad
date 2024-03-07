@@ -85,6 +85,7 @@ const { mutate: mutateDelete } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["objectById", objectsId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
+        queryClient.invalidateQueries({ queryKey: ["blocksList"] });
     }
 });
 

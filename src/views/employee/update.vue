@@ -69,17 +69,12 @@ import {
     manualGetModules
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-// import { useTableStore } from "@/store/tableStore";
 
 const queryClient = useQueryClient();
 const router = useRouter();
 const route = useRoute();
 const toast = useToast();
 const { t } = useI18n();
-
-// const tableStore = useTableStore();
-// const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
 
@@ -211,7 +206,7 @@ const selects = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["employeesById", slugId],
+    queryKey: ["employeeById", slugId],
     queryFn: () => getWithId("user", slugId.value),
     select: (data) => {
         state.value.id = data.id;
@@ -242,10 +237,7 @@ const { mutate: updateMutate } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["employees"] });
-        queryClient.invalidateQueries({ queryKey: ["employeesById", slugId] });
-        
-        // setPagePagination(1);
-        // setLimitPagination(10);
+        queryClient.invalidateQueries({ queryKey: ["employeeById", slugId] });
 
         router.push(routes.EMPLOYEES.path);
     }

@@ -84,7 +84,7 @@ const { mutate: mutateDelete } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
-        queryClient.invalidateQueries({ queryKey: ["budgetsById", budgetId] });
+        queryClient.invalidateQueries({ queryKey: ["budgetById", budgetId] });
     }
 });
 

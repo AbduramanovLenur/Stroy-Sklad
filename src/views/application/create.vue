@@ -307,10 +307,10 @@ const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
 
-const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
+// const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
 
 const addTableHandler = (object) => {
-    if (!!isNotAllEmptyData) {
+    // if (!!isNotAllEmptyData) {
         state.value.createApplicationTables.push({ 
             ...object,
             delId: uuidv4(), 
@@ -321,10 +321,10 @@ const addTableHandler = (object) => {
             // price: object.price
         });
 
-        return;
-    }
+        // return;
+    // }
 
-    toast.error(t("estimateEmptyData"));
+    // toast.error(t("estimateEmptyData"));
 }
 
 const deleteHandler = (idx) => {
