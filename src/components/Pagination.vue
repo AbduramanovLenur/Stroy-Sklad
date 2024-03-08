@@ -32,8 +32,8 @@ defineProps(["count", "isSucces"]);
 
 const options = ref([
     { id: 1, number: 10 },
-    { id: 1, number: 20 },
-    { id: 1, number: 50 },
+    { id: 2, number: 20 },
+    { id: 3, number: 50 },
 ]);
 
 const tableStore = useTableStore();

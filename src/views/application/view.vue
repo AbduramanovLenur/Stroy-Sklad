@@ -51,16 +51,6 @@
                 >
                     {{ $t("appCommentLabel") }}
                 </FormTextarea>
-                <!-- <FormTextarea 
-                    v-for="input in textareas"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :isDisabled="true"
-                >
-                    {{ $t(input.label) }}
-                </FormTextarea> -->
                 <div 
                     v-if="isAllSuccessData && (state.statusId !== 7 && state.statusId !== 15) && state.allowedActionRoleIds.includes(user?.user?.roleId)"
                     class="manage__triggers" 
@@ -265,16 +255,6 @@ const selects = ref([
     //     multiple: true
     // }
 ]);
-
-// const textareas = ref([
-//     { 
-//         id: 1, 
-//         model: "details", 
-//         label: "appCommentLabel", 
-//         placeholder: "appCommentPlaceholder",
-//         errorKey: "details"
-//     }
-// ]);
 
 const { isError } = await useQuery({
     queryKey: ["applicationsById", slugId],

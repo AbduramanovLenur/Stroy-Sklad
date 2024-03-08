@@ -313,22 +313,17 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-// const isNotAllEmptyData = computed(() => !!(Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
-
 const addTableHandler = (object) => {
-    // if (isNotAllEmptyData) {
-        state.value.tables.push({ 
-            ...object, 
-            delId: uuidv4(),
-            blockValue: getBlockIdValue(object),
-            floorValue: getFloorIdValue(object),
-            costValue: getCostIdValue(object),
-            constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
-        });
-
-        state.value.price = +state.value.price + +object.price;
-        return;
-    // }
+    state.value.tables.push({ 
+        ...object, 
+        delId: uuidv4(),
+        blockValue: getBlockIdValue(object),
+        floorValue: getFloorIdValue(object),
+        costValue: getCostIdValue(object),
+        constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
+    });
+    
+    state.value.price = +state.value.price + +object.price;
 
     // toast.error(t("estimateEmptyData"));
 }

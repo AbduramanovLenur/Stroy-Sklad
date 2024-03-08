@@ -287,17 +287,7 @@ const selectsInfo = ref([
         success: isSuccessMaterials,
         loading: isLoadingMaterials
     },
-])
-
-// const textareas = ref([
-//     { 
-//         id: 1, 
-//         model: "details", 
-//         label: "appCommentLabel", 
-//         placeholder: "appCommentPlaceholder",
-//         errorKey: "details"
-//     }
-// ]);
+]);
 
 const floorMap = computed(() => createIdMap(floors.value));
 const costMap = computed(() => createIdMap(costs.value));
@@ -307,22 +297,14 @@ const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
 
-// const isNotAllEmptyData = computed(() => Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length);
-
 const addTableHandler = (object) => {
-    // if (!!isNotAllEmptyData) {
-        state.value.createApplicationTables.push({ 
-            ...object,
-            delId: uuidv4(), 
-            floorValue: getFloorIdValue(object),
-            costValue: getCostIdValue(object),
-            constructionMaterialValue: getConstructionMaterialIdValue(object),
-            // count: object.count,
-            // price: object.price
-        });
-
-        // return;
-    // }
+    state.value.createApplicationTables.push({ 
+        ...object,
+        delId: uuidv4(), 
+        floorValue: getFloorIdValue(object),
+        costValue: getCostIdValue(object),
+        constructionMaterialValue: getConstructionMaterialIdValue(object),
+    });
 
     // toast.error(t("estimateEmptyData"));
 }
