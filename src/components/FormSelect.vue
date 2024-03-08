@@ -12,6 +12,7 @@
             :placeholder="$t(placeholder)"
             :loading="loading"
             :disabled="loading || !options?.length || isDisabled"
+            display="chip"
         />
         <span 
             v-if="error" 

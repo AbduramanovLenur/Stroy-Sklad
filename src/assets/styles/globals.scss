@@ -299,6 +299,21 @@ svg {
         padding: 5px;
         border-radius: 10px;
     }
+    &-label {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    &-token {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: #16ff16;
+        color: white;
+        padding: 5px;
+        border-radius: 10px;
+    }
     &-items  {
         display: flex;
         flex-direction: column;
