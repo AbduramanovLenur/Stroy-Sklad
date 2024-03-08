@@ -346,8 +346,6 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
-
 const addTableHandler = (object) => {
     state.value.budgetTables.push({
         ...object, 
@@ -358,15 +356,16 @@ const addTableHandler = (object) => {
         constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
     });
     
-    state.value.price = +state.value.price + +object.price;
+    state.value.price += parseInt(object.price, 10);
 
     // toast.error(t("estimateEmptyData"));
 }
 
+const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
 const isInitialRender = ref(true);
 
 watch(isNotAllEmptyData, (newValue) => {
-    if (!!newValue && isInitialRender.value) {
+    if (newValue && isInitialRender.value) {
         state.value.budgetTables = state.value.budgetTables.map((elem) => {
             const object = {
                 ...elem,

@@ -253,6 +253,7 @@ const { mutate: updateMutate } = useMutation({
         
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         queryClient.invalidateQueries({ queryKey: ["companyById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["organizations"] });
 
         router.push(routes.COMPANIES.path);
     }

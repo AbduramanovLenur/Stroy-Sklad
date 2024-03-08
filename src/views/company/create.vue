@@ -194,6 +194,7 @@ const { mutate: createMutate } = useMutation({
         // if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["companies"] });
+        queryClient.invalidateQueries({ queryKey: ["organizations"] });
         
         router.push(routes.COMPANIES.path);
         // setTimeout(() => toast.success(t("createToast")), 1000);

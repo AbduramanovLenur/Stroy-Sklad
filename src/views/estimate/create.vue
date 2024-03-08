@@ -323,7 +323,7 @@ const addTableHandler = (object) => {
         constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
     });
     
-    state.value.price = +state.value.price + +object.price;
+    state.value.price += parseInt(object.price, 10);
 
     // toast.error(t("estimateEmptyData"));
 }
