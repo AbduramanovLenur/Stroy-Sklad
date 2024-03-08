@@ -36,14 +36,14 @@
                         </div>
                         <div class="management-role__actions">
                             <div
-                                v-if="index + 1 !== state?.length" 
+                                v-if="(index + 1 !== state?.length) && isAction" 
                                 class="management-role__icon"
                                 @click="() => addItem(index + 1)"
                             >
                                 <Icon name="plus" />
                             </div>
                             <div
-                                v-if="index !== 0 && index + 1 !== state?.length" 
+                                v-if="(index !== 0 && index + 1 !== state?.length) && user?.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.DELETE)" 
                                 class="management-role__icon"
                                 @click="() => deleteItem(index)"
                             >
@@ -52,7 +52,10 @@
                         </div>
                     </div>
                 </div>
-                <CustomButton className="form__submit">
+                <CustomButton 
+                    v-if="isAction"
+                    className="form__submit"
+                >
                     {{ $t("formButton") }}
                 </CustomButton>
             </form>
@@ -86,7 +89,8 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.CREATE));
+const isShow = computed(() => user?.value.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.READ));
+const isAction = computed(() => user?.value.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.CREATE) || user?.value.user?.modules?.includes(actionModules.MANAGEMENT_ROLE.UPDATE));
 
 const state = ref([
     { uuid: uuidv4(), roleIds: [], label: "creatorApp" },
