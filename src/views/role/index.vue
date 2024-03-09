@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { useUserStore } from "@/store/userStore";

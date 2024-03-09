@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { refDebounced } from "@vueuse/core";

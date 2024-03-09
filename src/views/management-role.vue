@@ -65,7 +65,7 @@
 
 <script setup>
 import { v4 as uuidv4 } from "uuid";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
