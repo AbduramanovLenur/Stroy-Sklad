@@ -147,11 +147,11 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ESTIMATE.CREATE));
 
 const headers = ref([
-    { id: 1, label: "estimateBlock", width: 200 },
-    { id: 2, label: "estimateFloor", width: 200 },
-    { id: 3, label: "estimateMaterial", width: 260 },
-    { id: 4, label: "estimateBudget", width: 200 },
-    { id: 5, label: "estimateCost" }
+    { id: 1, label: "estimateBlock", width: 15 },
+    { id: 2, label: "estimateFloor", width: 20 },
+    { id: 3, label: "estimateMaterial", width: 25 },
+    { id: 4, label: "estimateBudget", width: 20 },
+    { id: 5, label: "estimateCost", width: 20 }
 ]);
 
 const state = ref({
@@ -409,6 +409,7 @@ const submitHandler = () => {
     &__blocks {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 15px;
     }
     &__block {

@@ -62,11 +62,11 @@ const applicationId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "applicationUserName", width: 190 },
-    { id: 3, label: "applicationDocDate", width: 230 },
-    { id: 4, label: "applicationDedline", width: 230 },
-    { id: 5, label: "applicationObject", width: 250 },
-    { id: 6, label: "applicationBlock", width: 250 }
+    { id: 1, label: "applicationUserName", width: 12 }, // 12
+    { id: 3, label: "applicationDocDate", width: 14.6 }, // 14.6
+    { id: 4, label: "applicationDedline", width: 14.6 }, // 14.6
+    { id: 5, label: "applicationObject", width: 16 },
+    { id: 6, label: "applicationBlock", width: 16 }
 ]);
 
 const {

@@ -174,6 +174,7 @@ const inputs = ref([
         placeholder: "phoneOrganizationPlaceholder", 
         icon: "phone",
         errorKey: "phoneNumber",
+        type: "number"
     },
     { 
         id: 5, 

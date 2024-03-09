@@ -51,10 +51,10 @@ const employeesId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "employeesFullName", width: 300 },
-    { id: 2, label: "employeesOrganization", width: 320 },
-    { id: 3, label: "employeesPhone", width: 255 },
-    { id: 4, label: "employeesRole", width: 195 }
+    { id: 1, label: "employeesFullName", width: 30 },
+    { id: 2, label: "employeesOrganization", width: 30 },
+    { id: 3, label: "employeesPhone", width: 20 },
+    { id: 4, label: "employeesRole", width: 15 }
 ]);
 
 const {

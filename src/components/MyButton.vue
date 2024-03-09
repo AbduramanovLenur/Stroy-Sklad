@@ -1,5 +1,5 @@
 <template>
-    <router-link v-if="type === 'link'" :to="to" class="add-button hovered" :style="`background-color: var(--${color}); max-width: ${width}px`">
+    <router-link v-if="type === 'link'" :to="to" :class="`add-button hovered ${className ? className : ''}`" :style="`background-color: var(--${color}); max-width: ${width}px`">
         <span class="add-button__icon">
             <Icon :name="icon" />
         </span>
@@ -26,6 +26,10 @@ defineProps({
     width: {
         type: Number,
         default: () => 150
+    },
+    className: {
+        type: String,
+        default: () => ""
     }
 });
 </script>

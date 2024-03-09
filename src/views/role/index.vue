@@ -61,7 +61,7 @@ const rolesId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "rolesName", width: 1150 }
+    { id: 1, label: "rolesName", width: 70 }
 ]);
 
 const {

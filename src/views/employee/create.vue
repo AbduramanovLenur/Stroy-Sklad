@@ -14,6 +14,7 @@
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
                     :error="v$?.[input.errorKey]?.$error" 
+                    :type="input?.type"
                     :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
                 >
                     {{ $t(input.label) }}
@@ -155,6 +156,7 @@ const inputs = ref([
         placeholder: "employeesPhonePlaceholder", 
         icon: "phone", 
         errorKey: "phoneNumber",
+        type: "number"
     }
 ]);
 

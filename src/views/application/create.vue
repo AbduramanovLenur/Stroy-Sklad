@@ -113,10 +113,10 @@ const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModule
 const isSubmit = ref(false);
 
 const headers = ref([
-    { id: 1, label: "appFloor", width: 350 },
-    { id: 2, label: "appMaterial", width: 370 },
-    { id: 3, label: "appCount", width: 260 },
-    { id: 4, label: "appPrice", width: 350 }
+    { id: 1, label: "appFloor", width: 15 },
+    { id: 2, label: "appMaterial", width: 30 },
+    { id: 3, label: "appCount", width: 15 },
+    { id: 4, label: "appPrice", width: 20 }
 ]);
 
 const state = ref({

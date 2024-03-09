@@ -10,7 +10,7 @@
                     align="center" 
                     v-for="title in headers" 
                     :key="title.id" 
-                    :style="`width: ${title.width}px;`"
+                    :style="`width: ${title.width}%;`"
                 >
                     {{ $t(title.label) }}
                 </th>

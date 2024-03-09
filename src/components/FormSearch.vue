@@ -43,6 +43,7 @@ watch(search, () => {
     @media (max-width: 1024px) {
         margin-left: initial;
         order: 3;
+        grid-column: 1 / 3;
     }
 
     @media (max-width: 768px) {

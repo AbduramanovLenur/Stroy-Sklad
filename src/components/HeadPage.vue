@@ -10,6 +10,7 @@
             icon="add-company"
             type="link"
             color="black"
+            className="head-page-button"
         >
             {{ $t("addButton") }}
         </MyButton>
@@ -52,6 +53,11 @@ defineProps({
 
     @media (max-width: 480px) {
         grid-template-columns: repeat(1, 1fr);
+    }
+    &-button {
+        @media (max-width: 1024px) {
+            margin-left: auto;
+        }
     }
 }
 </style>

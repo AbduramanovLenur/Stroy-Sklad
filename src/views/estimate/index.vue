@@ -61,10 +61,10 @@ const budgetId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "estimateName", width: 280 },
-    { id: 2, label: "estimateObject", width: 280 },
-    { id: 3, label: "estimateAddress", width: 280 },
-    { id: 4, label: "estimatePrice", width: 280 },
+    { id: 1, label: "estimateName", width: 25 },
+    { id: 2, label: "estimateObject", width: 25 },
+    { id: 3, label: "estimateAddress", width: 20 },
+    { id: 4, label: "estimatePrice", width: 20 },
 ]);
 
 const {

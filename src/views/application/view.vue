@@ -40,7 +40,7 @@
                     :table="state.applicationTables"
                 />
                 <Spinner 
-                    v-if="isLoadingCosts || isLoadingMaterials || isLoadingFloors || !state.applicationTables?.length" 
+                    v-if="isLoading" 
                 />
                 <FormTextarea 
                     v-if="isAllSuccessData"
@@ -78,6 +78,7 @@
                 </div>
             </form>
             <Histories 
+                v-if="isAllSuccessData"
                 :histories="state.histories" 
             />
         </div>
@@ -121,10 +122,10 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
 
 const headers = ref([
-    { id: 1, label: "appFloor", width: 350 },
-    { id: 2, label: "appMaterial", width: 370 },
-    { id: 3, label: "appCount", width: 260 },
-    { id: 4, label: "appPrice" },
+    { id: 1, label: "appFloor", width: 20 },
+    { id: 2, label: "appMaterial", width: 30 },
+    { id: 3, label: "appCount", width: 20 },
+    { id: 4, label: "appPrice", width: 30 },
 ]);
 
 const state = ref({
@@ -208,7 +209,8 @@ const {
     enabled: isEnabled
 });
 
-const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.value.applicationTables?.length));
+const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.value.applicationTables.every((elem) => elem.floorValue && elem.costValue && elem.constructionMaterialValue)));
+const isLoading = computed(() => !!(isLoadingCosts.value || isLoadingMaterials.value || isLoadingFloors.value || !state.value.applicationTables.every((elem) => elem.floorValue && elem.costValue && elem.constructionMaterialValue)))
 
 const inputs = ref([
     { 

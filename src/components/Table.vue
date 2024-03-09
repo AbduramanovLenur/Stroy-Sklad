@@ -10,7 +10,7 @@
                     :key="title.id" 
                     class="table-title" 
                     align="center" 
-                    :style="`width: ${title.width}px;`"
+                    :style="`width: ${title.width}%;`"
                 >
                     {{ $t(title.label) }}
                 </th>
@@ -47,10 +47,10 @@
                 <td v-if="info.company" class="table-info" align="center">
                     {{ info.company }}
                 </td>
-                <td v-if="info.docDate" class="table-info" align="center">
+                <td v-if="info.docDate" class="table-info" align="center" style="white-space: nowrap;">
                     {{ info.docDate }}
                 </td>
-                <td v-if="info.deadline" class="table-info" align="center">
+                <td v-if="info.deadline" class="table-info" align="center" style="white-space: nowrap;">
                     {{ info.deadline }}
                 </td>
                 <td v-if="info.phone" class="table-info" align="center">
