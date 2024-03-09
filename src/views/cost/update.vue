@@ -60,6 +60,7 @@ import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -147,6 +148,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["expensesById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
@@ -161,8 +164,11 @@ const submitHandler = async () => {
     if (v$.value.$errors.length) {
         return;
     }
+    
+    const formData = { ...state.value };
 
-    updateMutate(state.value);
+    updateMutate(formData);
+
     v$.value.$reset();
 }
 </script>

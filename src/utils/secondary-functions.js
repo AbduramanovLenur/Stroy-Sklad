@@ -35,3 +35,19 @@ export const createIdMap = (items) => {
 
 export const priceSeperator = (price = 0) =>
   price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+export const clearState = (formData) => {
+  let body = { ...formData };
+
+  const keys = Object.keys(body);
+
+  keys.forEach((key) => {
+    if (Array.isArray(body[key])) {
+      body[key] = [];
+    } else {
+      body[key] = "";
+    }
+  });
+
+  return body;
+}

@@ -85,7 +85,7 @@ import { create, createWithExcel } from "@/services/crud.services.js";
 import { manualQuantityTypes } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap } from "@/utils/secondary-functions.js";
+import { createIdMap, clearState } from "@/utils/secondary-functions.js";
 import FormFile from "@/components/FormFile.vue";
 
 const queryClient = useQueryClient();
@@ -176,6 +176,8 @@ const { mutate: createMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 
@@ -187,6 +189,8 @@ const { mutate: createWithExcelMutate } = useMutation({
     mutationFn: (body) => createWithExcel("construction_material", body),
     onSuccess: (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["products"] });
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
@@ -202,7 +206,12 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate({ fullname: state.value.fullname, quantityTypeId: state.value.quantityTypeId });
+    const formData = { ...state.value };
+
+    delete formData.data;
+
+    createMutate(formData);
+
     v$.value.$reset();
 }
 
@@ -214,7 +223,9 @@ const submitWithExcelFile = () => {
         return;
     }
 
-    state.value.data =  state.value.data.map((elem) => {
+    let array = [ ...state.value.data ];
+
+    array =  array.map((elem) => {
         const object = { ...elem };
 
         delete object?.id;
@@ -224,7 +235,7 @@ const submitWithExcelFile = () => {
         return object;
     });
 
-    createWithExcelMutate(state.value.data);
+    createWithExcelMutate(array);
 }
 </script>
 

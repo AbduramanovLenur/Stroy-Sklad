@@ -14,6 +14,7 @@
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
                     :error="v$?.[input?.errorKey]?.$error" 
+                    :type="input?.type"
                     :textError="v$?.[input?.errorKey]?.$errors[0]?.$message"
                 >
                     {{ $t(input.label) }}
@@ -61,6 +62,7 @@ import {
     manualGetStates 
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -155,6 +157,7 @@ const inputs = ref([
         placeholder: "innOrganizationPlaceholder", 
         icon: "tin",
         errorKey: "inn",
+        type: "number"
     },
     { 
         id: 3, 
@@ -250,6 +253,8 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("organization", body),
     onSuccess: async (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
         
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         queryClient.invalidateQueries({ queryKey: ["companyById", slugId] });
@@ -266,7 +271,10 @@ const submitHandler = async () => {
         return;
     }
 
-    updateMutate(state.value);
+    const formData = { ...state.value };
+
+    updateMutate(formData);
+
     v$.value.$reset();
 }
 </script>

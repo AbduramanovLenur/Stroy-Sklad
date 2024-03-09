@@ -41,6 +41,7 @@ import { useQueryClient, useMutation } from "@tanstack/vue-query";
 import { create } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -77,6 +78,8 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("cost", body),
     onSuccess: (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
         
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
@@ -92,7 +95,10 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate(state.value);
+    const formData = { ...state.value };
+
+    createMutate(formData);
+
     v$.value.$reset();
 }
 </script>

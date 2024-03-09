@@ -98,7 +98,7 @@ import {
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap } from "@/utils/secondary-functions.js";
+import { createIdMap, clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -305,8 +305,6 @@ const addTableHandler = (object) => {
         costValue: getCostIdValue(object),
         constructionMaterialValue: getConstructionMaterialIdValue(object),
     });
-
-    // toast.error(t("estimateEmptyData"));
 }
 
 const deleteHandler = (idx) => {
@@ -321,17 +319,16 @@ const { mutate: createMutate } = useMutation({
         body.buildingBlockId = body.buildingBlockId[0];
 
         body.createApplicationTables = body.createApplicationTables.map((elem) => {
-            delete elem.delId;
-            delete elem.floorValue;
-            delete elem.costValue;
-            delete elem.constructionMaterialValue;
+            const { delId, floorValue, costValue, constructionMaterialValue, ...rest } = elem;
 
-            return elem;
-        })
+            return rest;
+        });
     },
     mutationFn: (body) => create("application", body),
     onSuccess: (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         
@@ -346,7 +343,10 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate(state.value);
+    const formData = { ...state.value };
+
+    createMutate(formData);
+
     v$.value.$reset();
 }
 </script>

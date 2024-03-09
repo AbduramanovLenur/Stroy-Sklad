@@ -64,6 +64,7 @@ import {
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -229,6 +230,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["objects"] });
         queryClient.invalidateQueries({ queryKey: ["objectById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
@@ -245,7 +248,10 @@ const submitHandler = async () => {
         return;
     }
 
-    updateMutate(state.value);
+    const formData = { ...state.value };
+
+    updateMutate(formData);
+
     v$.value.$reset();
 }
 </script>

@@ -328,9 +328,9 @@ svg {
         gap: 10px;
         cursor: pointer;
         transition: 0.5s;
-            // &[aria-selected="true"] {
-            //     display: none;
-            // }
+            &[aria-selected="true"] {
+                display: none;
+            }
         @media (hover: hover) {
             &:hover {
                 background-color: rgba(0, 128, 0, 0.2);

@@ -60,7 +60,7 @@ import { getWithId, updateById } from "@/services/crud.services.js";
 import { manualGetRoles, manualGetStates } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
-// import { useTableStore } from "@/store/tableStore";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -72,9 +72,6 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.ORG_USER.UPDATE));
-
-// const tableStore = useTableStore();
-// const { setPagePagination, setLimitPagination } = tableStore;
 
 const slugId = ref(route.params.id);
 
@@ -208,6 +205,8 @@ const { mutate: updateMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         queryClient.invalidateQueries({ queryKey: ["orgUserById", slugId] });
 
@@ -222,7 +221,10 @@ const submitHandler = async () => {
         return;
     }
 
-    updateMutate(state.value);
+    const formData = { ...state.value };
+
+    updateMutate(formData);
+
     v$.value.$reset();
 }
 </script>

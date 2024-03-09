@@ -122,7 +122,7 @@
 
 <script setup>
 import { v4 as uuidv4 } from "uuid";
-import { ref, watch, watchEffect, computed } from "vue";
+import { ref, watch, computed } from "vue";
 import EstimateForm from "@/components/EstimateForm.vue";
 import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -147,7 +147,7 @@ import {
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap } from "@/utils/secondary-functions.js";
+import { createIdMap, clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -357,8 +357,6 @@ const addTableHandler = (object) => {
     });
     
     state.value.price += parseInt(object.price, 10);
-
-    // toast.error(t("estimateEmptyData"));
 }
 
 const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
@@ -384,7 +382,13 @@ watch(isNotAllEmptyData, (newValue) => {
 }, { immediate: true });
 
 const deleteHandler = (idx) => {
-    state.value.budgetTables = state.value.budgetTables.filter((elem) => elem.delId !== idx);
+    state.value.budgetTables = state.value.budgetTables.filter((elem) => {
+        const isEqual = elem.delId !== idx;
+
+        if (!isEqual) state.value.price -= parseInt(elem.price, 10);
+
+        return isEqual;
+    });
 }
 
 const { isError } = await useQuery({
@@ -416,15 +420,16 @@ const { mutate: updateMutate } = useMutation({
         isSubmit.value = true;
 
         body.budgetTables = body.budgetTables.map((elem) => {
-            let object = { ...elem };
+            const { 
+                delId, 
+                blockValue, 
+                floorValue, 
+                costValue, 
+                constructionMaterialIdsValue, 
+                ...rest 
+            } = elem;
 
-            delete object.delId;
-            delete object.blockValue;
-            delete object.floorValue;
-            delete object.costValue;
-            delete object.constructionMaterialIdsValue;
-
-            return object;
+            return rest;
         });
 
         body.buildingObjectId = body.buildingObjectId[0];
@@ -433,6 +438,8 @@ const { mutate: updateMutate } = useMutation({
     mutationFn: (body) => updateById("budget", body),
     onSuccess: (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
         queryClient.invalidateQueries({ queryKey: ["budgetById", slugId] });
@@ -448,7 +455,10 @@ const submitHandler = () => {
         return;
     }
 
-    updateMutate(state.value);
+    const formData = { ...state.value };
+
+    updateMutate(formData);
+
     v$.value.$reset();
 }
 </script>

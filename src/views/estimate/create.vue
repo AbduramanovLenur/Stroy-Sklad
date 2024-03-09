@@ -134,7 +134,7 @@ import {
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap } from "@/utils/secondary-functions.js";
+import { createIdMap, clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -324,12 +324,16 @@ const addTableHandler = (object) => {
     });
     
     state.value.price += parseInt(object.price, 10);
-
-    // toast.error(t("estimateEmptyData"));
 }
 
 const deleteHandler = (idx) => {
-    state.value.tables = state.value.tables.filter((elem) => elem.delId !== idx);
+    state.value.tables = state.value.tables.filter((elem) => {
+        const isEqual = elem.delId !== idx;
+
+        if (!isEqual) state.value.price -= parseInt(elem.price, 10);
+
+        return isEqual;
+    });
 }
 
 const { mutate: createMutate } = useMutation({
@@ -337,17 +341,16 @@ const { mutate: createMutate } = useMutation({
         isSubmit.value = true;
 
         body.tables = body.tables.map((elem) => {
-            let object = { 
-                ...elem
-            };
+            const { 
+                delId, 
+                blockValue, 
+                floorValue, 
+                costValue, 
+                constructionMaterialIdsValue, 
+                ...rest 
+            } = elem;
 
-            delete object.delId;
-            delete object.blockValue;
-            delete object.floorValue;
-            delete object.costValue;
-            delete object.constructionMaterialIdsValue;
-
-            return object;
+            return rest;
         });
 
         body.buildingObjectId = body.buildingObjectId[0];
@@ -355,6 +358,8 @@ const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("budget", body),
     onSuccess: (response) => {
         // if (!response?.success) return;
+
+        state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
         
@@ -368,8 +373,11 @@ const submitHandler = () => {
     if (v$.value.$errors.length) {
         return;
     }
+    
+    const formData = { ...state.value };
 
-    createMutate(state.value);
+    createMutate(formData);
+
     v$.value.$reset();
 }
 </script>

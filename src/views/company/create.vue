@@ -14,6 +14,7 @@
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
                     :error="v$?.[input.errorKey].$error" 
+                    :type="input?.type"
                     :textError="v$?.[input.errorKey].$errors[0]?.$message"
                 >
                     {{ $t(input.label) }}
@@ -57,6 +58,7 @@ import {
 import { create } from "@/services/crud.services.js";
 import { manualGetRegions, manualGetDistricts } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -132,6 +134,7 @@ const inputs = ref([
         placeholder: "innOrganizationPlaceholder", 
         icon: "tin",
         errorKey: "inn",
+        type: "number"
     },
     { 
         id: 3, 
@@ -193,6 +196,8 @@ const { mutate: createMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["companies"] });
         queryClient.invalidateQueries({ queryKey: ["organizations"] });
         
@@ -208,7 +213,10 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate(state.value);
+    const formData = { ...state.value };
+
+    createMutate(formData);
+
     v$.value.$reset();
 }
 </script>

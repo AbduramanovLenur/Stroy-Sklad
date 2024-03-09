@@ -68,6 +68,7 @@ import {
     manualGetModules 
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
+import { clearState } from "@/utils/secondary-functions.js";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -189,6 +190,8 @@ const { mutate: createMutate } = useMutation({
     onSuccess: (response) => {
         // if (!response?.success) return;
 
+        state.value = clearState(state.value);
+
         queryClient.invalidateQueries({ queryKey: ["employees"] });
         
         router.push(routes.EMPLOYEES.path);
@@ -202,7 +205,10 @@ const submitHandler = () => {
         return;
     }
 
-    createMutate(state.value);
+    const formData = { ...state.value };
+
+    createMutate(formData);
+
     v$.value.$reset();
 }
 </script>
