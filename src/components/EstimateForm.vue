@@ -7,7 +7,7 @@
             <FormSelect 
                 v-for="select in selects"
                 :key="select.id"
-                v-model="formData[select.model]" 
+                v-model.trim="formData[select.model]" 
                 :width="500" 
                 :options="select.options"
                 :placeholder="select?.placeholder"

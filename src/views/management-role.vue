@@ -23,7 +23,7 @@
                     >
                         <div class="management-role__select-box">
                             <FormSelect 
-                                v-model="select.roleIds" 
+                                v-model.trim="select.roleIds" 
                                 :width="500" 
                                 :options="filteredRoles(index)"
                                 placeholder="managementRolePlaceholder"

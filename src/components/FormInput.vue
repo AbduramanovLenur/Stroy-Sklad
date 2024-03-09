@@ -3,7 +3,7 @@
         <slot />
         <span class="label-wrapper">
             <input 
-                v-model="model"
+                v-model.trim="model"
                 class="input" 
                 :type="type ? type : 'text'" 
                 :placeholder="placeholder" 

@@ -21,7 +21,7 @@
                             <input 
                                 class="auth__input" 
                                 type="text" 
-                                v-model="formData.userName"
+                                v-model.trim="formData.userName"
                                 :placeholder="$t('loginPlaceholder')"
                             >
                             <span 
@@ -37,7 +37,7 @@
                                 <input 
                                     class="auth__input" 
                                     :type="isShow ? 'text' : 'password'" 
-                                    v-model="formData.password"
+                                    v-model.trim="formData.password"
                                     :placeholder="$t('passwordPlaceholder')"
                                 >
                                 <span class="auth__label-icon" @click="() => isShow = !isShow">

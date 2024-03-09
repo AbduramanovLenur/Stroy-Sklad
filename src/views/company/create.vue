@@ -22,7 +22,7 @@
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
-                    v-model="state[select.model]"
+                    v-model.trim="state[select.model]"
                     :width="500" 
                     :options="select.options"
                     :error="v$?.[select?.errorKey]?.$error" 

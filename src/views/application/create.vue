@@ -10,7 +10,7 @@
                     <FormInput 
                         v-for="input in inputs"
                         :key="input.id"
-                        v-model.trim="state[input.model]"
+                        v-model="state[input.model]"
                         :width="500" 
                         :placeholder="$t(input.placeholder)"
                         :name="input.icon"

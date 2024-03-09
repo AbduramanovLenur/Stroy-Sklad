@@ -13,7 +13,7 @@
                     >
                         <label class="modules__action-label">
                             <input 
-                                v-model="model"
+                                v-model.trim="model"
                                 type="checkbox" 
                                 :value="elem.id" 
                             >
