@@ -253,6 +253,9 @@ const submitWithExcelFile = () => {
         &-head {
             display: flex;
             gap: 10px;
+            @media (max-width: 480px) {
+                flex-direction: column;
+            }
         }
     }
 }

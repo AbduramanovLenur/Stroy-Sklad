@@ -74,6 +74,7 @@ const onChangeLimit = (limit) => {
         @media (max-width: 480px) {
             font-size: 14px;
             padding: 8px;
+            margin-left: initial;
         }
     }
 }
