@@ -228,7 +228,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("building_object", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -238,6 +238,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         
         router.push(routes.OBJECT.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

@@ -253,7 +253,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("organization", body),
     onSuccess: async (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
         
@@ -262,6 +262,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["organizations"] });
 
         router.push(routes.COMPANIES.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

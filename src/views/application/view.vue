@@ -310,24 +310,28 @@ watch(isError, (value) => {
 const { mutate: cancelMutate } = useMutation({
     mutationFn: (idx) => cancelWithId("application", idx),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 
         router.push(routes.APPLICATION.path);
+
+        setTimeout(() => toast.success(t("cancelToast")), 150);
     }
 });
 
 const { mutate: acceptMutate } = useMutation({
     mutationFn: (idx) => acceptWithId("application", idx),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 
         router.push(routes.APPLICATION.path);
+
+        setTimeout(() => toast.success(t("acceptToast")), 150);
     }
 });
 

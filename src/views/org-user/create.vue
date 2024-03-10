@@ -14,6 +14,7 @@
                     :placeholder="$t(input.placeholder)"
                     :name="input.icon"
                     :error="v$?.[input.errorKey]?.$error" 
+                    :type="input?.type"
                     :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
                 >
                     {{ $t(input.label) }}
@@ -134,6 +135,7 @@ const inputs = ref([
         placeholder: "employeesPhonePlaceholder", 
         icon: "phone", 
         errorKey: "phoneNumber",
+        type: "number"
     }
 ]);
 
@@ -156,13 +158,15 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("user", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         
         router.push(routes.ORG_USER.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

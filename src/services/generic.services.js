@@ -19,10 +19,11 @@ export const request = async ({ url, method, body = {} }) => {
 
     const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
 
-    const { data, statusText } = response;
+    const { data, statusText, status } = response;
 
-    if (method.toLowerCase() === 'post') {
-      toast.success(statusText);
+    if (method.toLowerCase() === 'post' && status === 200) {
+      // toast.success(statusText);
+      return { data, success: true };
     }
 
     return data;

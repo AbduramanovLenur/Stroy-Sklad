@@ -146,7 +146,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("cost", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -155,6 +155,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
         
         router.push(routes.EXPENS.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

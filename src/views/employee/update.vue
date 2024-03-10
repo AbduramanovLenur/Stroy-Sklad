@@ -237,7 +237,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("user", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -245,6 +245,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["employeeById", slugId] });
 
         router.push(routes.EMPLOYEES.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

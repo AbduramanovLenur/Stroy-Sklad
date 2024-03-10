@@ -198,7 +198,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("warehouse", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -206,6 +206,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["warehouseById", slugId] });
         
         router.push(routes.WAREHOUSE.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

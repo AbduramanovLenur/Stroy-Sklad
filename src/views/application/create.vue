@@ -326,13 +326,15 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("application", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         
         router.push(routes.APPLICATION.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

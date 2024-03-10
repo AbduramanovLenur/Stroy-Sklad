@@ -99,15 +99,16 @@ const v$ = useVuelidate(rules, formData);
 const { mutate: loginMutate } = useMutation({
     mutationFn: (body) => loginUser(body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
-        setUser(response);
-        // toast.success(t("signInToast"));
+        setUser(response?.data);
 
         formData.value = clearForm(formData.value);
         v$.value.$reset();
 
         router.push(routes.HOME.path);
+
+        setTimeout(() => toast.success(t("signInToast")), 150);
     }
 });
 

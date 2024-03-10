@@ -77,7 +77,7 @@ const inputs = ref([
 const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("cost", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
         
@@ -85,6 +85,8 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
         
         router.push(routes.EXPENS.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

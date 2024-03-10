@@ -195,7 +195,7 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("organization", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -203,7 +203,7 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["organizations"] });
         
         router.push(routes.COMPANIES.path);
-        // setTimeout(() => toast.success(t("createToast")), 1000);
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

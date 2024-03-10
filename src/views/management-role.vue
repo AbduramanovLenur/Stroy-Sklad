@@ -173,11 +173,13 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => createPositionRoles("application_position", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["positions"] });
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById"] });
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

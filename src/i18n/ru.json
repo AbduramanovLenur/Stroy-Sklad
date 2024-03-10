@@ -265,5 +265,8 @@
   "fileLabel": "Импорт товаров из Excel",
   "quantityName": "Величина",
   "isEmptyExcelFile": "В файле есть пустые ячейки",
-  "historiesLabel": "История заявки"
+  "historiesLabel": "История заявки",
+  "deleteToast": "Удалено",
+  "acceptToast": "Одобрено",
+  "cancelToast": "Отказано"
 }

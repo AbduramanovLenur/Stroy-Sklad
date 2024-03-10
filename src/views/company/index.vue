@@ -33,6 +33,8 @@ import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { refDebounced } from "@vueuse/core";
+import { useToast } from "vue-toastification";
+import { useI18n } from "vue-i18n";
 import { 
     useQueryClient, 
     useQuery, 
@@ -42,6 +44,9 @@ import { getList, deleteWithId } from "@/services/crud.services.js";
 import { routes } from "@/utils/routes.js";
 
 const queryClient = useQueryClient();
+
+const toast = useToast();
+const { t } = useI18n();
 
 const tableStore = useTableStore();
 const { page, limit, search } = storeToRefs(tableStore);
@@ -89,10 +94,12 @@ const {
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("organization", idx),
     onSuccess: async (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         await queryClient.invalidateQueries({ queryKey: ["companies"] });
         await queryClient.invalidateQueries({ queryKey: ["companyById", companyId] });
+
+        setTimeout(() => toast.success(t("deleteToast")), 150);
     }
 });
 

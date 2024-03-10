@@ -265,5 +265,8 @@
   "fileLabel": "Mahsulotlarni excel dan import qilish",
   "quantityName": "Birlik",
   "isEmptyExcelFile": "Faylda bo'sh hujayralar mavjud",
-  "historiesLabel": "Ariza tarixi"
+  "historiesLabel": "Ariza tarixi",
+  "deleteToast": "O'chirildi",
+  "acceptToast": "Tasdiqlangan",
+  "cancelToast": "Bekor etilgan"
 }

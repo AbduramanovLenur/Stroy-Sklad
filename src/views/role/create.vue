@@ -110,7 +110,7 @@ const inputs = ref([
 const { mutate: createMutate } = useMutation({
     mutationFn: (body) => create("Role", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -118,6 +118,8 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });
         
         router.push(routes.ROLE.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

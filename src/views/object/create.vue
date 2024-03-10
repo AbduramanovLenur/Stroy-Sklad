@@ -171,7 +171,7 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("building_object", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -179,6 +179,8 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["objectsList"] });
         
         router.push(routes.OBJECT.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 

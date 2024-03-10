@@ -37,6 +37,8 @@ import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 import { useUserStore } from "@/store/userStore";
 import { refDebounced } from "@vueuse/core";
+import { useToast } from "vue-toastification";
+import { useI18n } from "vue-i18n";
 import { 
     useQueryClient, 
     useQuery, 
@@ -47,6 +49,9 @@ import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
 
 const queryClient = useQueryClient();
+
+const toast = useToast();
+const { t } = useI18n();
 
 const tableStore = useTableStore();
 const { page, limit, search } = storeToRefs(tableStore);
@@ -78,11 +83,13 @@ const {
 const { mutate: mutateDelete } = useMutation({
     mutationFn: (idx) => deleteWithId("cost", idx),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
         
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["expensesById", expensesId] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
+
+        setTimeout(() => toast.success(t("deleteToast")), 150);
     }
 });
 

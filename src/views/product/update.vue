@@ -170,7 +170,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("construction_material", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -179,6 +179,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
         
         router.push(routes.PRODUCT.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

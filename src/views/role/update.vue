@@ -176,7 +176,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("Role", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -185,6 +185,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });
         
         router.push(routes.ROLE.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

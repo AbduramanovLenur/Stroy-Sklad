@@ -109,8 +109,7 @@
                 >
                     {{ $t("estimateCommentLabel") }}
                 </FormTextarea>
-                <CustomButton 
-                    v-if="blockId" 
+                <CustomButton
                     className="manage__submit"
                 >
                     {{ $t("formButton") }}
@@ -437,7 +436,7 @@ const { mutate: updateMutate } = useMutation({
     },
     mutationFn: (body) => updateById("budget", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -445,6 +444,8 @@ const { mutate: updateMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["budgetById", slugId] });
         
         router.push(routes.ESTIMATE.path);
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 

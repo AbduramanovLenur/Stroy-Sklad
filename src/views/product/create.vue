@@ -174,7 +174,7 @@ const { mutate: createMutate } = useMutation({
     },
     mutationFn: (body) => create("construction_material", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -182,13 +182,15 @@ const { mutate: createMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 
         router.push(routes.PRODUCT.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 
 const { mutate: createWithExcelMutate } = useMutation({
     mutationFn: (body) => createWithExcel("construction_material", body),
     onSuccess: (response) => {
-        // if (!response?.success) return;
+        if (!response?.success) return;
 
         state.value = clearState(state.value);
 
@@ -196,6 +198,8 @@ const { mutate: createWithExcelMutate } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["materialsList"] });
 
         router.push(routes.PRODUCT.path);
+
+        setTimeout(() => toast.success(t("createToast")), 150);
     }
 });
 
