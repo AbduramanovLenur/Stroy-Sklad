@@ -2,18 +2,23 @@
     <aside :class="`sidepanel ${isOpenPanel ? 'isOpen' : ''}`">
         <div :class="`sidepanel__inner ${isOpenPanel ? 'isOpen' : ''}`">
             <router-link :to="routes.HOME.path" :class="`sidepanel__logo ${isOpenPanel ? 'centered' : ''}`">
-                <span class="sidepanel__logo-picture">
+                <span class="sidepanel__logo-circle">
+                    <img 
+                        src="@/assets/images/logo/circle.svg" 
+                        alt="logo" 
+                        loading="lazy" 
+                        width="35" 
+                        height="30"
+                    >
+                </span>
+                <span :class="`sidepanel__logo-picture ${isOpenPanel ? 'hide' : ''}`">
                     <img 
                         src="@/assets/images/logo/logo.svg" 
                         alt="logo" 
                         loading="lazy" 
-                        width="30" 
-                        height="80"
+                        width="130" 
+                        height="40"
                     >
-                </span>
-                <span :class="`sidepanel__logo-text ${isOpenPanel ? 'hide' : ''}`">
-                    Stroy <br>
-                    Sklad
                 </span>
             </router-link>
             <Menu />
@@ -133,26 +138,15 @@ const logoutHandler = async () => {
     &__logo {
         display: flex;
         align-items: center;
-        gap: 25px;
+        justify-content: center;
+        gap: 10px;
 
-        &.centered {
-            display: flex;
-            justify-content: center;
+        &-circle {
+            flex-shrink: 0;
         }
 
         &-picture {
             flex-shrink: 0;
-        }
-
-        &-text {
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.2;
-            color: var(--white);
-            transition: 0.5s;
-            @media (max-width: 720px) {
-                display: none;
-            }
         }
     }
 

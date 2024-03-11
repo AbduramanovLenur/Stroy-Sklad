@@ -7,8 +7,8 @@
                         <img 
                             src="@/assets/images/auth/logo-auth.svg" 
                             alt="logo" 
-                            width="415" 
-                            height="80" 
+                            width="200" 
+                            height="65" 
                             loading="lazy"
                         >
                     </div>
