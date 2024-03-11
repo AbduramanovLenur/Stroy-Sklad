@@ -387,7 +387,7 @@ const acceptHandler = () => {
         align-items: center;
         gap: 30px;
         margin-top: 30px;
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
             flex-direction: column;
             gap: 20px;
         }

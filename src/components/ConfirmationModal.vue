@@ -34,6 +34,7 @@ defineProps(["isOpen"]);
     opacity: 0;
     visibility: hidden;
     transition: 0.5s;
+    z-index: 1005;
     &.is-active {
         opacity: 1;
         visibility: visible;
