@@ -60,7 +60,7 @@
             </div>
         </div>
     </section>
-    <div v-if="isLoading" class="loading">
+    <div v-if="status === 'pending'" class="loading">
         <Spinner />
     </div>
 </template>
@@ -99,7 +99,7 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, formData);
 
-const { mutate: loginMutate, isLoading } = useMutation({
+const { status, mutate: loginMutate } = useMutation({
     mutationFn: (body) => loginUser(body),
     onSuccess: (response) => {
         if (!response?.success) return;
