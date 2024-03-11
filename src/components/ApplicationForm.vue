@@ -96,7 +96,7 @@ const addHandler = () => {
         costId: formData.value.costId[0],
         constructionMaterialId: formData.value.constructionMaterialId[0],
         count: formData.value.count,
-        price: formData.value.price
+        // price: formData.value.price
     }
 
     emit("onAddTable", formData.value);
