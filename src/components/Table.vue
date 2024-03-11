@@ -104,13 +104,13 @@
                 <td v-if="info.director" class="table-info" align="center">
                     {{ info.director }}
                 </td>
-                <td v-if="info.state" class="table-info table-status" align="center">
+                <td v-if="info.state" class="table-info table-state" align="center">
                     <span :class="`${info.stateId === 1 ? 'active' : 'no-active'}`">
                         {{ info.state }}
                     </span>
                 </td>
-                <td v-if="info.status" class="table-info table-status" align="center">
-                    <span :class="`${(info.statusId === 1 || info.statusId === 7) ? 'active' : 'no-active'}`">
+                <td v-if="info.status" class="table-info" align="center">
+                    <span :class="`table-status ${ info?.statusId === 1 ? 'created' : info?.statusId === 7 ? 'accepted' : info?.statusId === 20 ? 'expected' : info?.statusId === 15 ? 'refused' : '' }`">
                         {{ info.status }}
                     </span>
                 </td>
@@ -212,7 +212,7 @@ const getId = computed(() => {
     &-delete {
         margin-left: 30px;
     }
-    &-status {
+    &-state {
         white-space: nowrap;
         span {
             font-size: 14px;
@@ -245,6 +245,9 @@ const getId = computed(() => {
                 }
             }
         }
+    }
+    &-status {
+        width: 160px;
     }
 }
 th {

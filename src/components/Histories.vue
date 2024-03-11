@@ -85,22 +85,22 @@ const date = computed(() => {
             background-color: var(--black);
             border-radius: 50%;
         }
-        &.created {
-            background-color: var(--blue);
-            color: var(--white);
-        }
-        &.accepted {
-            background-color: var(--green);
-            color: var(--white);
-        }
-        &.expected {
-            background-color: var(--yellow);
-            color: var(--red);
-        }
-        &.refused {
-            background-color: var(--red);
-            color: var(--white);
-        }
+        // &.created {
+        //     background-color: var(--blue);
+        //     color: var(--white);
+        // }
+        // &.accepted {
+        //     background-color: var(--green);
+        //     color: var(--white);
+        // }
+        // &.expected {
+        //     background-color: var(--yellow);
+        //     color: var(--red);
+        // }
+        // &.refused {
+        //     background-color: var(--red);
+        //     color: var(--white);
+        // }
     }
     &__head {
         display: flex;

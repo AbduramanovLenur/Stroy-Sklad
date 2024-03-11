@@ -384,3 +384,30 @@ svg {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+.created,
+.accepted,
+.expected,
+.refused {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.created {
+    background-color: var(--blue);
+    color: var(--white);
+}
+.accepted {
+    background-color: var(--green);
+    color: var(--white);
+}
+.expected {
+    background-color: var(--yellow);
+    color: var(--red);
+}
+.refused {
+    background-color: var(--red);
+    color: var(--white);
+}
