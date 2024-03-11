@@ -60,6 +60,9 @@
             </div>
         </div>
     </section>
+    <div v-if="isLoading" class="loading">
+        <Spinner />
+    </div>
 </template>
 
 <script setup>
@@ -96,7 +99,7 @@ const rules = computed(() => ({
 
 const v$ = useVuelidate(rules, formData);
 
-const { mutate: loginMutate } = useMutation({
+const { mutate: loginMutate, isLoading } = useMutation({
     mutationFn: (body) => loginUser(body),
     onSuccess: (response) => {
         if (!response?.success) return;
