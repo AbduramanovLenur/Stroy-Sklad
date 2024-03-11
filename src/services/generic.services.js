@@ -28,10 +28,10 @@ export const request = async ({ url, method, body = {} }) => {
 
     return data;
   } catch (error) {
-    // if (error.code === "ERR_NETWORK") {
-    //   resetUser();
-    //   router.push(routes.AUTH.path);
-    // }
+    if (error.code === "ERR_NETWORK") {
+      resetUser();
+      router.push(routes.AUTH.path);
+    }
 
     toast.error(error.message);
   }

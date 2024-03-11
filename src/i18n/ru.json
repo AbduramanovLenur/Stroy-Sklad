@@ -268,5 +268,9 @@
   "historiesLabel": "История заявки",
   "deleteToast": "Удалено",
   "acceptToast": "Одобрено",
-  "cancelToast": "Отказано"
+  "cancelToast": "Отказано",
+  "sureConfirm": "Вы действительно хотите подтвердить?",
+  "sureRefused": "Вы действительно хотите отказать?",
+  "yesButton": "Да",
+  "noButton": "Нет"
 }

@@ -61,7 +61,7 @@
                         type="submit" 
                         color="green" 
                         :width="180" 
-                        @click="acceptHandler"
+                        @click="() => isOpenAcceptedModal = true"
                     >
                         {{ $t("acceptButton") }}
                     </MyButton>
@@ -71,7 +71,7 @@
                         type="submit" 
                         color="red" 
                         :width="180" 
-                        @click="cancelHandler"
+                        @click="() => isOpenRefusedModal = true"
                     >
                         {{ $t("cancelButton") }}
                     </MyButton>
@@ -82,6 +82,20 @@
                 :histories="state.histories" 
             />
         </div>
+        <ConfirmationModal 
+            :isOpen="isOpenAcceptedModal"
+            @onConfirmed="acceptHandler" 
+            @onNotConfirmed="() => isOpenAcceptedModal = false"
+        >
+            {{ $t("sureConfirm") }}
+        </ConfirmationModal>
+        <ConfirmationModal 
+            :isOpen="isOpenRefusedModal"
+            @onConfirmed="cancelHandler" 
+            @onNotConfirmed="() => isOpenRefusedModal = false"
+        >
+            {{ $t("sureRefused") }}
+        </ConfirmationModal>
     </section>
 </template>
 
@@ -107,6 +121,7 @@ import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
 import { createIdMap } from "@/utils/secondary-functions.js";
 import Histories from "@/components/Histories.vue";
+import ConfirmationModal from "@/components/ConfirmationModal.vue";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -120,6 +135,9 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
+
+const isOpenAcceptedModal = ref(false);
+const isOpenRefusedModal = ref(false);
 
 const headers = ref([
     { id: 1, label: "appFloor", width: 20 },
@@ -369,6 +387,10 @@ const acceptHandler = () => {
         align-items: center;
         gap: 30px;
         margin-top: 30px;
+        @media (max-width: 480px) {
+            flex-direction: column;
+            gap: 20px;
+        }
     }
 }
 </style>
