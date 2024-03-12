@@ -19,8 +19,8 @@ export default ({ mode }) => {
       host: true,
       port: 8080,
     },
-    // build: {
-    //   sourcemap: true,
-    // },
+    build: {
+      sourcemap: false,
+    },
   });
 };
