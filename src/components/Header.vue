@@ -3,10 +3,10 @@
         <div class="header__inner">
             <Burger />
             <div class="header__info">
-                <div class="header__organization">
+                <div v-if="user?.user?.organizationName" class="header__organization">
                     {{ $t('organization') }} {{ user?.user?.organizationName }}
                 </div>
-                <div class="header__user">
+                <div v-if="user?.user?.role && user?.user?.fullName" class="header__user">
                     {{ user?.user?.role }} : {{ user?.user?.fullName }}
                 </div>
             </div>
@@ -16,9 +16,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from "@/store/userStore";
-import { storeToRefs } from "pinia";
-import Burger from "@/components/Burger.vue";
+import Burger from "@/components/Burger.vue"
+import { useUserStore } from "@/store/userStore"
+import { storeToRefs } from "pinia"
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
