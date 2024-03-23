@@ -204,7 +204,7 @@ const {
     isSuccess: isSuccessBlocks,
     isLoading: isLoadingBlocks
 } = await useQuery({
-    queryKey: ["blocksList", { blockId: valueObject }],
+    queryKey: ["blocksList", { blockId: valueObject, organizationId: user.value.user.organizationId }],
     queryFn: () => manualGetBlocks(valueObject.value[0]),
     enabled: isEnabledBlocks
 });
@@ -218,7 +218,7 @@ const {
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floorsList", { floorId: valueBlock }],
+    queryKey: ["floorsList", { floorId: valueBlock, organizationId: user.value.user.organizationId }],
     queryFn: () => manualGetFloors(valueBlock.value),
     enabled: isEnabled
 });

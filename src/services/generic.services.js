@@ -28,9 +28,14 @@ export const request = async ({ url, method, body = {} }) => {
 
     return data;
   } catch (error) {
-    if (error.code === "ERR_NETWORK") {
+    if (error?.response?.status === 401 || error.code === "ERR_NETWORK") {
       resetUser();
       router.push(routes.AUTH.path);
+    }
+
+    if (error?.response?.data) {
+      toast.error(error.response.data);
+      return;
     }
 
     toast.error(error.message);
