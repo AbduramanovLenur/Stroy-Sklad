@@ -58,7 +58,6 @@ const routes = [
     component: () => import("@/views/company/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -82,7 +81,6 @@ const routes = [
     component: () => import("@/views/company/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -106,7 +104,6 @@ const routes = [
     component: () => import("@/views/company/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -130,7 +127,6 @@ const routes = [
     component: () => import("@/views/employee/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -154,7 +150,6 @@ const routes = [
     component: () => import("@/views/employee/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -178,7 +173,6 @@ const routes = [
     component: () => import("@/views/employee/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
     },
     beforeEnter: (to, from, next) => {
@@ -202,7 +196,6 @@ const routes = [
     component: () => import("@/views/role/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ROLE.READ
     },
@@ -231,7 +224,6 @@ const routes = [
     component: () => import("@/views/role/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ROLE.CREATE
     },
@@ -260,7 +252,6 @@ const routes = [
     component: () => import("@/views/role/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ROLE.UPDATE
     },
@@ -289,7 +280,6 @@ const routes = [
     component: () => import("@/views/org-user/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ORG_USER.READ
     },
@@ -318,7 +308,6 @@ const routes = [
     component: () => import("@/views/org-user/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ORG_USER.CREATE
     },
@@ -347,7 +336,6 @@ const routes = [
     component: () => import("@/views/org-user/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ORG_USER.UPDATE
     },
@@ -376,7 +364,6 @@ const routes = [
     component: () => import("@/views/object/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.OBJECT.READ
     },
@@ -405,7 +392,6 @@ const routes = [
     component: () => import("@/views/object/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.OBJECT.CREATE
     },
@@ -434,7 +420,6 @@ const routes = [
     component: () => import("@/views/object/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.OBJECT.UPDATE
     },
@@ -463,7 +448,6 @@ const routes = [
     component: () => import("@/views/block/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.BLOCK.READ
     },
@@ -492,7 +476,6 @@ const routes = [
     component: () => import("@/views/block/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.BLOCK.CREATE
     },
@@ -521,7 +504,6 @@ const routes = [
     component: () => import("@/views/block/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.BLOCK.UPDATE
     },
@@ -550,7 +532,6 @@ const routes = [
     component: () => import("@/views/estimate/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ESTIMATE.READ
     },
@@ -579,7 +560,6 @@ const routes = [
     component: () => import("@/views/estimate/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ESTIMATE.CREATE
     },
@@ -608,7 +588,6 @@ const routes = [
     component: () => import("@/views/estimate/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.ESTIMATE.UPDATE
     },
@@ -637,7 +616,6 @@ const routes = [
     component: () => import("@/views/cost/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.EXPENS.READ
     },
@@ -666,7 +644,6 @@ const routes = [
     component: () => import("@/views/cost/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.EXPENS.CREATE
     },
@@ -695,7 +672,6 @@ const routes = [
     component: () => import("@/views/cost/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.EXPENS.UPDATE
     },
@@ -724,7 +700,6 @@ const routes = [
     component: () => import("@/views/product/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.PRODUCT.READ
     },
@@ -753,7 +728,6 @@ const routes = [
     component: () => import("@/views/product/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.PRODUCT.CREATE
     },
@@ -782,7 +756,6 @@ const routes = [
     component: () => import("@/views/product/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.PRODUCT.UPDATE
     },
@@ -811,7 +784,6 @@ const routes = [
     component: () => import("@/views/warehouse/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.WAREHOUSE.READ
     },
@@ -840,7 +812,6 @@ const routes = [
     component: () => import("@/views/warehouse/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.WAREHOUSE.CREATE
     },
@@ -869,7 +840,6 @@ const routes = [
     component: () => import("@/views/warehouse/update.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.WAREHOUSE.UPDATE
     },
@@ -898,7 +868,6 @@ const routes = [
     component: () => import("@/views/application/index.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.APPLICATION.READ
     },
@@ -927,7 +896,6 @@ const routes = [
     component: () => import("@/views/application/create.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.APPLICATION.CREATE
     },
@@ -956,7 +924,6 @@ const routes = [
     component: () => import("@/views/application/view.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.APPLICATION.UPDATE
     },
@@ -985,7 +952,6 @@ const routes = [
     component: () => import("@/views/management.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       modules: [actionModules.ROLE.READ, actionModules.ORG_USER.READ, actionModules.MANAGEMENT_ROLE.READ]
     },
@@ -1014,7 +980,6 @@ const routes = [
     component: () => import("@/views/management-role.vue"),
     meta: {
       layout: DefaultLayouts,
-      requiresAuth: true,
       roleId: roles.SUPERADMIN_ID,
       module: actionModules.MANAGEMENT_ROLE.READ
     },
