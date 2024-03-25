@@ -19,6 +19,16 @@
                 >
                     {{ $t(input.label) }}
                 </FormInput>
+                 <FormInput 
+                    v-model="state.createRoleDto.fullName"
+                    :width="500" 
+                    :placeholder="$t('employeesRolePlaceholder')"
+                    name="person"
+                    :error="v$?.createRoleDto.fullName?.$error"
+                    :textError="v$?.createRoleDto.fullName?.$errors[0]?.$message"
+                >
+                    {{ $t('employeesRoleLabel') }}
+                </FormInput>
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
@@ -35,12 +45,12 @@
                 </FormSelect>
                 <ActionsModules 
                     v-if="isSuccessModules"
-                    v-model="state.roleModules"
+                    v-model="state.createRoleDto.roleModules"
                     :actions="modules"
                 />
                 <CustomButton 
                     v-if="isSuccessModules"
-                    :className="`form__submit ${v$?.roleId.$errors[0]?.$message ? 'centered' : ''}`"
+                    className="form__submit"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -51,25 +61,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required, minLength } from "@/utils/i18n-validators.js";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { create } from "@/services/crud.services.js";
-import { 
-    manualGetOrganizations, 
-    manualGetRoles, 
-    manualGetModules 
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { create } from "@/services/crud.services.js"
+import {
+manualGetModules,
+manualGetOrganizations
+} from "@/services/manual.services.js"
+import { minLength, required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -82,8 +91,11 @@ const state = ref({
     password: "",
     phoneNumber: "",
     organizationId: [],
-    roleId: [],
-    roleModules: []
+    createRoleDto: {
+        fullName: "OrgAdmin",
+        shortName: "OrgAdmin",
+        roleModules: [],
+    }
 });
 
 const rules = computed(() => ({
@@ -92,7 +104,11 @@ const rules = computed(() => ({
     password: { required, minLength },
     phoneNumber: { required },
     organizationId: { required },
-    roleId: { required },
+    createRoleDto: { 
+        fullName: { required }, 
+        shortName: { required }, 
+        roleModules: { required } 
+    }
 }));
 
 const v$ = useVuelidate(rules, state);
@@ -113,15 +129,6 @@ const {
 } = await useQuery({
     queryKey: ["organizations"],
     queryFn: () => manualGetOrganizations()
-});
-
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["adminRoles"],
-    queryFn: () => manualGetRoles()
 });
 
 const inputs = ref([
@@ -170,23 +177,12 @@ const selects = ref([
         options: organizations, 
         success: isSuccessOrganizations,
         loading: isLoadingOrganizations
-    },
-    { 
-        id: 2, 
-        model: "roleId", 
-        label: "employeesRoleLabel", 
-        placeholder: "employeesRolePlaceholder", 
-        errorKey: "roleId", 
-        options: roles, 
-        success: isSuccessRoles,
-        loading: isLoadingRoles
-    },
+    }
 ]);
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
         body.organizationId = body.organizationId[0];
-        body.roleId = body.roleId[0];
     },
     mutationFn: (body) => create("user", body),
     onSuccess: (response) => {
@@ -203,6 +199,8 @@ const { mutate: createMutate } = useMutation({
 });
 
 const submitHandler = () => {
+    state.value.createRoleDto.shortName = state.value.createRoleDto.fullName;
+
     v$.value.$validate();
 
     if (v$.value.$errors.length) {

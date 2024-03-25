@@ -19,6 +19,16 @@
                 >
                     {{ $t(input.label) }}
                 </FormInput>
+                <FormInput 
+                    v-model="state.createRoleDto.fullName"
+                    :width="500" 
+                    :placeholder="$t('employeesRolePlaceholder')"
+                    name="person"
+                    :error="v$?.createRoleDto.fullName?.$error"
+                    :textError="v$?.createRoleDto.fullName?.$errors[0]?.$message"
+                >
+                    {{ $t('employeesRoleLabel') }}
+                </FormInput>
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
@@ -35,7 +45,7 @@
                 </FormSelect>
                 <ActionsModules 
                     v-if="isSuccessModules"
-                    v-model="state.roleModules"
+                    v-model="state.updateRoleDto.roleModules"
                     :actions="modules"
                 />
                 <CustomButton 
@@ -51,26 +61,25 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { getWithId, updateById } from "@/services/crud.services.js";
-import { 
-    manualGetOrganizations, 
-    manualGetRoles, 
-    manualGetStates,
-    manualGetModules
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { getWithId, updateById } from "@/services/crud.services.js"
+import {
+manualGetModules,
+manualGetOrganizations,
+manualGetStates
+} from "@/services/manual.services.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -87,9 +96,14 @@ const state = ref({
     password: "",
     phoneNumber: "",
     organizationId: [],
-    roleId: [],
-    stateId: [],
-    roleModules: []
+    updateRoleDto: {
+        id: 0,
+        stateId: 0,
+        fullName: "OrgAdmin",
+        shortName: "OrgAdmin",
+        roleModules: []
+    },
+    stateId: []
 });
 
 const rules = computed(() => ({
@@ -98,7 +112,13 @@ const rules = computed(() => ({
     userName: { required },
     phoneNumber: { required },
     organizationId: { required },
-    roleId: { required },
+    updateRoleDto: { 
+        id: { required },
+        stateId: { required },
+        fullName: { required }, 
+        shortName: { required }, 
+        roleModules: { required } 
+    },
     stateId: { required }
 }));
 
@@ -111,15 +131,6 @@ const {
 } = await useQuery({
     queryKey: ["organizations"],
     queryFn: () => manualGetOrganizations()
-});
-
-const {
-    data: roles,
-    isSuccess: isSuccessRoles,
-    isLoading: isLoadingRoles
-} = await useQuery({
-    queryKey: ["adminRoles"],
-    queryFn: () => manualGetRoles()
 });
 
 const {
@@ -188,16 +199,6 @@ const selects = ref([
     },
     { 
         id: 2, 
-        model: "roleId", 
-        label: "employeesRoleLabel", 
-        placeholder: "employeesRolePlaceholder", 
-        errorKey: "roleId", 
-        options: roles, 
-        success: isSuccessRoles,
-        loading: isLoadingRoles
-    },
-    { 
-        id: 3, 
         model: "stateId", 
         label: "employeesStatePlaceholder", 
         placeholder: "employeesStatePlaceholder", 
@@ -217,9 +218,12 @@ const { isError } = await useQuery({
         state.value.userName = data.userName;
         state.value.phoneNumber = data.phoneNumber;
         state.value.organizationId = [data.organizationId];
-        state.value.roleId = [data.roleId];
         state.value.stateId = [data.stateId];
-        state.value.roleModules = [...data.roleModules]
+        state.value.updateRoleDto.id = data.updateRoleDto.id;
+        state.value.updateRoleDto.stateId = data.updateRoleDto.stateId;
+        state.value.updateRoleDto.shortName = data.updateRoleDto.shortName;
+        state.value.updateRoleDto.fullName = data.updateRoleDto.fullName;
+        state.value.updateRoleDto.roleModules = [...data.updateRoleDto.roleModules];
     }
 });
 
@@ -232,7 +236,6 @@ watch(isError, (value) => {
 const { mutate: updateMutate } = useMutation({
     onMutate: (body) => {
         body.organizationId = body.organizationId[0];
-        body.roleId = body.roleId[0];
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("user", body),
@@ -251,6 +254,8 @@ const { mutate: updateMutate } = useMutation({
 });
 
 const submitHandler = async () => {
+    state.value.updateRoleDto.shortName = state.value.updateRoleDto.fullName;
+
     v$.value.$validate();
 
     if (v$.value.$errors.length) {
