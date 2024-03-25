@@ -66,7 +66,8 @@ const productId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "productsName", width: 70 }
+    { id: 1, label: "productsName", width: 50 },
+    { id: 1, label: "productsTypeName", width: 20 }
 ]);
 
 const {
@@ -87,7 +88,6 @@ const {
             }
 
             delete product.fullName;
-            delete product.quantityType;
 
             return product;
         })

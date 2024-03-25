@@ -133,6 +133,7 @@
   "blockAddress": "Blok manzili",
   "productsTitle": "Mahsulot",
   "productsName": "Mahsulot turi",
+  "productsTypeName": "Miqdor nomi",
   "addNewProductTitle": "Mahsulot yaratish",
   "nameProductsLabel": "Mahsulot nomi",
   "nameProductsPlaceholder": "Mahsulot...",

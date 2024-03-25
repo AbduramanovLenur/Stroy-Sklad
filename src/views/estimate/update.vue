@@ -110,6 +110,7 @@
                     {{ $t("estimateCommentLabel") }}
                 </FormTextarea>
                 <CustomButton
+                    v-if="blockId" 
                     className="manage__submit"
                 >
                     {{ $t("formButton") }}
@@ -355,7 +356,7 @@ const addTableHandler = (object) => {
         constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
     });
     
-    state.value.price += parseInt(object.price, 10);
+    state.value.price = +state.value.price + object.price;
 }
 
 const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
@@ -384,7 +385,7 @@ const deleteHandler = (idx) => {
     state.value.budgetTables = state.value.budgetTables.filter((elem) => {
         const isEqual = elem.delId !== idx;
 
-        if (!isEqual) state.value.price -= parseInt(elem.price, 10);
+        if (!isEqual) state.value.price -= elem.price;
 
         return isEqual;
     });

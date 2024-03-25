@@ -62,7 +62,7 @@ const model = defineModel();
 .input {
     font-size: 16px;
     font-weight: 500;
-    height: 50px;
+    height: 60px;
     width: 100%;
     padding: 10px 50px;
     border-radius: 20px;

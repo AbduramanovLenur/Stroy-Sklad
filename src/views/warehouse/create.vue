@@ -6,18 +6,6 @@
                 :to="routes.WAREHOUSE.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormInput 
-                    v-for="input in inputs"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
-                    :error="v$?.[input.errorKey]?.$error" 
-                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
-                >
-                    {{ $t(input.label) }}
-                </FormInput>
                 <FormSelect 
                     v-for="select in selects"
                     :key="select.id"
@@ -32,8 +20,20 @@
                 >
                     {{ $t(select.label) }}
                 </FormSelect>
+                <FormInput 
+                    v-for="input in inputs"
+                    :key="input.id"
+                    v-model="state[input.model]"
+                    :width="500" 
+                    :placeholder="$t(input.placeholder)"
+                    :name="input.icon"
+                    :error="v$?.[input.errorKey]?.$error" 
+                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
+                >
+                    {{ $t(input.label) }}
+                </FormInput>
                 <CustomButton 
-                    :className="`form__submit ${v$?.quantityTypeId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :className="`form__submit ${v$?.quantity.$errors[0]?.$message ? 'centered' : ''}`"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -43,24 +43,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { create } from "@/services/crud.services.js";
-import { manualQuantityTypes, manualConstructionMaterial } from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { create } from "@/services/crud.services.js"
+import { manualConstructionMaterial } from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { computed, ref } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -74,27 +74,15 @@ const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModule
 
 const state = ref({
     materialId: [],
-    quantity: "",
-    quantityTypeId: [],
+    quantity: ""
 });
 
 const rules = computed(() => ({
     materialId: { required },
-    quantity: { required },
-    quantityTypeId: { required },
+    quantity: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
-
-const {
-    data: quantityTypes,
-    isSuccess: isSuccessQunatityTypes,
-    isLoading: isLoadingQunatityTypes
-} = await useQuery({
-    queryKey: ["types"],
-    queryFn: () => manualQuantityTypes(),
-    enabled: isShow
-});
 
 const {
     data: materials,
@@ -127,23 +115,12 @@ const selects = ref([
         options: materials,
         success: isSuccessMaterials,
         loading: isLoadingMaterials
-    },
-    { 
-        id: 2, 
-        model: "quantityTypeId", 
-        label: "qunatityTypesWarehouseLabel", 
-        placeholder: "qunatityTypesWarehousePlaceholder",
-        errorKey: "quantityTypeId",
-        options: quantityTypes,
-        success: isSuccessQunatityTypes,
-        loading: isLoadingQunatityTypes
     }
 ]);
 
 const { mutate: createMutate } = useMutation({
     onMutate: (body) => {
         body.materialId = body.materialId[0];
-        body.quantityTypeId = body.quantityTypeId[0];
     },
     mutationFn: (body) => create("warehouse", body),
     onSuccess: (response) => {

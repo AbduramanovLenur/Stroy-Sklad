@@ -133,6 +133,7 @@
   "blockAddress": "Адрес блока",
   "productsTitle": "Материалы",
   "productsName": "Тип материала",
+  "productsTypeName": "Название величины",
   "addNewProductTitle": "Создание материала",
   "nameProductsLabel": "Название материала",
   "nameProductsPlaceholder": "Материал...",

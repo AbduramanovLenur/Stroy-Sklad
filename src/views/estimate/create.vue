@@ -109,32 +109,32 @@
 </template>
 
 <script setup>
-import { v4 as uuidv4 } from "uuid";
-import { ref, watch, computed } from "vue";
-import EstimateForm from "@/components/EstimateForm.vue";
-import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { 
-    useQueryClient, 
-    useQuery,
-    useMutation 
-} from "@tanstack/vue-query";
-import { create } from "@/services/crud.services.js";
-import { 
-    manualConstructionMaterial, 
-    manualGetFloors, 
-    manualGetCost, 
-    manualGetObjects, 
-    manualGetBlocks
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap, clearState } from "@/utils/secondary-functions.js";
+import EstimateForm from "@/components/EstimateForm.vue"
+import { create } from "@/services/crud.services.js"
+import {
+manualConstructionMaterial,
+manualGetBlocks,
+manualGetCost,
+manualGetFloors,
+manualGetObjects
+} from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState, createIdMap } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { v4 as uuidv4 } from "uuid"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -323,14 +323,14 @@ const addTableHandler = (object) => {
         constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
     });
     
-    state.value.price += parseInt(object.price, 10);
+    state.value.price = +state.value.price + object.price;
 }
 
 const deleteHandler = (idx) => {
     state.value.tables = state.value.tables.filter((elem) => {
         const isEqual = elem.delId !== idx;
 
-        if (!isEqual) state.value.price -= parseInt(elem.price, 10);
+        if (!isEqual) state.value.price -= elem.price;
 
         return isEqual;
     });

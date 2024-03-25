@@ -94,7 +94,7 @@ const addHandler = () => {
         floorId: formData.value.floorId[0],
         costId: formData.value.costId[0],
         constructionMaterailIds: formData.value.constructionMaterailIds,
-        price: formData.value.price
+        price: parseInt(formData.value.price.replaceAll(' ', ''), 10)
     }
 
     emit("onAddTable", formData.value);

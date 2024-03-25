@@ -43,28 +43,27 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { getWithId, updateById } from "@/services/crud.services.js";
-import { 
-    manualQuantityTypes, 
-    manualGetStates, 
-    manualConstructionMaterial 
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { getWithId, updateById } from "@/services/crud.services.js"
+import {
+manualConstructionMaterial,
+manualGetStates
+} from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -83,7 +82,6 @@ const state = ref({
     id: "",
     materialId: [],
     quantity: "",
-    quantityTypeId: [],
     stateId: []
 });
 
@@ -91,21 +89,10 @@ const rules = computed(() => ({
     id: { required },
     materialId: { required },
     quantity: { required },
-    quantityTypeId: { required },
     stateId: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
-
-const {
-    data: quantityTypes,
-    isSuccess: isSuccessQunatityTypes,
-    isLoading: isLoadingQunatityTypes
-} = await useQuery({
-    queryKey: ["types"],
-    queryFn: () => manualQuantityTypes(),
-    enabled: isShow
-});
 
 const {
     data: materials,
@@ -150,16 +137,6 @@ const selects = ref([
         loading: isLoadingMaterials
     },
     { 
-        id: 2, 
-        model: "quantityTypeId", 
-        label: "qunatityTypesWarehouseLabel", 
-        placeholder: "qunatityTypesWarehousePlaceholder",
-        errorKey: "quantityTypeId",
-        options: quantityTypes,
-        success: isSuccessQunatityTypes,
-        loading: isLoadingQunatityTypes
-    },
-    { 
         id: 3, 
         model: "stateId", 
         label: "stateWarehouseLabel", 
@@ -178,7 +155,6 @@ const { isError } = await useQuery({
         state.value.id = data.id;
         state.value.materialId = [data.materialId];
         state.value.quantity = data.quantity;
-        state.value.quantityTypeId = [data.quantityTypeId];
         state.value.stateId = [data.stateId];
     },
     enabled: isShow
@@ -193,7 +169,6 @@ watch(isError, (value) => {
 const { mutate: updateMutate } = useMutation({
     onMutate: (body) => {
         body.materialId = body.materialId[0];
-        body.quantityTypeId = body.quantityTypeId[0];
         body.stateId = body.stateId[0];
     },
     mutationFn: (body) => updateById("warehouse", body),
