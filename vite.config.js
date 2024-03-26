@@ -22,5 +22,8 @@ export default ({ mode }) => {
     build: {
       sourcemap: false,
     },
+    dev: {
+      sourcemap: true
+    }
   });
 };

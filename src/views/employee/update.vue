@@ -20,12 +20,12 @@
                     {{ $t(input.label) }}
                 </FormInput>
                 <FormInput 
-                    v-model="state.createRoleDto.fullName"
+                    v-model="state.updateRoleDto.fullName"
                     :width="500" 
                     :placeholder="$t('employeesRolePlaceholder')"
                     name="person"
-                    :error="v$?.createRoleDto.fullName?.$error"
-                    :textError="v$?.createRoleDto.fullName?.$errors[0]?.$message"
+                    :error="v$?.updateRoleDto.fullName?.$error"
+                    :textError="v$?.updateRoleDto.fullName?.$errors[0]?.$message"
                 >
                     {{ $t('employeesRoleLabel') }}
                 </FormInput>
@@ -213,17 +213,18 @@ const { isError } = await useQuery({
     queryKey: ["employeeById", slugId],
     queryFn: () => getWithId("user", slugId.value),
     select: (data) => {
+        console.log(data);
         state.value.id = data.id;
         state.value.fullName = data.fullName;
         state.value.userName = data.userName;
         state.value.phoneNumber = data.phoneNumber;
         state.value.organizationId = [data.organizationId];
         state.value.stateId = [data.stateId];
-        state.value.updateRoleDto.id = data.updateRoleDto.id;
-        state.value.updateRoleDto.stateId = data.updateRoleDto.stateId;
-        state.value.updateRoleDto.shortName = data.updateRoleDto.shortName;
-        state.value.updateRoleDto.fullName = data.updateRoleDto.fullName;
-        state.value.updateRoleDto.roleModules = [...data.updateRoleDto.roleModules];
+        state.value.updateRoleDto.id = data.role.id;
+        state.value.updateRoleDto.stateId = data.role.stateId;
+        state.value.updateRoleDto.shortName = data.role.shortName;
+        state.value.updateRoleDto.fullName = data.role.fullName;
+        state.value.updateRoleDto.roleModules = [...data.role.roleModules];
     }
 });
 

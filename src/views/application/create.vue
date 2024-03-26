@@ -93,8 +93,7 @@ import {
     manualGetFloors, 
     manualGetCost, 
     manualGetObjects, 
-    manualGetBlocks,
-    // manualGetRoles
+    manualGetBlocks
 } from "@/services/manual.services.js";
 import { routes } from "@/utils/routes.js";
 import { actionModules } from "@/utils/action-modules.js";
@@ -123,7 +122,6 @@ const state = ref({
     deadline: "",
     buildingObjectId: [],
     buildingBlockId: [],
-    // roleIds: [],
     createApplicationTables: [],
     details: ""
 });
@@ -138,16 +136,6 @@ const rules = computed(() => ({
 }));
 
 const v$ = useVuelidate(rules, state);
-
-// const {
-//     data: roles,
-//     isSuccess: isSuccessRoles,
-//     isLoading: isLoadingRoles
-// } = await useQuery({
-//     queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
-//     queryFn: () => manualGetRoles(),
-//     enabled: isShow
-// });
 
 const {
     data: objects,
@@ -245,18 +233,7 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
-    },
-    // { 
-    //     id: 6, 
-    //     model: "roleIds", 
-    //     label: "appRoleLabel", 
-    //     placeholder: "appRolePlaceholder", 
-    //     errorKey: "roleIds", 
-    //     options: roles, 
-    //     success: isSuccessRoles,
-    //     loading: isLoadingRoles,
-    //     multiple: true
-    // }
+    }
 ]);
 
 const selectsInfo = ref([

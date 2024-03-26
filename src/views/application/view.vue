@@ -5,7 +5,7 @@
                 title="addNewApplicationTitle" 
                 :to="routes.APPLICATION.path"
             />
-            <form class="manage__form" @submit.prevent>
+            <form v-if="isSuccess" class="manage__form" @submit.prevent>
                 <div class="manage__overlay">
                     <FormInput 
                         v-for="input in inputs"
@@ -35,15 +35,10 @@
                     </FormSelect>
                 </div>
                 <SubTable
-                    v-if="isAllSuccessData"
                     :headers="headers"
                     :table="state.applicationTables"
                 />
-                <Spinner 
-                    v-if="isLoading" 
-                />
-                <FormTextarea 
-                    v-if="isAllSuccessData"
+                <FormTextarea
                     v-model.trim="state.details"
                     :width="500" 
                     :placeholder="$t('appCommentPlaceholder')"
@@ -51,8 +46,9 @@
                 >
                     {{ $t("appCommentLabel") }}
                 </FormTextarea>
+                <!-- (state.statusId !== 7 && state.statusId !== 15) &&  -->
                 <div 
-                    v-if="isAllSuccessData && (state.statusId !== 7 && state.statusId !== 15) && state.allowedActionRoleIds.includes(user?.user?.roleId)"
+                    v-if="state.allowedActionRoleIds.includes(user?.user?.roleId)"
                     class="manage__triggers" 
                 >
                     <MyButton 
@@ -76,10 +72,10 @@
                         {{ $t("cancelButton") }}
                     </MyButton>
                 </div>
+                <Histories :histories="state.histories" />
             </form>
-            <Histories 
-                v-if="isAllSuccessData"
-                :histories="state.histories" 
+            <Spinner 
+                v-if="isLoading" 
             />
         </div>
         <ConfirmationModal 
@@ -100,28 +96,27 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import FormTextarea from "@/components/FormTextarea.vue";
-import { useRoute, useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { useQueryClient, useQuery, useMutation } from "@tanstack/vue-query";
-import { getWithId, cancelWithId, acceptWithId } from "@/services/crud.services.js";
-import { 
-    manualConstructionMaterial, 
-    manualGetFloors, 
-    manualGetCost, 
-    manualGetObjects, 
-    manualGetBlocks,
-    // manualGetRoles
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap } from "@/utils/secondary-functions.js";
-import Histories from "@/components/Histories.vue";
-import ConfirmationModal from "@/components/ConfirmationModal.vue";
+import ConfirmationModal from "@/components/ConfirmationModal.vue"
+import FormTextarea from "@/components/FormTextarea.vue"
+import Histories from "@/components/Histories.vue"
+import { acceptWithId, cancelWithId, getWithId } from "@/services/crud.services.js"
+import {
+manualConstructionMaterial,
+manualGetBlocks,
+manualGetCost,
+manualGetFloors,
+manualGetObjects,
+} from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { routes } from "@/utils/routes.js"
+import { createIdMap } from "@/utils/secondary-functions.js"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
+import { storeToRefs } from "pinia"
+import { computed, ref, watch, watchEffect } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -134,7 +129,7 @@ const slugId = ref(route.params.id);
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
+const isShow = computed(() => user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
 
 const isOpenAcceptedModal = ref(false);
 const isOpenRefusedModal = ref(false);
@@ -151,23 +146,12 @@ const state = ref({
     deadline: "",
     buildingObjectId: [],
     buildingBlockId: [],
-    // roleIds: [],
     applicationTables: [],
     details: "",
     statusId: "",
     allowedActionRoleIds: [],
     histories: []
 });
-
-// const {
-//     data: roles,
-//     isSuccess: isSuccessRoles,
-//     isLoading: isLoadingRoles
-// } = await useQuery({
-//     queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
-//     queryFn: () => manualGetRoles(),
-//     enabled: isShow
-// });
 
 const {
     data: objects,
@@ -179,9 +163,9 @@ const {
     enabled: isShow
 });
 
-const valueObject = computed(() => state.value.buildingObjectId);
+const valueObject = computed(() => state.value.buildingObjectId[0]);
 
-const isEnabledBlocks = computed(() => !!valueObject.value?.length);
+const isEnabledBlocks = computed(() => !!valueObject.value);
 
 const {
     data: blocks,
@@ -193,9 +177,9 @@ const {
     enabled: isEnabledBlocks
 });
 
-const valueBlock = computed(() => state.value.buildingBlockId);
+const valueBlock = computed(() => state.value.buildingBlockId[0]);
 
-const isEnabled = computed(() => !!valueBlock.value?.length);
+const isEnabled = computed(() => !!valueBlock.value);
 
 const {
     data: floors,
@@ -226,9 +210,6 @@ const {
     queryFn: () => manualConstructionMaterial(),
     enabled: isEnabled
 });
-
-const isAllSuccessData = computed(() => !!(isSuccessCosts && isSuccessMaterials && isSuccessFloors && state.value.applicationTables.every((elem) => elem.floorValue && elem.costValue && elem.constructionMaterialValue)));
-const isLoading = computed(() => !!(isLoadingCosts.value || isLoadingMaterials.value || isLoadingFloors.value || !state.value.applicationTables.every((elem) => elem.floorValue && elem.costValue && elem.constructionMaterialValue)))
 
 const inputs = ref([
     { 
@@ -262,18 +243,7 @@ const selects = ref([
         options: blocks,
         success: isSuccessBlocks,
         loading: isLoadingBlocks
-    },
-    // { 
-    //     id: 6, 
-    //     model: "roleIds", 
-    //     label: "appRoleLabel", 
-    //     placeholder: "appRolePlaceholder", 
-    //     errorKey: "roleIds", 
-    //     options: roles, 
-    //     success: isSuccessRoles,
-    //     loading: isLoadingRoles,
-    //     multiple: true
-    // }
+    }
 ]);
 
 const { isError } = await useQuery({
@@ -284,7 +254,6 @@ const { isError } = await useQuery({
         state.value.deadline = data.deadline;
         state.value.buildingObjectId = [data.buildingObjectId];
         state.value.buildingBlockId = [data.buildingBlockId];
-        // state.value.roleIds = [...data.roleIds];
         state.value.applicationTables = [...data.applicationTables];
         state.value.details = data.details;
         state.value.statusId = data.statusId;
@@ -302,10 +271,16 @@ const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
 
-const isNotAllEmptyData = computed(() => Object.keys(floorMap.value)?.length && Object.keys(costMap.value)?.length && Object.keys(materialMap.value)?.length);
+const isSuccess = ref(false);
+const isLoading = ref(true);
 
-watch(isNotAllEmptyData, (newValue) => {
-    if (!!newValue) {
+watchEffect(() => {
+    const keysFloor = Object.keys(floorMap.value)?.length;
+    const keysCost = Object.keys(costMap.value)?.length;
+    const keysMaterial =  Object.keys(materialMap.value)?.length;
+    const applicationTables = state.value.applicationTables.length;
+
+    if (!!(keysFloor && keysCost && keysMaterial && applicationTables)) {
         state.value.applicationTables = state.value.applicationTables.map((elem) => {
             const object = { 
                 ...elem,
@@ -316,8 +291,11 @@ watch(isNotAllEmptyData, (newValue) => {
 
             return object;
         });
+
+        isSuccess.value = true;
+        isLoading.value = false;
     }
-}, { immediate: true });
+});
 
 watch(isError, (value) => {
     if (value) {

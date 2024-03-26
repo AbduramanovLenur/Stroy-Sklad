@@ -78,7 +78,6 @@
                         </div>
                     </li>
                 </ul>
-                <Spinner v-if="isLoadingBlocks" />
                 <EstimateForm 
                     v-if="blockId"
                     :selects="selectsInfo"
@@ -116,6 +115,7 @@
                     {{ $t("formButton") }}
                 </CustomButton>
             </form>
+            <Spinner v-if="isLoadingBlocks" />
         </div>
     </section>
 </template>
@@ -346,20 +346,13 @@ const getConstructionMaterialIdsValue = (elem) => {
     }));
 }
 
-const addTableHandler = (object) => {
-    state.value.budgetTables.push({
-        ...object, 
-        delId: uuidv4(),
-        blockValue: getBlockIdValue(object),
-        floorValue: getFloorIdValue(object),
-        costValue: getCostIdValue(object),
-        constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
-    });
-    
-    state.value.price = +state.value.price + object.price;
-}
-
-const isNotAllEmptyData = computed(() => !!(state.value.budgetTables.length && Object.keys(blockMap.value).length && Object.keys(floorMap.value).length && Object.keys(costMap.value).length && Object.keys(materialMap.value).length));
+const isNotAllEmptyData = computed(() => !!(
+    state.value.budgetTables.length && 
+    Object.keys(blockMap.value).length && 
+    Object.keys(floorMap.value).length && 
+    Object.keys(costMap.value).length && 
+    Object.keys(materialMap.value).length
+));
 const isInitialRender = ref(true);
 
 watch(isNotAllEmptyData, (newValue) => {
@@ -380,6 +373,19 @@ watch(isNotAllEmptyData, (newValue) => {
         isInitialRender.value = false;
     }
 }, { immediate: true });
+
+const addTableHandler = (object) => {
+    state.value.budgetTables.push({
+        ...object, 
+        delId: uuidv4(),
+        blockValue: getBlockIdValue(object),
+        floorValue: getFloorIdValue(object),
+        costValue: getCostIdValue(object),
+        constructionMaterialIdsValue: getConstructionMaterialIdsValue(object)
+    });
+    
+    state.value.price = +state.value.price + object.price;
+}
 
 const deleteHandler = (idx) => {
     state.value.budgetTables = state.value.budgetTables.filter((elem) => {
