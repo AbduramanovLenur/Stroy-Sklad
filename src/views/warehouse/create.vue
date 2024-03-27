@@ -51,9 +51,9 @@ import { required } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
 import { clearState } from "@/utils/secondary-functions.js"
 import {
-useMutation,
-useQuery,
-useQueryClient
+    useMutation,
+    useQuery,
+    useQueryClient
 } from "@tanstack/vue-query"
 import { useVuelidate } from "@vuelidate/core"
 import { storeToRefs } from "pinia"

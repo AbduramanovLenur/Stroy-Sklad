@@ -110,9 +110,9 @@ const {
     enabled: isShow
 });
 
-const valueRegion = computed(() => state.value.regionId);
+const valueRegion = computed(() => state.value.regionId[0]);
 
-const isEnabled = computed(() => !!valueRegion.value.length);
+const isEnabled = computed(() => !!valueRegion.value);
 
 watch(valueRegion, () => {
     if (!isSubmit.value) {

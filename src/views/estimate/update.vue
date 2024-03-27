@@ -209,9 +209,9 @@ const {
     enabled: isShow
 });
 
-const valueObject = computed(() => state.value.buildingObjectId);
+const valueObject = computed(() => state.value.buildingObjectId[0]);
 
-const isEnabledBlocks = computed(() => !!valueObject.value.length);
+const isEnabledBlocks = computed(() => !!valueObject.value);
 
 watch(valueObject, () => {
     if (!isFirstChange.value && !isSubmit.value) {
@@ -227,8 +227,8 @@ const {
     isSuccess: isSuccessBlocks,
     isLoading: isLoadingBlocks
 } = await useQuery({
-    queryKey: ["blocksList", { blockId: valueObject }],
-    queryFn: () => manualGetBlocks(valueObject.value[0]),
+    queryKey: ["blocksList", { objectId: valueObject, organizationId: user.value.user.organizationId }],
+    queryFn: () => manualGetBlocks(valueObject.value),
     enabled: isEnabledBlocks
 });
 
@@ -241,7 +241,7 @@ const {
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floorsList", { floorId: valueBlock }],
+    queryKey: ["floorsList", { blockId: valueBlock, organizationId: user.value.user.organizationId }],
     queryFn: () => manualGetFloors(valueBlock.value),
     enabled: isEnabled
 });

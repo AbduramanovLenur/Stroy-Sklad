@@ -43,29 +43,29 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { getWithId, updateById } from "@/services/crud.services.js";
-import { 
-    manualGetRegions, 
-    manualGetDistricts, 
-    manualGetStates, 
-    manualGetObjects 
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { getWithId, updateById } from "@/services/crud.services.js"
+import {
+manualGetDistricts,
+manualGetObjects,
+manualGetRegions,
+manualGetStates
+} from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -119,9 +119,9 @@ const {
     enabled: isShow
 });
 
-const valueRegion = computed(() => state.value.regionId);
+const valueRegion = computed(() => state.value.regionId[0]);
 
-const isEnabled = computed(() => !!valueRegion.value.length);
+const isEnabled = computed(() => !!valueRegion.value);
 
 watch(valueRegion, () => {
     if (!isFirstChange.value && !isSubmit.value) {
