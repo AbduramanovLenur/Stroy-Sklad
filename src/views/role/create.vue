@@ -6,18 +6,19 @@
                 :to="routes.ROLE.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormInput 
-                    v-for="input in inputs"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
-                    :error="v$?.[input.errorKey]?.$error" 
-                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
-                >
-                    {{ $t(input.label) }}
-                </FormInput>
+                <template v-for="field in fields" :key="field.id">
+                    <FormInput 
+                        v-if="!field?.select"
+                        v-model="state[field.model]"
+                        :width="500" 
+                        :placeholder="$t(field.placeholder)"
+                        :name="field.icon"
+                        :error="v$?.[field.errorKey]?.$error" 
+                        :textError="v$?.[field.errorKey]?.$errors[0]?.$message"
+                    >
+                        {{ $t(field.label) }}
+                    </FormInput>
+                </template>
                 <ActionsModules 
                     v-if="isSuccessModules"
                     v-model="state.roleModules"
@@ -88,7 +89,7 @@ const {
     enabled: isShow
 });
 
-const inputs = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "fullName", 

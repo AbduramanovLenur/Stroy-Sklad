@@ -48,7 +48,7 @@
                 </FormTextarea>
                 <!-- (state.statusId !== 7 && state.statusId !== 15) &&  -->
                 <div 
-                    v-if="state.allowedActionRoleIds.includes(user?.user?.roleId)"
+                    v-if="state.hasPermission"
                     class="manage__triggers" 
                 >
                     <MyButton 
@@ -149,7 +149,7 @@ const state = ref({
     applicationTables: [],
     details: "",
     statusId: "",
-    allowedActionRoleIds: [],
+    hasPermission: [],
     histories: []
 });
 
@@ -257,7 +257,7 @@ const { isError } = await useQuery({
         state.value.applicationTables = [...data.applicationTables];
         state.value.details = data.details;
         state.value.statusId = data.statusId;
-        state.value.allowedActionRoleIds = data.allowedActionRoleIds;
+        state.value.hasPermission = data.hasPermission;
         state.value.histories = data.applicationHistories;
     },
     enabled: isShow

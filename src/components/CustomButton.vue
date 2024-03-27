@@ -36,6 +36,7 @@ defineProps({
     width: 100%;
     &.form__submit {
         margin-top: auto;
+        height: 60px;
         &.centered {
             margin: auto 0;
         }

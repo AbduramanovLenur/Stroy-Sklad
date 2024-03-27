@@ -6,32 +6,32 @@
                 :to="routes.WAREHOUSE.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormSelect 
-                    v-for="select in selects"
-                    :key="select.id"
-                    v-model.trim="state[select.model]" 
-                    :width="500" 
-                    :options="select.options"
-                    :error="v$?.[select?.errorKey]?.$error" 
-                    :placeholder="select?.placeholder"
-                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
-                    :success="select.success"
-                    :loading="select.loading"
-                >
-                    {{ $t(select.label) }}
-                </FormSelect>
-                <FormInput 
-                    v-for="input in inputs"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
-                    :error="v$?.[input.errorKey]?.$error" 
-                    :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
-                >
-                    {{ $t(input.label) }}
-                </FormInput>
+                <template v-for="field in fields" :key="field.id">
+                    <FormInput 
+                        v-if="!field?.select"
+                        v-model="state[field.model]"
+                        :width="500" 
+                        :placeholder="$t(field.placeholder)"
+                        :name="field.icon"
+                        :error="v$?.[field.errorKey]?.$error" 
+                        :textError="v$?.[field.errorKey]?.$errors[0]?.$message"
+                    >
+                        {{ $t(field.label) }}
+                    </FormInput>
+                    <FormSelect 
+                        v-if="field?.select"
+                        v-model.trim="state[field.model]" 
+                        :width="500" 
+                        :options="field.options"
+                        :error="v$?.[field?.errorKey]?.$error" 
+                        :placeholder="field?.placeholder"
+                        :textError="v$?.[field?.errorKey]?.$errors[0]?.$message"
+                        :success="field.success"
+                        :loading="field.loading"
+                    >
+                        {{ $t(field.label) }}
+                    </FormSelect>
+                </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.quantity.$errors[0]?.$message ? 'centered' : ''}`"
                 >
@@ -94,18 +94,7 @@ const {
     enabled: isShow
 });
 
-const inputs = ref([
-    { 
-        id: 1, 
-        model: "quantity", 
-        label: "quantityWarehouseLabel", 
-        placeholder: "quantityWarehousePlaceholder", 
-        icon: "list",
-        errorKey: "quantity",
-    }
-]);
-
-const selects = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "materialId", 
@@ -114,7 +103,16 @@ const selects = ref([
         errorKey: "materialId",
         options: materials,
         success: isSuccessMaterials,
-        loading: isLoadingMaterials
+        loading: isLoadingMaterials,
+        select: true
+    },
+    { 
+        id: 2, 
+        model: "quantity", 
+        label: "quantityWarehouseLabel", 
+        placeholder: "quantityWarehousePlaceholder", 
+        icon: "list",
+        errorKey: "quantity",
     }
 ]);
 
