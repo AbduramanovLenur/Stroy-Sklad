@@ -7,55 +7,33 @@
             />
             <form class="manage__form" @submit.prevent="submitHandler">
                 <div class="manage__overlay">
-                    <FormInput 
-                        v-for="input in inputs"
-                        :key="input.id"
-                        v-model="state[input.model]"
-                        :width="500" 
-                        :placeholder="$t(input.placeholder)"
-                        :name="input.icon"
-                        :error="v$?.[input.errorKey]?.$error" 
-                        :textError="v$?.[input.errorKey]?.$errors[0]?.$message"
-                    >
-                        {{ $t(input.label) }}
-                    </FormInput>
-                    <FormSelect 
-                        v-for="select in selects"
-                        :key="select.id"
-                        v-model.trim="state[select.model]" 
-                        :width="500" 
-                        :options="select.options"
-                        :error="v$?.[select?.errorKey]?.$error" 
-                        :placeholder="select?.placeholder"
-                        :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
-                        :success="select.success"
-                        :loading="select.loading"
-                    >
-                        {{ $t(select.label) }}
-                    </FormSelect>
-                    <FormInput 
-                        v-model="state.price"
-                        :width="500" 
-                        :placeholder="$t('estimatePricePlaceholder')"
-                        name="money"
-                        :error="v$?.price?.$error" 
-                        :textError="v$?.price?.$errors[0]?.$message"
-                        :isDisabled="true"
-                    >
-                        {{ $t("estimatePriceLabel") }}
-                    </FormInput>
-                    <FormSelect 
-                        v-model.trim="state.stateId" 
-                        :width="500" 
-                        :options="states"
-                        :error="v$?.stateId?.$error" 
-                        placeholder="estimateStatePlaceholder"
-                        :textError="v$?.stateId?.$errors[0]?.$message"
-                        :success="isSuccessStates"
-                        :loading="isLoadingStates"
-                    >
-                        {{ $t("estimateStateLabel") }}
-                    </FormSelect>
+                    <template v-for="field in fields" :key="field.id">
+                        <FormInput 
+                            v-if="!field?.select"
+                            v-model="state[field.model]"
+                            :width="500" 
+                            :placeholder="$t(field.placeholder)"
+                            :name="field.icon"
+                            :error="v$?.[field.errorKey]?.$error" 
+                            :textError="v$?.[field.errorKey]?.$errors[0]?.$message"
+                            :isDisabled="field?.isDisabled"
+                        >
+                            {{ $t(field.label) }}
+                        </FormInput>
+                        <FormSelect 
+                            v-if="field?.select"
+                            v-model.trim="state[field.model]" 
+                            :width="500" 
+                            :options="field.options"
+                            :error="v$?.[field?.errorKey]?.$error" 
+                            :placeholder="field?.placeholder"
+                            :textError="v$?.[field?.errorKey]?.$errors[0]?.$message"
+                            :success="field.success"
+                            :loading="field.loading"
+                        >
+                            {{ $t(field.label) }}
+                        </FormSelect>
+                    </template>
                 </div>
                 <h3 
                     v-if="isSuccessBlocks && blocks?.length"
@@ -80,7 +58,7 @@
                 </ul>
                 <EstimateForm 
                     v-if="blockId"
-                    :selects="selectsInfo"
+                    :subFields="subFields"
                     :blockId="blockId"
                     @onAddTable="addTableHandler"
                     @onChangeBlock="($event) => blockId = $event"
@@ -276,7 +254,7 @@ const {
     enabled: isShow
 });
 
-const inputs = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "fullname", 
@@ -284,23 +262,41 @@ const inputs = ref([
         placeholder: "nameEstimatePlaceholder", 
         icon: "input-company",
         errorKey: "fullname",
-    }
-]);
-
-const selects = ref([
+    },
     { 
-        id: 1, 
+        id: 2, 
         model: "buildingObjectId", 
         label: "objectEstimateLabel", 
         placeholder: "objectEstimatePlaceholder",
         errorKey: "buildingObjectId",
         options: objects,
         success: isSuccessObjects,
-        loading: isLoadingObjects
+        loading: isLoadingObjects,
+        select: true
+    },
+    { 
+        id: 3, 
+        model: "price", 
+        label: "estimatePriceLabel", 
+        placeholder: "estimatePricePlaceholder", 
+        icon: "money",
+        errorKey: "price",
+        isDisabled: true
+    },
+    { 
+        id: 4, 
+        model: "stateId", 
+        label: "estimateStateLabel", 
+        placeholder: "estimateStatePlaceholder",
+        errorKey: "stateId",
+        options: states,
+        success: isSuccessStates,
+        loading: isLoadingStates,
+        select: true
     }
 ]);
 
-const selectsInfo = ref([
+const subFields = ref([
     { 
         id: 1, 
         model: "floorId", 
@@ -308,7 +304,8 @@ const selectsInfo = ref([
         placeholder: "floorsEstimatePlaceholder", 
         options: floors,
         success: isSuccessFloors,
-        loading: isLoadingFloors
+        loading: isLoadingFloors,
+        select: true
     },
     { 
         id: 2, 
@@ -317,7 +314,8 @@ const selectsInfo = ref([
         placeholder: "costEstimatePlaceholder",
         options: costs,
         success: isSuccessCosts,
-        loading: isLoadingCosts
+        loading: isLoadingCosts,
+        select: true
     },
     { 
         id: 3, 
@@ -327,7 +325,15 @@ const selectsInfo = ref([
         options: materials,
         success: isSuccessMaterials,
         loading: isLoadingMaterials,
-        multiple: true
+        multiple: true,
+        select: true
+    },
+    { 
+        id: 4, 
+        model: "price", 
+        label: "priceEstimateLabel", 
+        placeholder: "priceEstimatePlaceholder", 
+        icon: "money"
     }
 ]);
 

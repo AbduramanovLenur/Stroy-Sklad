@@ -6,43 +6,44 @@
                 :to="routes.EMPLOYEES.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormInput 
-                    v-for="input in inputs"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
-                    :error="v$?.[input?.errorKey]?.$error" 
-                    :type="input?.type"
-                    :textError="v$?.[input?.errorKey]?.$errors[0]?.$message"
-                >
-                    {{ $t(input.label) }}
-                </FormInput>
-                <FormInput 
-                    v-model="state.updateRoleDto.fullName"
-                    :width="500" 
-                    :placeholder="$t('employeesRolePlaceholder')"
-                    name="person"
-                    :error="v$?.updateRoleDto.fullName?.$error"
-                    :textError="v$?.updateRoleDto.fullName?.$errors[0]?.$message"
-                >
-                    {{ $t('employeesRoleLabel') }}
-                </FormInput>
-                <FormSelect 
-                    v-for="select in selects"
-                    :key="select.id"
-                    v-model.trim="state[select.model]" 
-                    :width="500" 
-                    :options="select.options"
-                    :error="v$?.[select?.errorKey]?.$error" 
-                    :placeholder="select?.placeholder"
-                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
-                    :success="select.success"
-                    :loading="select.loading"
-                >
-                    {{ $t(select.label) }}
-                </FormSelect>
+                <template v-for="field in fields" :key="field.id">
+                    <FormInput 
+                        v-if="!field?.select && field.model !== 'updateRoleDto.fullName'"
+                        v-model="state[field.model]"
+                        :width="500" 
+                        :placeholder="$t(field.placeholder)"
+                        :name="field.icon"
+                        :error="v$?.[field?.errorKey]?.$error" 
+                        :type="field?.type"
+                        :textError="v$?.[field?.errorKey]?.$errors[0]?.$message"
+                    >
+                        {{ $t(field.label) }}
+                    </FormInput>
+                    <FormInput 
+                        v-if="!field?.select && field.model === 'updateRoleDto.fullName'"
+                        v-model="state.updateRoleDto.fullName"
+                        :width="500" 
+                        :placeholder="$t('employeesRolePlaceholder')"
+                        name="person"
+                        :error="v$?.updateRoleDto?.fullName?.$error"
+                        :textError="v$?.updateRoleDto?.fullName?.$errors[0]?.$message"
+                    >
+                        {{ $t('employeesRoleLabel') }}
+                    </FormInput>
+                    <FormSelect 
+                        v-if="field?.select"
+                        v-model.trim="state[field.model]" 
+                        :width="500" 
+                        :options="field.options"
+                        :error="v$?.[field?.errorKey]?.$error" 
+                        :placeholder="field?.placeholder"
+                        :textError="v$?.[field?.errorKey]?.$errors[0]?.$message"
+                        :success="field.success"
+                        :loading="field.loading"
+                    >
+                        {{ $t(field.label) }}
+                    </FormSelect>
+                </template>
                 <ActionsModules 
                     v-if="isSuccessModules"
                     v-model="state.updateRoleDto.roleModules"
@@ -63,9 +64,9 @@
 <script setup>
 import { getWithId, updateById } from "@/services/crud.services.js"
 import {
-manualGetModules,
-manualGetOrganizations,
-manualGetStates
+    manualGetModules,
+    manualGetOrganizations,
+    manualGetStates
 } from "@/services/manual.services.js"
 import { required } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
@@ -151,7 +152,7 @@ const {
     queryFn: () => manualGetModules()
 });
 
-const inputs = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "fullName", 
@@ -173,7 +174,7 @@ const inputs = ref([
         model: "password", 
         label: "employeesPasswordLabel", 
         placeholder: "employeesPasswordPlaceholder", 
-        icon: "password",
+        icon: "password"
     },
     { 
         id: 4, 
@@ -183,29 +184,32 @@ const inputs = ref([
         icon: "phone", 
         errorKey: "phoneNumber",
         type: "number"
-    }
-]);
-
-const selects = ref([
+    },
     { 
-        id: 1, 
+        id: 5, 
+        model: "updateRoleDto.fullName"
+    },
+    { 
+        id: 6, 
         model: "organizationId", 
         label: "employeesOrganizationLabel", 
         placeholder: "employeesOrganizationPlaceholder", 
         errorKey: "organizationId",
         options: organizations, 
         success: isSuccessOrganizations,
-        loading: isLoadingOrganizations
+        loading: isLoadingOrganizations,
+        select: true
     },
     { 
-        id: 2, 
+        id: 7, 
         model: "stateId", 
         label: "employeesStatePlaceholder", 
         placeholder: "employeesStatePlaceholder", 
         errorKey: "stateId", 
         options: states,
         success: isSuccessStates,
-        loading: isLoadingStates
+        loading: isLoadingStates,
+        select: true
     }
 ]);
 

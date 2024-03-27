@@ -7,32 +7,32 @@
             />
             <form v-if="isSuccess" class="manage__form" @submit.prevent>
                 <div class="manage__overlay">
-                    <FormInput 
-                        v-for="input in inputs"
-                        :key="input.id"
-                        v-model="state[input.model]"
-                        :width="500"
-                        :placeholder="$t(input.placeholder)"
-                        :name="input.icon"
-                        :type="input?.type"
-                        :isDisabled="true"
-                    >
-                        {{ $t(input.label) }}
-                    </FormInput>
-                    <FormSelect 
-                        v-for="select in selects"
-                        :key="select.id"
-                        v-model.trim="state[select.model]" 
-                        :width="500" 
-                        :options="select.options"
-                        :placeholder="select?.placeholder"
-                        :success="select.success"
-                        :loading="select.loading"
-                        :isMultiSelect="select?.multiple"
-                        :isDisabled="true"
-                    >
-                        {{ $t(select.label) }}
-                    </FormSelect>
+                    <template v-for="field in fields" :key="field.id">
+                        <FormInput 
+                            v-if="!field?.select"
+                            v-model="state[field.model]"
+                            :width="500"
+                            :placeholder="$t(field.placeholder)"
+                            :name="field.icon"
+                            :type="field?.type"
+                            :isDisabled="true"
+                        >
+                            {{ $t(field.label) }}
+                        </FormInput>
+                        <FormSelect 
+                            v-if="field?.select"
+                            v-model.trim="state[field.model]" 
+                            :width="500" 
+                            :options="field.options"
+                            :placeholder="field?.placeholder"
+                            :success="field.success"
+                            :loading="field.loading"
+                            :isMultiSelect="field?.multiple"
+                            :isDisabled="true"
+                        >
+                            {{ $t(field.label) }}
+                        </FormSelect>
+                    </template>
                 </div>
                 <SubTable
                     :headers="headers"
@@ -101,11 +101,11 @@ import FormTextarea from "@/components/FormTextarea.vue"
 import Histories from "@/components/Histories.vue"
 import { acceptWithId, cancelWithId, getWithId } from "@/services/crud.services.js"
 import {
-manualConstructionMaterial,
-manualGetBlocks,
-manualGetCost,
-manualGetFloors,
-manualGetObjects,
+    manualConstructionMaterial,
+    manualGetBlocks,
+    manualGetCost,
+    manualGetFloors,
+    manualGetObjects,
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -211,7 +211,7 @@ const {
     enabled: isEnabled
 });
 
-const inputs = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "deadline", 
@@ -220,29 +220,28 @@ const inputs = ref([
         icon: "date",
         errorKey: "deadline",
         type: "date"
-    }
-]);
-
-const selects = ref([
+    },
     { 
-        id: 1, 
+        id: 2, 
         model: "buildingObjectId", 
         label: "objectAppLabel", 
         placeholder: "objectAppPlaceholder",
         errorKey: "buildingObjectId",
         options: objects,
         success: isSuccessObjects,
-        loading: isLoadingObjects
+        loading: isLoadingObjects,
+        select: true
     },
     { 
-        id: 2, 
+        id: 3, 
         model: "buildingBlockId", 
         label: "blockAppLabel", 
         placeholder: "blockAppPlaceholder",
         errorKey: "buildingBlockId",
         options: blocks,
         success: isSuccessBlocks,
-        loading: isLoadingBlocks
+        loading: isLoadingBlocks,
+        select: true
     }
 ]);
 

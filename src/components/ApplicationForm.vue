@@ -4,30 +4,30 @@
             {{ $t("appInfo") }}
         </h4>
         <div class="application-form__overlay form-manage">
-            <FormSelect 
-                v-for="select in selects"
-                :key="select.id"
-                v-model.trim="formData[select.model]" 
-                :width="500" 
-                :options="select.options"
-                :placeholder="select?.placeholder"
-                :success="select.success"
-                :loading="select.loading"
-                :isMultiSelect="select?.multiple"
-            >
-                {{ $t(select.label) }}
-            </FormSelect>
-            <FormInput 
-                v-for="input in inputs"
-                :key="input.id"
-                v-model="formData[input.model]"
-                :width="500" 
-                :placeholder="$t(input.placeholder)"
-                :name="input.icon"
-                :type="input?.type"
-            >
-                {{ $t(input.label) }}
-            </FormInput>
+            <template v-for="subField in subFields" :key="subField.id">
+                <FormInput 
+                    v-if="!subField?.select"
+                    v-model="formData[subField.model]"
+                    :width="500" 
+                    :placeholder="$t(subField.placeholder)"
+                    :name="subField.icon"
+                    :type="subField?.type"
+                >
+                    {{ $t(subField.label) }}
+                </FormInput>
+                <FormSelect 
+                    v-if="subField?.select"
+                    v-model.trim="formData[subField.model]" 
+                    :width="500" 
+                    :options="subField.options"
+                    :placeholder="subField?.placeholder"
+                    :success="subField.success"
+                    :loading="subField.loading"
+                    :isMultiSelect="subField?.multiple"
+                >
+                    {{ $t(subField.label) }}
+                </FormSelect>
+            </template>
             <CustomButton 
                 className="form__submit"
                 type="button"
@@ -40,15 +40,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { clearForm, isFormDataEmpty } from "@/utils/secondary-functions.js";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
+import { clearForm, isFormDataEmpty } from "@/utils/secondary-functions.js"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useToast } from "vue-toastification"
 
 const toast = useToast();
 const { t } = useI18n();
 
-const props = defineProps(["selects", "buildingBlockId", "isSubmit"]);
+const props = defineProps(["subFields", "buildingBlockId", "isSubmit"]);
 
 const emit = defineEmits(["onAddTable"]);
 
@@ -56,32 +56,14 @@ const formData = ref({
     floorId: [],
     costId: [],
     constructionMaterialId: [],
-    count: "",
-    // price: ""
+    count: ""
 });
 
 const valueBlock = computed(() => props.buildingBlockId);
 
 watch(valueBlock, () => {
     formData.value.floorId = [];
-})
-
-const inputs = ref([
-    { 
-        id: 1, 
-        model: "count", 
-        label: "countAppLabel", 
-        placeholder: "countAppPlaceholder", 
-        icon: "list"
-    },
-    // { 
-    //     id: 2, 
-    //     model: "price", 
-    //     label: "priceAppLabel", 
-    //     placeholder: "priceAppPlaceholder", 
-    //     icon: "money"
-    // }
-]);
+});
 
 const addHandler = () => {
     const isEmpty = isFormDataEmpty(formData.value);
@@ -95,8 +77,7 @@ const addHandler = () => {
         floorId: formData.value.floorId[0],
         costId: formData.value.costId[0],
         constructionMaterialId: formData.value.constructionMaterialId[0],
-        count: formData.value.count,
-        // price: formData.value.price
+        count: formData.value.count
     }
 
     emit("onAddTable", formData.value);

@@ -4,30 +4,30 @@
             {{ $t("estimateInfo") }}
         </h4>
         <div class="estimate-form__overlay form-manage">
-            <FormSelect 
-                v-for="select in selects"
-                :key="select.id"
-                v-model.trim="formData[select.model]" 
-                :width="500" 
-                :options="select.options"
-                :placeholder="select?.placeholder"
-                :success="select.success"
-                :loading="select.loading"
-                :isMultiSelect="select?.multiple"
-            >
-                {{ $t(select.label) }}
-            </FormSelect>
-            <FormInput 
-                v-for="input in inputs"
-                :key="input.id"
-                v-model="formData[input.model]"
-                :width="500" 
-                :placeholder="$t(input.placeholder)"
-                :name="input.icon"
-                :type="input?.type"
-            >
-                {{ $t(input.label) }}
-            </FormInput>
+            <template v-for="subField in subFields" :key="subField.id">
+                <FormInput 
+                    v-if="!subField?.select"
+                    v-model="formData[subField.model]"
+                    :width="500" 
+                    :placeholder="$t(subField.placeholder)"
+                    :name="subField.icon"
+                    :type="subField?.type"
+                >
+                    {{ $t(subField.label) }}
+                </FormInput>
+                <FormSelect 
+                    v-if="subField?.select"
+                    v-model.trim="formData[subField.model]" 
+                    :width="500" 
+                    :options="subField.options"
+                    :placeholder="subField?.placeholder"
+                    :success="subField.success"
+                    :loading="subField.loading"
+                    :isMultiSelect="subField?.multiple"
+                >
+                    {{ $t(subField.label) }}
+                </FormSelect>
+            </template>
             <CustomButton 
                 className="form__submit"
                 type="button"
@@ -48,7 +48,7 @@ import { useI18n } from "vue-i18n";
 const toast = useToast();
 const { t } = useI18n();
 
-const props = defineProps(["selects", "blockId"]);
+const props = defineProps(["subFields", "blockId"]);
 
 const emit = defineEmits(["onAddTable", "onChangeBlock"]);
 
@@ -66,16 +66,6 @@ watch(valueBlock, (value) => {
     formData.value.buildingBlockId = value;
     formData.value.floorId = [];
 });
-
-const inputs = ref([
-    { 
-        id: 1, 
-        model: "price", 
-        label: "priceEstimateLabel", 
-        placeholder: "priceEstimatePlaceholder", 
-        icon: "money"
-    }
-]);
 
 const addHandler = () => {
     const isEmpty = isFormDataEmpty(formData.value);

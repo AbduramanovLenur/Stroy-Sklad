@@ -6,33 +6,33 @@
                 :to="routes.COMPANIES.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
-                <FormInput 
-                    v-for="input in inputs"
-                    :key="input.id"
-                    v-model="state[input.model]"
-                    :width="500" 
-                    :placeholder="$t(input.placeholder)"
-                    :name="input.icon"
-                    :error="v$?.[input.errorKey].$error" 
-                    :type="input?.type"
-                    :textError="v$?.[input.errorKey].$errors[0]?.$message"
-                >
-                    {{ $t(input.label) }}
-                </FormInput>
-                <FormSelect 
-                    v-for="select in selects"
-                    :key="select.id"
-                    v-model.trim="state[select.model]"
-                    :width="500" 
-                    :options="select.options"
-                    :error="v$?.[select?.errorKey]?.$error" 
-                    :placeholder="select?.placeholder"
-                    :textError="v$?.[select?.errorKey]?.$errors[0]?.$message"
-                    :success="select.success"
-                    :loading="select.loading"
-                >
-                    {{ $t(select.label) }}
-                </FormSelect>
+                <template v-for="field in fields" :key="field.id">
+                    <FormInput 
+                        v-if="!field?.select"
+                        v-model="state[field.model]"
+                        :width="500" 
+                        :placeholder="$t(field.placeholder)"
+                        :name="field.icon"
+                        :error="v$?.[field.errorKey].$error" 
+                        :type="field?.type"
+                        :textError="v$?.[field.errorKey].$errors[0]?.$message"
+                    >
+                        {{ $t(field.label) }}
+                    </FormInput>
+                    <FormSelect 
+                        v-if="field?.select"
+                        v-model.trim="state[field.model]"
+                        :width="500" 
+                        :options="field.options"
+                        :error="v$?.[field?.errorKey]?.$error" 
+                        :placeholder="field?.placeholder"
+                        :textError="v$?.[field?.errorKey]?.$errors[0]?.$message"
+                        :success="field.success"
+                        :loading="field.loading"
+                    >
+                        {{ $t(field.label) }}
+                    </FormSelect>
+                </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.districtId.$errors[0]?.$message ? 'centered' : ''}`"
                 >
@@ -118,7 +118,7 @@ const {
     enabled: isEnabled
 });
 
-const inputs = ref([
+const fields = ref([
     { 
         id: 1, 
         model: "fullName", 
@@ -160,29 +160,28 @@ const inputs = ref([
         placeholder: "directorOrganizationPlaceholder", 
         icon: "person",
         errorKey: "director",
-    }
-]);
-
-const selects = ref([
+    },
     { 
-        id: 1, 
+        id: 6, 
         model: "regionId", 
         label: "regionOrganizationLabel", 
         placeholder: "regionOrganizationPlaceholder",
         errorKey: "regionId",
         options: regions,
         success: isSuccessRegions,
-        loading: isLoadingRegions
+        loading: isLoadingRegions,
+        select: true
     },
     { 
-        id: 2, 
+        id: 7, 
         model: "districtId", 
         label: "districtOrganizationLabel", 
         placeholder: "districtOrganizationPlaceholder",
         errorKey: "districtId",
         options: districts,
         success: isSuccessDistricts,
-        loading: isLoadingDistricts
+        loading: isLoadingDistricts,
+        select: true
     }
 ]);
 
