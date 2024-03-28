@@ -90,7 +90,10 @@ const {
     isSuccess: isSuccessMaterials,
     isLoading: isLoadingMaterials
 } = await useQuery({
-    queryKey: ["materialsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["materialsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualConstructionMaterial(),
     enabled: isShow
 });

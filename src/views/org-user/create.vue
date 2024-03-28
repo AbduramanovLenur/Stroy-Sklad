@@ -99,7 +99,10 @@ const {
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["rolesList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["rolesList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetRoles(),
     enabled: isShow
 });

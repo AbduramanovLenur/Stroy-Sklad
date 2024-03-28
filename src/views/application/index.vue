@@ -80,7 +80,13 @@ const {
     isSuccess: isSuccessApplications,
     isError
 } = await useQuery({
-    queryKey: ["applications", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId, roleId: user.value.user.roleId }],
+    queryKey: ["applications", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName
+    }],
     queryFn: () => getList("application", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let applications = {...data};

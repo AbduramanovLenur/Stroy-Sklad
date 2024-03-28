@@ -75,7 +75,13 @@ const {
     isSuccess: isSuccessRoles,
     isError
 } = await useQuery({
-    queryKey: ["roles", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["roles", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => getList("Role", page.value, limit.value, debouncedSearch.value),
     enabled: isShowList
 });

@@ -103,11 +103,11 @@
 import EstimateForm from "@/components/EstimateForm.vue"
 import { create } from "@/services/crud.services.js"
 import {
-    manualConstructionMaterial,
-    manualGetBlocks,
-    manualGetCost,
-    manualGetFloors,
-    manualGetObjects
+manualConstructionMaterial,
+manualGetBlocks,
+manualGetCost,
+manualGetFloors,
+manualGetObjects
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -115,9 +115,9 @@ import { required } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
 import { clearState, createIdMap } from "@/utils/secondary-functions.js"
 import {
-    useMutation, 
-    useQuery,
-    useQueryClient
+useMutation,
+useQuery,
+useQueryClient
 } from "@tanstack/vue-query"
 import { useVuelidate } from "@vuelidate/core"
 import { storeToRefs } from "pinia"
@@ -174,7 +174,10 @@ const {
     isSuccess: isSuccessObjects,
     isLoading: isLoadingObjects
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["objectsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetObjects(),
     enabled: isShow
 });
@@ -195,7 +198,11 @@ const {
     isSuccess: isSuccessBlocks,
     isLoading: isLoadingBlocks
 } = await useQuery({
-    queryKey: ["blocksList", { objectId: valueObject, organizationId: user.value.user.organizationId }],
+    queryKey: ["blocksList", { 
+        objectId: valueObject, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetBlocks(valueObject.value),
     enabled: isEnabledBlocks
 });
@@ -209,7 +216,11 @@ const {
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floorsList", { blockId: valueBlock, organizationId: user.value.user.organizationId }],
+    queryKey: ["floorsList", { 
+        blockId: valueBlock, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetFloors(valueBlock.value),
     enabled: isEnabled
 });
@@ -219,7 +230,10 @@ const {
     isSuccess: isSuccessCosts,
     isLoading: isLoadingCosts
 } = await useQuery({
-    queryKey: ["costsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["costsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetCost(),
     enabled: isEnabled
 });
@@ -229,7 +243,10 @@ const {
     isSuccess: isSuccessMaterials,
     isLoading: isLoadingMaterials
 } = await useQuery({
-    queryKey: ["materialsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["materialsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualConstructionMaterial(),
     enabled: isEnabled
 });

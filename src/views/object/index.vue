@@ -76,7 +76,13 @@ const {
     isSuccess: isSuccessObjects,
     isError
 } = await useQuery({
-    queryKey: ["objects", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["objects", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => getList("building_object", page.value, limit.value, debouncedSearch.value),
     enabled: isShowList
 });

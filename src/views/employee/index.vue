@@ -68,7 +68,7 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["employees", { page, limit, debouncedSearch }],
+    queryKey: ["employees", { page, limit, debouncedSearch, name: user.value.user.fullName }],
     queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};

@@ -198,7 +198,7 @@ const fields = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["objectById", slugId],
+    queryKey: ["objectById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("building_object", slugId.value),
     select: (data) => {
         state.value.id = data.id;

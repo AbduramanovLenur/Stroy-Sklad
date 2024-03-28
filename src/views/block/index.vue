@@ -79,7 +79,13 @@ const {
     isSuccess: isSuccessBlocks,
     isError
 } = await useQuery({
-    queryKey: ["blocks", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["blocks", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => getList("building_block", page.value, limit.value, debouncedSearch.value),
     enabled: isShowList
 });

@@ -147,7 +147,10 @@ const {
     isSuccess: isSuccessObjectsList,
     isLoading: isLoadingObjectsList
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["objectsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetObjects(),
     enabled: isShow
 });
@@ -242,7 +245,7 @@ const fields = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["blocksById", slugId],
+    queryKey: ["blocksById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("building_block", slugId.value),
     select: (data) => {
         state.value.id = data.id;

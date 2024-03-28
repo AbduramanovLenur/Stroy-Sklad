@@ -76,7 +76,13 @@ const {
     isSuccess: isSuccessProducts,
     isError
 } = await useQuery({
-    queryKey: ["products", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["products", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => getList("construction_material", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let productsList = [...data?.constructionMaterial];

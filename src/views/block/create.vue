@@ -136,7 +136,10 @@ const {
     isSuccess: isSuccessObjectsList,
     isLoading: isLoadingObjectsList
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["objectsList", { 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetObjects(),
     enabled: isShow
 });

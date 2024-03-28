@@ -105,7 +105,10 @@ const {
     isSuccess: isSuccessRoles,
     isLoading: isLoadingRoles
 } = await useQuery({
-    queryKey: ["rolesList", { organizationId: state.value.organizationId }],
+    queryKey: ["rolesList", { 
+        organizationId: state.value.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => manualGetRoles(),
     enabled: isShow
 });
@@ -178,7 +181,7 @@ const fields = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["orgUserById", slugId],
+    queryKey: ["orgUserById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("user", slugId.value),
     select: (data) => {
         state.value.id = data.id;

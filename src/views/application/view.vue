@@ -160,7 +160,10 @@ const {
     isSuccess: isSuccessObjects,
     isLoading: isLoadingObjects
 } = await useQuery({
-    queryKey: ["objectsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["objectsList", { 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
     queryFn: () => manualGetObjects(),
     enabled: isShow
 });
@@ -174,7 +177,11 @@ const {
     isSuccess: isSuccessBlocks,
     isLoading: isLoadingBlocks
 } = await useQuery({
-    queryKey: ["blocksList", { blockId: valueObject, organizationId: user.value.user.organizationId }],
+    queryKey: ["blocksList", { 
+        blockId: valueObject, 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
     queryFn: () => manualGetBlocks(valueObject.value),
     enabled: isEnabledBlocks
 });
@@ -188,7 +195,11 @@ const {
     isSuccess: isSuccessFloors,
     isLoading: isLoadingFloors
 } = await useQuery({
-    queryKey: ["floorsList", { floorId: valueBlock, organizationId: user.value.user.organizationId }],
+    queryKey: ["floorsList", { 
+        floorId: valueBlock, 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
     queryFn: () => manualGetFloors(valueBlock.value),
     enabled: isEnabled
 });
@@ -198,7 +209,10 @@ const {
     isSuccess: isSuccessCosts,
     isLoading: isLoadingCosts
 } = await useQuery({
-    queryKey: ["costsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["costsList", { 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
     queryFn: () => manualGetCost(),
     enabled: isEnabled
 });
@@ -208,7 +222,10 @@ const {
     isSuccess: isSuccessMaterials,
     isLoading: isLoadingMaterials
 } = await useQuery({
-    queryKey: ["materialsList", { organizationId: user.value.user.organizationId }],
+    queryKey: ["materialsList", { 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
     queryFn: () => manualConstructionMaterial(),
     enabled: isEnabled
 });
@@ -248,7 +265,7 @@ const fields = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["applicationsById", slugId],
+    queryKey: ["applicationsById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("application", slugId.value),
     select: (data) => {
         state.value.id = data.id;

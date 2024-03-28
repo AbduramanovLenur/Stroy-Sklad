@@ -77,7 +77,13 @@ const {
     isSuccess: isSuccessWarehouse,
     isError
 } = await useQuery({
-    queryKey: ["warehouse", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["warehouse", { 
+        page, 
+        limit, 
+        debouncedSearch, 
+        organizationId: user.value.user.organizationId, 
+        name: user.value.user.fullName 
+    }],
     queryFn: () => getList("warehouse", page.value, limit.value, debouncedSearch.value),
     enabled: isShowList
 });
