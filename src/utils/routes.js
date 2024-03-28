@@ -39,8 +39,7 @@ export const routes = {
 
     APPLICATION: {
         name: "Applications",
-        path: "/applications",
-        module: actionModules.APPLICATION.READ
+        path: "/applications"
     },
     CREATE_APPLICATION: {
         name: "CreateApplications",
@@ -53,8 +52,7 @@ export const routes = {
 
     ESTIMATE: {
         name: "Estimate",
-        path: "/estimate",
-        module: actionModules.ESTIMATE.READ
+        path: "/estimate"
     },
     CREATE_ESTIMATE: {
         name: "CreateEstimate",
@@ -67,8 +65,7 @@ export const routes = {
 
     OBJECT: {
         name: "Objects",
-        path: "/objects",
-        module: actionModules.OBJECT.READ
+        path: "/objects"
     },
     CREATE_OBJECT: {
         name: "CreateObjects",
@@ -81,8 +78,7 @@ export const routes = {
 
     BLOCK: {
         name: "Blocks",
-        path: "/blocks",
-        module: actionModules.BLOCK.READ
+        path: "/blocks"
     },
     CREATE_BLOCK: {
         name: "CreateBlocks",
@@ -93,24 +89,22 @@ export const routes = {
         path: "/blocks/manage/:id"
     },
 
-    EXPENS: {
-        name: "Expenses",
-        path: "/expenses",
-        module: actionModules.EXPENS.READ
+    COST: {
+        name: "Costs",
+        path: "/costs"
     },
-    CREATE_EXPENS: {
-        name: "CreateExpenses",
-        path: "/expenses/manage"
+    CREATE_COST: {
+        name: "CreateCosts",
+        path: "/costs/manage"
     },
-    UPDATE_EXPENS: {
-        name: "UpdateExpenses",
-        path: "/expenses/manage/:id"
+    UPDATE_COST: {
+        name: "UpdateCosts",
+        path: "/costs/manage/:id"
     },
 
     PRODUCT: {
         name: "Products",
-        path: "/products",
-        module: actionModules.PRODUCT.READ
+        path: "/products"
     },
     CREATE_PRODUCT: {
         name: "CreateProducts",
@@ -123,8 +117,7 @@ export const routes = {
 
     WAREHOUSE: {
         name: "Warehouse",
-        path: "/warehouse",
-        module: actionModules.WAREHOUSE.READ
+        path: "/warehouse"
     },
     CREATE_WAREHOUSE: {
         name: "CreateWarehouse",
@@ -137,8 +130,7 @@ export const routes = {
 
     ROLE: {
         name: "Roles",
-        path: "/roles",
-        module: actionModules.ROLE.READ
+        path: "/roles"
     },
     CREATE_ROLE: {
         name: "CreateRoles",
@@ -151,8 +143,7 @@ export const routes = {
 
     ORG_USER: {
         name: "OrganizationUser",
-        path: "/organization-employees",
-        module: actionModules.ORG_USER.READ
+        path: "/organization-employees"
     },
     CREATE_ORG_USER: {
         name: "CreateOrganizationUser",
@@ -170,7 +161,19 @@ export const routes = {
 
     MANAGEMENT_ROLE: {
         name: "ManagementRole",
-        path: "/management-role",
-        module: actionModules.MANAGEMENT_ROLE.READ
-    }
+        path: "/management-role"
+    },
+
+    // EXPENS: {
+    //     name: "Expenses",
+    //     path: "/expenses"
+    // },
+    // CREATE_EXPENS: {
+    //     name: "CreateExpenses",
+    //     path: "/expenses/manage"
+    // },
+    // UPDATE_EXPENS: {
+    //     name: "UpdateExpenses",
+    //     path: "/expenses/manage/:id"
+    // },
 }

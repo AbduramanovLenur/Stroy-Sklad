@@ -2,8 +2,8 @@
     <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
-                title="addNewExpensesTitle" 
-                :to="routes.EXPENS.path"
+                title="addNewCostsTitle" 
+                :to="routes.COST.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <template v-for="field in fields" :key="field.id">
@@ -21,6 +21,7 @@
                 </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.fullName.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"    
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -52,7 +53,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.CREATE));
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.COST.CREATE));
 
 const state = ref({
     fullName: "",
@@ -68,24 +69,24 @@ const fields = ref([
     { 
         id: 1, 
         model: "fullName", 
-        label: "nameExpensesLabel", 
-        placeholder: "nameExpensesPlaceholder", 
+        label: "nameCostsLabel", 
+        placeholder: "nameCostsPlaceholder", 
         icon: "input-company",
         errorKey: "fullName",
     }
 ]);
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     mutationFn: (body) => create("cost", body),
     onSuccess: (response) => {
         if (!response?.success) return;
 
         state.value = clearState(state.value);
         
-        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["costs"] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
         
-        router.push(routes.EXPENS.path);
+        router.push(routes.COST.path);
 
         setTimeout(() => toast.success(t("createToast")), 150);
     }

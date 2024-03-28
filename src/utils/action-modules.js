@@ -25,7 +25,7 @@ export const actionModules = {
         UPDATE: 15,
         DELETE: 16
     },
-    EXPENS: {
+    COST: {
         READ: 21,
         CREATE: 22,
         UPDATE: 23,
@@ -60,5 +60,11 @@ export const actionModules = {
         CREATE: 40,
         UPDATE: 41,
         DELETE: 42
-    }
+    },
+    // EXPENS: {
+    //     READ: 39,
+    //     CREATE: 40,
+    //     UPDATE: 41,
+    //     DELETE: 42
+    // }
 }

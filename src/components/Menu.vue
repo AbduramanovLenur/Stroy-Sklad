@@ -46,9 +46,10 @@ const menu = ref([
     { id: 4, label: "itemUserEstimate", icon: "estimate", to: routes.ESTIMATE.path, moduleId: actionModules.ESTIMATE.READ },  
     { id: 5, label: "itemUserObjects", icon: "objects", to: routes.OBJECT.path, moduleId: actionModules.OBJECT.READ },
     { id: 6, label: "itemUserBlocks", icon: "blocks", to: routes.BLOCK.path, moduleId: actionModules.BLOCK.READ },
-    { id: 7, label: "itemUserExpenses", icon: "expenses", to: routes.EXPENS.path, moduleId: actionModules.EXPENS.READ },
+    { id: 7, label: "itemUserCosts", icon: "costs", to: routes.COST.path, moduleId: actionModules.COST.READ },
     { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCT.path, moduleId: actionModules.PRODUCT.READ },
     { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, moduleId: actionModules.WAREHOUSE.READ },
+    // { id: 10, label: "itemUserCost", icon: "cost", to: routes.COST.path, moduleId: actionModules.COST.READ },
     // { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLE.path, moduleId: actionModules.ROLE.READ },
     // { id: 11, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ORG_USER.READ },
 ]);

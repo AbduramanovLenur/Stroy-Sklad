@@ -34,6 +34,7 @@
                 </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.stateId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -54,9 +55,9 @@ import { required } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
 import { clearState } from "@/utils/secondary-functions.js"
 import {
-    useMutation,
-    useQuery,
-    useQueryClient
+useMutation,
+useQuery,
+useQueryClient
 } from "@tanstack/vue-query"
 import { useVuelidate } from "@vuelidate/core"
 import { storeToRefs } from "pinia"
@@ -161,11 +162,11 @@ const { isError } = await useQuery({
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.WAREHOUSE.path);
     }
 });
 
-const { mutate: updateMutate } = useMutation({
+const { mutate: updateMutate, status } = useMutation({
     onMutate: (body) => {
         body.materialId = body.materialId[0];
         body.stateId = body.stateId[0];

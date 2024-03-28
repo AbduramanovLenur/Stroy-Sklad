@@ -50,6 +50,7 @@
                         v-if="state.data.length"
                         :width="240" 
                         className="form__submit"
+                        :disabled="status === 'pending'"
                     >
                         {{ $t("formButton") }}
                     </CustomButton>
@@ -140,7 +141,7 @@ const fields = ref([
         errorKey: "fullname",
     },
     { 
-        id: 1, 
+        id: 2, 
         model: "quantityTypeId", 
         label: "qunatityTypesProductsLabel", 
         placeholder: "qunatityTypesProductsPlaceholder",
@@ -166,7 +167,7 @@ const deleteHandler = (idx) => {
     state.value.data = state.value.data.filter((elem) => elem.delId !== idx);
 }
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     onMutate: (body) => {
         body.quantityTypeId = body.quantityTypeId[0];
     },

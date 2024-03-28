@@ -90,6 +90,7 @@
                 <CustomButton 
                     v-if="blockId" 
                     className="manage__submit"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -343,7 +344,7 @@ const deleteHandler = (idx) => {
     });
 }
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     onMutate: (body) => {
         isSubmit.value = true;
 

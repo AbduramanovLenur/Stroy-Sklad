@@ -27,6 +27,7 @@
                 <CustomButton 
                     v-if="isSuccessModules"
                     :className="`form__submit manage__submit ${v$?.fullName.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -108,7 +109,7 @@ const fields = ref([
     },
 ]);
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     mutationFn: (body) => create("Role", body),
     onSuccess: (response) => {
         if (!response?.success) return;

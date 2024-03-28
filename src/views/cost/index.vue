@@ -1,28 +1,28 @@
 <template>
-    <section class="expenses" v-if="isShowList">
-        <div class="expenses__inner section-padding">
+    <section class="costs" v-if="isShowList">
+        <div class="costs__inner section-padding">
             <HeadPage 
-                title="expensesTitle" 
-                :to="routes.CREATE_EXPENS.path"
-                :isShowCreate="user?.user?.modules?.includes(actionModules.EXPENS.CREATE)"
+                title="applicationCost" 
+                :to="routes.CREATE_COST.path"
+                :isShowCreate="user?.user?.modules?.includes(actionModules.COST.CREATE)"
             />
             <Table 
-                v-if="isSuccessExpenses && expenses?.count"
+                v-if="isSuccessCosts && costs?.count"
                 :headers="headers" 
-                :table="expenses?.cost"
-                :to="routes.UPDATE_EXPENS.name"
+                :table="costs?.cost"
+                :to="routes.UPDATE_COST.name"
                 :options="{ page, limit }"
-                :isShowUpdate="user?.user?.modules?.includes(actionModules.EXPENS.UPDATE)"
-                :isShowDelete="user?.user?.modules?.includes(actionModules.EXPENS.DELETE)"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.COST.UPDATE)"
+                :isShowDelete="user?.user?.modules?.includes(actionModules.COST.DELETE)"
                 @onActionDelete="deleteHandler"
             />
             <Pagination
-                :count="expenses?.count"
-                :isSucces="isSuccessExpenses"
+                :count="costs?.count"
+                :isSucces="isSuccessCosts"
             />
-            <Spinner v-if="isLoadingExpenses" />
+            <Spinner v-if="isLoadingCosts" />
             <div 
-                v-if="(isSuccessExpenses && !expenses.count) || isError" 
+                v-if="(isSuccessCosts && !costs.count) || isError" 
                 class="empty-table shadowed"
             >
                 {{ $t("emptyTableTitle") }}
@@ -59,23 +59,23 @@ const { page, limit, search } = storeToRefs(tableStore);
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.READ));
+const isShowList = computed(() => !!user?.value.user?.modules?.includes(actionModules.COST.READ));
 
-const expensesId = ref("");
+const costId = ref("");
 
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "expensesName", width: 70 }
+    { id: 1, label: "costsName", width: 70 }
 ]);
 
 const {
-    data: expenses,
-    isLoading: isLoadingExpenses,
-    isSuccess: isSuccessExpenses,
+    data: costs,
+    isLoading: isLoadingCosts,
+    isSuccess: isSuccessCosts,
     isError
 } = await useQuery({
-    queryKey: ["expenses", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
+    queryKey: ["costs", { page, limit, debouncedSearch, organizationId: user.value.user.organizationId }],
     queryFn: () => getList("cost", page.value, limit.value, debouncedSearch.value),
     enabled: isShowList
 });
@@ -85,8 +85,8 @@ const { mutate: mutateDelete } = useMutation({
     onSuccess: (response) => {
         if (!response?.success) return;
         
-        queryClient.invalidateQueries({ queryKey: ["expenses"] });
-        queryClient.invalidateQueries({ queryKey: ["expensesById", expensesId] });
+        queryClient.invalidateQueries({ queryKey: ["costs"] });
+        queryClient.invalidateQueries({ queryKey: ["costById", costId] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
 
         setTimeout(() => toast.success(t("deleteToast")), 150);
@@ -94,7 +94,7 @@ const { mutate: mutateDelete } = useMutation({
 });
 
 const deleteHandler = async (idx) => {
-    expensesId.value = idx;
+    costId.value = idx;
     mutateDelete(idx);
 }
 </script>

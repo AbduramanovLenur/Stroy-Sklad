@@ -35,6 +35,7 @@
                 </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.stateId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -193,11 +194,11 @@ const { isError } = await useQuery({
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.ORG_USER.path);
     }
 });
 
-const { mutate: updateMutate } = useMutation({
+const { mutate: updateMutate, status } = useMutation({
     onMutate: (body) => {
         body.roleId = body.roleId[0];
         body.stateId = body.stateId[0];

@@ -58,6 +58,7 @@
                         color="green" 
                         :width="180" 
                         @click="() => isOpenAcceptedModal = true"
+                        :disabled="approveStatus === 'pending'"
                     >
                         {{ $t("acceptButton") }}
                     </MyButton>
@@ -68,6 +69,7 @@
                         color="red" 
                         :width="180" 
                         @click="() => isOpenRefusedModal = true"
+                        :disabled="refusalStatus === 'pending'"
                     >
                         {{ $t("cancelButton") }}
                     </MyButton>
@@ -298,11 +300,11 @@ watchEffect(() => {
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.APPLICATION.path);
     }
 });
 
-const { mutate: cancelMutate } = useMutation({
+const { mutate: cancelMutate, status: refusalStatus } = useMutation({
     mutationFn: (idx) => cancelWithId("application", idx),
     onSuccess: (response) => {
         if (!response?.success) return;
@@ -316,7 +318,7 @@ const { mutate: cancelMutate } = useMutation({
     }
 });
 
-const { mutate: acceptMutate } = useMutation({
+const { mutate: acceptMutate, status: approveStatus } = useMutation({
     mutationFn: (idx) => acceptWithId("application", idx),
     onSuccess: (response) => {
         if (!response?.success) return;

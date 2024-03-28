@@ -34,6 +34,7 @@
                 </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.districtId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -161,7 +162,7 @@ const fields = ref([
     }
 ]);
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     onMutate: (body) => {
         isSubmit.value = true;
 

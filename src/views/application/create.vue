@@ -63,7 +63,10 @@
                 >
                     {{ $t("appCommentLabel") }}
                 </FormTextarea>
-                <CustomButton className="manage__submit">
+                <CustomButton 
+                    className="manage__submit"
+                    :disabled="status === 'pending'"
+                >
                     {{ $t("appButton") }}
                 </CustomButton>
             </form>
@@ -297,7 +300,7 @@ const deleteHandler = (idx) => {
     state.value.createApplicationTables = state.value.createApplicationTables.filter((elem) => elem.delId !== idx);
 }
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     onMutate: (body) => {
         isSubmit.value = true;
 

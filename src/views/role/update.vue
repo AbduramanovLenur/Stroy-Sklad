@@ -40,6 +40,7 @@
                 <CustomButton 
                     v-if="isSuccessModules"
                     :className="`form__submit manage__submit ${v$?.fullName.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -164,11 +165,11 @@ const { isError } = await useQuery({
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.ROLE.path);
     }
 });
 
-const { mutate: updateMutate } = useMutation({
+const { mutate: updateMutate, status } = useMutation({
     onMutate: (body) => {
         body.stateId = body.stateId[0];
     },

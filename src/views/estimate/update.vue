@@ -89,6 +89,7 @@
                 <CustomButton
                     v-if="blockId" 
                     className="manage__submit"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -422,12 +423,12 @@ const { isError } = await useQuery({
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.ESTIMATE.path);
     }
 });
 
 
-const { mutate: updateMutate } = useMutation({
+const { mutate: updateMutate, status } = useMutation({
     onMutate: (body) => {
         isSubmit.value = true;
 

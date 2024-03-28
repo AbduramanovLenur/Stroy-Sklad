@@ -52,6 +52,7 @@
                 <CustomButton 
                     v-if="isSuccessModules"
                     className="form__submit"
+                    :disabled="status === 'pending'"
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -183,7 +184,7 @@ const fields = ref([
     }
 ]);
 
-const { mutate: createMutate } = useMutation({
+const { mutate: createMutate, status } = useMutation({
     onMutate: (body) => {
         body.organizationId = body.organizationId[0];
     },

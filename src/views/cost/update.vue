@@ -2,8 +2,8 @@
     <section class="manage section-height shadowed" v-if="isShow">
         <div class="manage__inner section-padding">
             <ManageHead 
-                title="editExpensesTitle" 
-                :to="routes.EXPENS.path"
+                title="editCostsTitle" 
+                :to="routes.COST.path"
             />
             <form class="manage__form form-manage" @submit.prevent="submitHandler">
                 <template v-for="field in fields" :key="field.id">
@@ -34,6 +34,7 @@
                 </template>
                 <CustomButton 
                     :className="`form__submit ${v$?.stateId.$errors[0]?.$message ? 'centered' : ''}`"
+                    :disabled="status === 'pending'"   
                 >
                     {{ $t("formButton") }}
                 </CustomButton>
@@ -71,7 +72,7 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
-const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.EXPENS.UPDATE));
+const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.COST.UPDATE));
 
 const slugId = ref(route.params.id);
 
@@ -103,16 +104,16 @@ const fields = ref([
     { 
         id: 1, 
         model: "fullName", 
-        label: "nameExpensesLabel", 
-        placeholder: "nameExpensesPlaceholder", 
+        label: "nameCostsLabel", 
+        placeholder: "nameCostsPlaceholder", 
         icon: "input-company",
         errorKey: "fullName",
     },
     { 
         id: 2, 
         model: "stateId", 
-        label: "stateExpensesLabel", 
-        placeholder: "stateExpensesPlaceholder", 
+        label: "stateCostsLabel", 
+        placeholder: "stateCostsPlaceholder", 
         errorKey: "stateId", 
         options: states,
         success: isSuccessStates,
@@ -122,7 +123,7 @@ const fields = ref([
 ]);
 
 const { isError } = await useQuery({
-    queryKey: ["expensesById", slugId],
+    queryKey: ["costById", slugId],
     queryFn: () => getWithId("cost", slugId.value),
     select: (data) => {
         state.value.id = data.id;
@@ -134,11 +135,11 @@ const { isError } = await useQuery({
 
 watch(isError, (value) => {
     if (value) {
-        router.push(routes.HOME.path);
+        router.push(routes.COST.path);
     }
 });
 
-const { mutate: updateMutate } = useMutation({
+const { mutate: updateMutate, status } = useMutation({
     onMutate: (body) => {
         body.stateId = body.stateId[0];
     },
@@ -148,11 +149,11 @@ const { mutate: updateMutate } = useMutation({
 
         state.value = clearState(state.value);
 
-        queryClient.invalidateQueries({ queryKey: ["expenses"] });
-        queryClient.invalidateQueries({ queryKey: ["expensesById", slugId] });
+        queryClient.invalidateQueries({ queryKey: ["costs"] });
+        queryClient.invalidateQueries({ queryKey: ["costById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["costsList"] });
         
-        router.push(routes.EXPENS.path);
+        router.push(routes.COST.path);
 
         setTimeout(() => toast.success(t("updateToast")), 150);
     }
