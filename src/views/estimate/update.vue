@@ -220,7 +220,7 @@ const {
 
 const valueBlock = computed(() => blockId.value);
 
-const isEnabled  = computed(() => !!valueBlock.value);
+const isEnabledFloors  = computed(() => !!valueBlock.value);
 
 const {
     data: floors,
@@ -233,7 +233,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualGetFloors(valueBlock.value),
-    enabled: isEnabled
+    enabled: isEnabledFloors
 });
 
 const {
@@ -246,7 +246,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualGetCost(),
-    enabled: isEnabled
+    enabled: isShow
 });
 
 const {
@@ -259,7 +259,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualConstructionMaterial(),
-    enabled: isEnabled
+    enabled: isShow
 });
 
 const {

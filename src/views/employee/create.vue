@@ -65,8 +65,8 @@
 <script setup>
 import { create } from "@/services/crud.services.js"
 import {
-manualGetModules,
-manualGetOrganizations
+    manualGetModules,
+    manualGetOrganizations
 } from "@/services/manual.services.js"
 import { minLength, required } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"

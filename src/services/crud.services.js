@@ -12,9 +12,9 @@ export const updateById = (api, body) => request({ url: `${api}/Update`, method:
 
 export const deleteWithId = (api, idx) => request({ url: `${api}/Delete/${idx}`, method: "POST" });
 
-export const cancelWithId = (api, idx) => request({ url: `${api}/Cancel/${idx}`, method: "POST" });
+export const cancelWithId = (api, idx, body) => request({ url: `${api}/Cancel/${idx}`, method: "POST", body });
 
-export const acceptWithId = (api, idx) => request({ url: `${api}/Accept/${idx}`, method: "POST" });
+export const acceptWithId = (api, idx, body) => request({ url: `${api}/Accept/${idx}`, method: "POST", body });
 
 export const createWithExcel = (api, body) => request({ url: `${api}/ImportFromExcel`, method: "POST", body });
 

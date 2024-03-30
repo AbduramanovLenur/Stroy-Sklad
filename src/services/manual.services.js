@@ -25,3 +25,5 @@ export const manualGetBlocks = (idx) => request({ url: `manual/BuildingBlockSele
 export const manualGetModules = () => request({ url: "manual/ModuleSubGroupSelectList", method: "GET" });
 
 export const manualGetPositionRoles = (body) => request({ url: "manual/RoleForPositionSelectList", method: "POST", body });
+
+export const manualGetWarehouse = () => request({ url: "manual/WarehouseSelectList", method: "GET" });

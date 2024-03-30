@@ -29,19 +29,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { storeToRefs } from "pinia";
-import { useTableStore } from "@/store/tableStore";
-import { refDebounced } from "@vueuse/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { getList, deleteWithId } from "@/services/crud.services.js";
-import { routes } from "@/utils/routes.js";
+import { deleteWithId, getList } from "@/services/crud.services.js"
+import { useTableStore } from "@/store/tableStore"
+import { routes } from "@/utils/routes.js"
+import {
+    useMutation,
+    useQuery,
+    useQueryClient
+} from "@tanstack/vue-query"
+import { refDebounced } from "@vueuse/core"
+import { storeToRefs } from "pinia"
+import { ref } from "vue"
+import { useI18n } from "vue-i18n"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 
@@ -68,7 +68,7 @@ const {
     isSuccess: isSuccessEmployees,
     isError
 } = await useQuery({
-    queryKey: ["employees", { page, limit, debouncedSearch, name: user.value.user.fullName }],
+    queryKey: ["employees", { page, limit, debouncedSearch }],
     queryFn: () => getList("user", page.value, limit.value, debouncedSearch.value),
     select: (data) => {
         let employees = {...data};

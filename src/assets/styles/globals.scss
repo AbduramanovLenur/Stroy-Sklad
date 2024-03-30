@@ -393,6 +393,34 @@ svg {
     }
 }
 
+.manage {
+    &__overlay {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px 50px;
+        margin-top: 20px;
+        margin-bottom: 50px;
+
+        @media (max-width: 1536px) {
+            gap: 20px;
+        }
+
+        @media (max-width: 1152px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 864px) {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+    &__submit {
+        margin-top: 30px;
+    }
+}
+
 .loading {
     display: flex;
     justify-content: center;

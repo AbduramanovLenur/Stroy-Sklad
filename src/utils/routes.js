@@ -1,5 +1,3 @@
-import { actionModules } from "@/utils/action-modules";
-
 export const routes = {
     HOME: {
         name: "Home",
@@ -164,16 +162,16 @@ export const routes = {
         path: "/management-role"
     },
 
-    // EXPENS: {
-    //     name: "Expenses",
-    //     path: "/expenses"
-    // },
-    // CREATE_EXPENS: {
-    //     name: "CreateExpenses",
-    //     path: "/expenses/manage"
-    // },
-    // UPDATE_EXPENS: {
-    //     name: "UpdateExpenses",
-    //     path: "/expenses/manage/:id"
-    // },
+    EXPENS: {
+        name: "Expenses",
+        path: "/expenses"
+    },
+    CREATE_EXPENS: {
+        name: "CreateExpenses",
+        path: "/expenses/manage"
+    },
+    VIEW_EXPENS: {
+        name: "UpdateExpenses",
+        path: "/expenses/manage/:id"
+    },
 }

@@ -65,6 +65,18 @@
                 <td v-if="info.buildingObject" class="table-info" align="center">
                     {{ info.buildingObject }}
                 </td>
+                <td v-if="info.buildingBlock" class="table-info" align="center">
+                    {{ info.buildingBlock }}
+                </td>
+                <td v-if="info.floor" class="table-info" align="center">
+                    {{ info.floor }}
+                </td>
+                <td v-if="info.constructionMaterial" class="table-info" align="center">
+                    {{ info.constructionMaterial }}
+                </td>
+                <td v-if="info.count" class="table-info" align="center">
+                    {{ info.count }}
+                </td>
                 <td v-if="info.objectName" class="table-info" align="center">
                     {{ info.objectName }}
                 </td>

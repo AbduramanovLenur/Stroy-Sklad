@@ -1,11 +1,11 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { routes as routesList } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { roles } from "@/utils/roles.js";
-import { useUserStore } from "@/store/userStore";
-import { storeToRefs } from "pinia";
-import DefaultLayouts from "@/layouts/DefaultLayouts.vue";
-import AuthLayouts from "@/layouts/AuthLayouts.vue";
+import AuthLayouts from "@/layouts/AuthLayouts.vue"
+import DefaultLayouts from "@/layouts/DefaultLayouts.vue"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { roles } from "@/utils/roles.js"
+import { routes as routesList } from "@/utils/routes.js"
+import { storeToRefs } from "pinia"
+import { createRouter, createWebHistory } from "vue-router"
 
 const routes = [
   {
@@ -1002,90 +1002,90 @@ const routes = [
       return next();
     },
   },
-  // {
-  //   name: routesList.COST.name,
-  //   path: routesList.COST.path,
-  //   component: () => import("@/views/expens/index.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     roleId: roles.SUPERADMIN_ID,
-  //     module: actionModules.COST.READ
-  //   },
-  //   beforeEnter: (to, from, next) => {
-  //     const userStore = useUserStore();
-  //     const { user } = storeToRefs(userStore);
+  {
+    name: routesList.EXPENS.name,
+    path: routesList.EXPENS.path,
+    component: () => import("@/views/expens/index.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.READ
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
 
-  //     if (!user.value?.token) {
-  //       return next({ name: routesList.AUTH.name });
-  //     }
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
 
-  //     if (!user?.value.user?.modules?.includes(+to.meta.module)) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     if (+to.meta?.roleId === +user.value?.user?.roleId) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     return next();
-  //   },
-  // },
-  // {
-  //   name: routesList.CREATE_COST.name,
-  //   path: routesList.CREATE_COST.path,
-  //   component: () => import("@/views/expens/create.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     roleId: roles.SUPERADMIN_ID,
-  //     module: actionModules.COST.CREATE
-  //   },
-  //   beforeEnter: (to, from, next) => {
-  //     const userStore = useUserStore();
-  //     const { user } = storeToRefs(userStore);
+      return next();
+    },
+  },
+  {
+    name: routesList.CREATE_EXPENS.name,
+    path: routesList.CREATE_EXPENS.path,
+    component: () => import("@/views/expens/create.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.CREATE
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
 
-  //     if (!user.value?.token) {
-  //       return next({ name: routesList.AUTH.name });
-  //     }
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
 
-  //     if (!user?.value.user?.modules?.includes(+to.meta.module)) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     if (+to.meta?.roleId === +user.value?.user?.roleId) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     return next();
-  //   },
-  // },
-  // {
-  //   name: routesList.UPDATE_COST.name,
-  //   path: routesList.UPDATE_COST.path,
-  //   component: () => import("@/views/expens/update.vue"),
-  //   meta: {
-  //     layout: DefaultLayouts,
-  //     roleId: roles.SUPERADMIN_ID,
-  //     module: actionModules.COST.UPDATE
-  //   },
-  //   beforeEnter: (to, from, next) => {
-  //     const userStore = useUserStore();
-  //     const { user } = storeToRefs(userStore);
+      return next();
+    },
+  },
+  {
+    name: routesList.VIEW_EXPENS.name,
+    path: routesList.VIEW_EXPENS.path,
+    component: () => import("@/views/expens/view.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      roleId: roles.SUPERADMIN_ID,
+      module: actionModules.EXPENS.READ
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
 
-  //     if (!user.value?.token) {
-  //       return next({ name: routesList.AUTH.name });
-  //     }
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
 
-  //     if (!user?.value.user?.modules?.includes(+to.meta.module)) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     if (+to.meta?.roleId === +user.value?.user?.roleId) {
-  //       return next({ name: routesList.HOME.name });
-  //     }
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
 
-  //     return next();
-  //   },
-  // },
+      return next();
+    },
+  },
 ];
 
 const router = createRouter({

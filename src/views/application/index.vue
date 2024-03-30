@@ -12,9 +12,9 @@
                 :table="applications?.applications"
                 :to="routes.VIEW_APPLICATION.name"
                 :options="{ page, limit }"
-                :isShowEye="true"
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.UPDATE)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.APPLICATION.DELETE)"
+                :isShowEye="true"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

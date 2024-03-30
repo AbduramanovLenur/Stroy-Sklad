@@ -27,6 +27,9 @@
                     <div class="histories__date">
                         {{ date(history?.createdDate) }}
                     </div>
+                    <div class="histories__comment">
+                        {{ history?.comment }}
+                    </div>
                 </div>
             </li>
         </ul>
@@ -105,7 +108,6 @@ const date = computed(() => {
     &__head {
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 10px;
         @media (max-width: 900px) {
             flex-direction: column;
@@ -117,6 +119,10 @@ const date = computed(() => {
         @media (max-width: 900px) {
             display: none;
         }
+    }
+    &__comment {
+        max-width: 800px;
+        white-space: pre-wrap;
     }
 }
 </style>

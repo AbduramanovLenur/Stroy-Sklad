@@ -38,14 +38,24 @@
                     :headers="headers"
                     :table="state.applicationTables"
                 />
-                <FormTextarea
-                    v-model.trim="state.details"
-                    :width="500" 
-                    :placeholder="$t('appCommentPlaceholder')"
-                    :isDisabled="true"
-                >
-                    {{ $t("appCommentLabel") }}
-                </FormTextarea>
+                <div class="manage__textareas">
+                    <FormTextarea
+                        v-model.trim="state.details"
+                        :width="500" 
+                        :placeholder="$t('appDetailsPlaceholder')"
+                        :isDisabled="true"
+                    >
+                        {{ $t("appDetailsLabel") }}
+                    </FormTextarea>
+                    <FormTextarea 
+                        v-model.trim="state.comment"
+                        :width="500" 
+                        :placeholder="$t('appCommentPlaceholder')"
+                        :isDisabled="!state.hasPermission"
+                    >
+                        {{ $t("appCommentLabel") }}
+                    </FormTextarea>
+                </div>
                 <!-- (state.statusId !== 7 && state.statusId !== 15) &&  -->
                 <div 
                     v-if="state.hasPermission"
@@ -150,6 +160,7 @@ const state = ref({
     buildingBlockId: [],
     applicationTables: [],
     details: "",
+    comment: "",
     statusId: "",
     hasPermission: [],
     histories: []
@@ -188,7 +199,7 @@ const {
 
 const valueBlock = computed(() => state.value.buildingBlockId[0]);
 
-const isEnabled = computed(() => !!valueBlock.value);
+const isEnabledFloors = computed(() => !!valueBlock.value);
 
 const {
     data: floors,
@@ -201,7 +212,7 @@ const {
         name: user.value.user.fullName
     }],
     queryFn: () => manualGetFloors(valueBlock.value),
-    enabled: isEnabled
+    enabled: isEnabledFloors
 });
 
 const {
@@ -214,7 +225,7 @@ const {
         name: user.value.user.fullName
     }],
     queryFn: () => manualGetCost(),
-    enabled: isEnabled
+    enabled: isShow
 });
 
 const {
@@ -227,7 +238,7 @@ const {
         name: user.value.user.fullName
     }],
     queryFn: () => manualConstructionMaterial(),
-    enabled: isEnabled
+    enabled: isShow
 });
 
 const fields = ref([
@@ -322,7 +333,7 @@ watch(isError, (value) => {
 });
 
 const { mutate: cancelMutate, status: refusalStatus } = useMutation({
-    mutationFn: (idx) => cancelWithId("application", idx),
+    mutationFn: (idx) => cancelWithId("application", idx, { comment: state.value.comment }),
     onSuccess: (response) => {
         if (!response?.success) return;
 
@@ -336,7 +347,7 @@ const { mutate: cancelMutate, status: refusalStatus } = useMutation({
 });
 
 const { mutate: acceptMutate, status: approveStatus } = useMutation({
-    mutationFn: (idx) => acceptWithId("application", idx),
+    mutationFn: (idx) => acceptWithId("application", idx, { comment: state.value.comment }),
     onSuccess: (response) => {
         if (!response?.success) return;
 
@@ -386,6 +397,15 @@ const acceptHandler = () => {
         @media (max-width: 640px) {
             flex-direction: column;
             gap: 20px;
+        }
+    }
+    &__textareas {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        @media (max-width: 1024px) {
+            flex-direction: column;
+            align-items: flex-start;
         }
     }
 }

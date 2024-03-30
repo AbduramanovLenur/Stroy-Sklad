@@ -218,7 +218,6 @@ const { isError } = await useQuery({
     queryKey: ["employeeById", slugId],
     queryFn: () => getWithId("user", slugId.value),
     select: (data) => {
-        console.log(data);
         state.value.id = data.id;
         state.value.fullName = data.fullName;
         state.value.userName = data.userName;

@@ -54,15 +54,26 @@
                     @onActionDelete="deleteHandler"
                     :isShowDelete="true"
                 />
-                <FormTextarea 
-                    v-model.trim="state.details"
-                    :width="500" 
-                    :placeholder="$t('appCommentPlaceholder')"
-                    :error="v$?.details?.$error" 
-                    :textError="v$?.details?.$errors[0]?.$message"
-                >
-                    {{ $t("appCommentLabel") }}
-                </FormTextarea>
+                <div class="manage__textareas">
+                    <FormTextarea 
+                        v-model.trim="state.details"
+                        :width="500" 
+                        :placeholder="$t('appDetailsPlaceholder')"
+                        :error="v$?.details?.$error" 
+                        :textError="v$?.details?.$errors[0]?.$message"
+                    >
+                        {{ $t("appDetailsLabel") }}
+                    </FormTextarea>
+                    <FormTextarea 
+                        v-model.trim="state.comment"
+                        :width="500" 
+                        :placeholder="$t('appCommentPlaceholder')"
+                        :error="v$?.comment?.$error" 
+                        :textError="v$?.comment?.$errors[0]?.$message"
+                    >
+                        {{ $t("appCommentLabel") }}
+                    </FormTextarea>
+                </div>
                 <CustomButton 
                     className="manage__submit"
                     :disabled="status === 'pending'"
@@ -75,32 +86,32 @@
 </template>
 
 <script setup>
-import { v4 as uuidv4 } from "uuid";
-import { ref, computed, watch } from "vue";
-import ApplicationForm from "@/components/ApplicationForm.vue";
-import { useRouter } from "vue-router";
-import { useVuelidate } from "@vuelidate/core";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { create } from "@/services/crud.services.js";
-import { 
-    manualConstructionMaterial, 
-    manualGetFloors, 
-    manualGetCost, 
-    manualGetObjects, 
-    manualGetBlocks
-} from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { createIdMap, clearState } from "@/utils/secondary-functions.js";
+import ApplicationForm from "@/components/ApplicationForm.vue"
+import { create } from "@/services/crud.services.js"
+import {
+    manualConstructionMaterial,
+    manualGetBlocks,
+    manualGetCost,
+    manualGetFloors,
+    manualGetObjects
+} from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState, createIdMap } from "@/utils/secondary-functions.js"
+import {
+    useMutation,
+    useQuery,
+    useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { v4 as uuidv4 } from "uuid"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -126,16 +137,17 @@ const state = ref({
     buildingObjectId: [],
     buildingBlockId: [],
     createApplicationTables: [],
-    details: ""
+    details: "",
+    comment: ""
 });
 
 const rules = computed(() => ({
     deadline: { required },
     buildingObjectId: { required },
     buildingBlockId: { required },
-    // roleIds: { required },
     createApplicationTables: { required },
-    details: { required }
+    details: { required },
+    comment: { required }
 }));
 
 const v$ = useVuelidate(rules, state);
@@ -179,7 +191,7 @@ const {
 
 const valueBlock = computed(() => state.value.buildingBlockId);
 
-const isEnabled  = computed(() => !!valueBlock.value.length);
+const isEnabledFloors  = computed(() => !!valueBlock.value.length);
 
 const {
     data: floors,
@@ -192,7 +204,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualGetFloors(valueBlock.value),
-    enabled: isEnabled 
+    enabled: isEnabledFloors 
 });
 
 const {
@@ -205,7 +217,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualGetCost(),
-    enabled: isEnabled 
+    enabled: isShow 
 });
 
 const {
@@ -218,7 +230,7 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => manualConstructionMaterial(),
-    enabled: isEnabled 
+    enabled: isShow 
 });
 
 const fields = ref([
@@ -361,26 +373,14 @@ const submitHandler = () => {
 
 <style lang="scss" scoped>
 .manage {
-    &__overlay {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 30px 50px;
-        margin-top: 20px;
-        margin-bottom: 50px;
-        @media (max-width: 1536px) {
-            gap: 20px;
-        }
-        @media (max-width: 1152px) {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        @media (max-width: 864px) {
-            display: flex;
+    &__textareas {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        @media (max-width: 1024px) {
             flex-direction: column;
-            align-items: center;
+            align-items: flex-start;
         }
-    }
-    &__submit {
-        margin-top: 30px;
     }
 }
 </style>

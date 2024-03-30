@@ -61,10 +61,9 @@ export const actionModules = {
         UPDATE: 41,
         DELETE: 42
     },
-    // EXPENS: {
-    //     READ: 39,
-    //     CREATE: 40,
-    //     UPDATE: 41,
-    //     DELETE: 42
-    // }
+    EXPENS: {
+        READ: 43,
+        CREATE: 44,
+        DELETE: 45
+    }
 }
