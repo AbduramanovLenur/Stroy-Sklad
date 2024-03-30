@@ -4,7 +4,9 @@
             <HeadPage
                 title="employeesTitle" 
                 :to="routes.CREATE_EMPLOYEES.path"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
                 :headers="headers" 

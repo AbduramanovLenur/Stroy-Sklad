@@ -40,17 +40,13 @@ watch(search, () => {
     height: 40px;
     margin-left: auto;
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1152px) {
         margin-left: initial;
         order: 3;
         grid-column: 1 / 3;
     }
 
     @media (max-width: 768px) {
-        grid-column: span 2;
-    }
-
-    @media (max-width: 480px) {
         grid-column: initial;
         height: 35px;
         max-width: initial;

@@ -4,7 +4,9 @@
             <HeadPage 
                 title="comapnyTitle" 
                 :to="routes.CREATE_COMPANIES.path"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessCompanies && companies?.count"
                 :headers="headers" 

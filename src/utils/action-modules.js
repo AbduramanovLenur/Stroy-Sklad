@@ -43,6 +43,16 @@ export const actionModules = {
         UPDATE: 35,
         DELETE: 36
     },
+    EXPENS: {
+        READ: 43,
+        CREATE: 44,
+        DELETE: 45
+    },
+    REPORTS: {
+        READ: 43,
+        CREATE: 44,
+        DELETE: 45
+    },
     ROLE: {
         READ: 25,
         CREATE: 26,
@@ -61,9 +71,9 @@ export const actionModules = {
         UPDATE: 41,
         DELETE: 42
     },
-    EXPENS: {
-        READ: 43,
-        CREATE: 44,
-        DELETE: 45
+    MATERIAL_FACTORY: {
+        READ: 46,
+        CREATE: 47,
+        DELETE: 48
     }
 }

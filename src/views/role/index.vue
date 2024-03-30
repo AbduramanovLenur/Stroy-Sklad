@@ -5,7 +5,9 @@
                 title="rolesTitle" 
                 :to="routes.CREATE_ROLE.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.ROLE.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessRoles && roles?.count"
                 :headers="headers" 

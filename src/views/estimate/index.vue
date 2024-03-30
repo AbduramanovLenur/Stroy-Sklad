@@ -5,7 +5,9 @@
                 title="estimateTitle" 
                 :to="routes.CREATE_ESTIMATE.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.ESTIMATE.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessBudgets && budgets?.count"
                 :headers="headers" 

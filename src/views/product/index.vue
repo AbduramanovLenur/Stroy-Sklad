@@ -5,7 +5,9 @@
                 title="productsTitle" 
                 :to="routes.CREATE_PRODUCT.path"                
                 :isShowCreate="user?.user?.modules?.includes(actionModules.PRODUCT.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessProducts && products?.count"
                 :headers="headers" 
@@ -67,7 +69,7 @@ const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "productsName", width: 50 },
-    { id: 1, label: "productsTypeName", width: 20 }
+    { id: 2, label: "productsTypeName", width: 20 }
 ]);
 
 const {

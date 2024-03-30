@@ -1086,6 +1086,38 @@ const routes = [
       return next();
     },
   },
+  {
+    name: routesList.REPORTS.name,
+    path: routesList.REPORTS.path,
+    component: () => import("@/views/reports.vue"),
+    meta: {
+      layout: DefaultLayouts,
+      roleId: roles.SUPERADMIN_ID,
+      module: actionModules.REPORTS.READ
+    },
+    beforeEnter: (to, from, next) => {
+      const userStore = useUserStore();
+      const { user } = storeToRefs(userStore);
+
+      if (!user.value?.token) {
+        return next({ name: routesList.AUTH.name });
+      }
+
+      if (!user?.value.user?.modules?.includes(+to.meta.module)) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      if (+to.meta?.roleId === +user.value?.user?.roleId) {
+        return next({ name: routesList.HOME.name });
+      }
+
+      return next();
+    },
+  },
+  { 
+		path: '/:catchAll(.*)', 
+		redirect: routesList.HOME.path 
+	}
 ];
 
 const router = createRouter({

@@ -5,7 +5,9 @@
                 title="objectTitle" 
                 :to="routes.CREATE_OBJECT.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.OBJECT.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessObjects && objects?.count"
                 :headers="headers" 

@@ -174,4 +174,9 @@ export const routes = {
         name: "UpdateExpenses",
         path: "/expenses/manage/:id"
     },
+
+    REPORTS: {
+        name: "Reports",
+        path: "/reports"
+    }
 }

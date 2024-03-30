@@ -5,7 +5,9 @@
                 title="warehouseTitle" 
                 :to="routes.CREATE_WAREHOUSE.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.WAREHOUSE.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessWarehouse && warehouse?.count"
                 :headers="headers" 

@@ -52,7 +52,7 @@ import { useUserStore } from "@/store/userStore";
 import { useVuelidate } from "@vuelidate/core";
 import { useToast } from "vue-toastification";
 import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
+import { required, minLength } from "@/utils/i18n-validators.js";
 import { 
     useQueryClient, 
     useQuery, 
@@ -92,6 +92,7 @@ const rules = computed(() => ({
     id: { required },
     fullName: { required },
     userName: { required },
+    password: { minLength },
     phoneNumber: { required },
     organizationId: { required },
     roleId: { required },
@@ -146,6 +147,7 @@ const fields = ref([
         label: "employeesPasswordLabel", 
         placeholder: "employeesPasswordPlaceholder", 
         icon: "password",
+        errorKey: "password",
     },
     { 
         id: 4, 

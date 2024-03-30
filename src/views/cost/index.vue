@@ -5,7 +5,9 @@
                 title="applicationCost" 
                 :to="routes.CREATE_COST.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.COST.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessCosts && costs?.count"
                 :headers="headers" 

@@ -1,4 +1,4 @@
-import { request } from "./generic.services.js";
+import { request } from "./generic.services.js"
 
 export const getList = (api, page, limit, search) => request({ url: `${api}/GetList?page=${page}&limit=${limit}${search ? `&search=${search}` : ''}`, method: "GET" });
 
@@ -19,3 +19,5 @@ export const acceptWithId = (api, idx, body) => request({ url: `${api}/Accept/${
 export const createWithExcel = (api, body) => request({ url: `${api}/ImportFromExcel`, method: "POST", body });
 
 export const createPositionRoles = (api, body) => request({ url: `${api}/CreateOrUpdate`, method: "POST", body });
+
+export const getReports = () => request({ url: "ExpenseReport/GetExpenseReportData", method: "GET" });

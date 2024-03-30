@@ -5,7 +5,9 @@
                 title="applicationTitle" 
                 :to="routes.CREATE_APPLICATION.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.APPLICATION.CREATE)"
-            />
+            >
+                {{ $t("createButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessApplications && applications?.count"
                 :headers="headers" 

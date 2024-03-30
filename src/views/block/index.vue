@@ -5,7 +5,9 @@
                 title="blockTitle" 
                 :to="routes.CREATE_BLOCK.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.BLOCK.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessBlocks && blocks?.count"
                 :headers="headers" 

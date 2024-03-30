@@ -74,7 +74,8 @@ app
   .component("Pagination", Pagination)
   .component("ActionsModules", ActionsModules)
   .component("SubTable", SubTable)
-  .component("FormTextarea", FormTextarea);
+  .component("FormTextarea", FormTextarea)
+  .component("Toast", Toast);
 
 app
   .use(pinia)

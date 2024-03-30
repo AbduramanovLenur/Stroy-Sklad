@@ -5,7 +5,9 @@
                 title="expensesTitle" 
                 :to="routes.CREATE_EXPENS.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.EXPENS.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessExpenses && expenses?.count"
                 :headers="headers" 
@@ -67,12 +69,12 @@ const expensId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "expensesObjectName" },
-    { id: 2, label: "expensesBlockName" },
-    { id: 3, label: "expensesFloorName" },
-    { id: 5, label: "expensesMaterial" },
-    { id: 6, label: "expensesCount" },
-    { id: 7, label: "expensesType" }
+    { id: 1, label: "expensesObjectName", width: 15 },
+    { id: 2, label: "expensesBlockName", width: 15 },
+    { id: 3, label: "expensesFloorName", width: 10 },
+    { id: 5, label: "expensesMaterial", width: 25 },
+    { id: 6, label: "expensesCount", width: 10 },
+    { id: 7, label: "expensesType", width: 30 }
 ]);
 
 const {

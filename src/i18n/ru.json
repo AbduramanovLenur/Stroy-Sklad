@@ -16,6 +16,7 @@
   "itemUserWarehouse": "Склад",
   "itemUserExpenses": "Расходы",
   "itemUserEstimate": "Смета",
+  "itemUserReports": "Отчёты",
   "qunatityTypesProductsLabel": "Величина материала",
   "qunatityTypesProductsPlaceholder": "Величина...",
   "itemUserApplications": "Заявления",
@@ -298,5 +299,15 @@
   "appDetailsLabel": "Детали описание",
   "appDetailsPlaceholder": "Детали...",
   "expenseSampleMaterial": "Выберите материал, чтобы посмотреть сколько осталось на складе",
-  "expenseStockMaterial": "На складе осталось:"
+  "expenseStockMaterial": "На складе осталось:",
+  "emptyModuleToast": "У вас нет никаких модулей для просмотра страниц CRM",
+  "reportsTitle": "Отчёты",
+  "reportsMaterial": "Название материала",
+  "reportsQuantity": "Количество",
+  "reportsObyekt": "Название объекта",
+  "reportsBlock": "Название блока",
+  "reportsFloor": "Этаж",
+  "reportsBudget": "Бюджет",
+  "createButton": "Создать",
+  "downloadLink": "Скачать"
 }

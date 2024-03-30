@@ -5,7 +5,9 @@
                 title="employeesTitle" 
                 :to="routes.CREATE_ORG_USER.path"
                 :isShowCreate="user?.user?.modules?.includes(actionModules.ORG_USER.CREATE)"
-            />
+            >
+                {{ $t("addButton") }}
+            </HeadPage>
             <Table 
                 v-if="isSuccessEmployees && employees?.count"
                 :headers="headers" 

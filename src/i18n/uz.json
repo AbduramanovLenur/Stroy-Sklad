@@ -16,6 +16,7 @@
   "itemUserWarehouse": "Sklad",
   "itemUserExpenses": "Sarflar",
   "itemUserEstimate": "Smeta",
+  "itemUserReports": "Hisobotlar",
   "qunatityTypesProductsLabel": "Material birlik",
   "qunatityTypesProductsPlaceholder": "Birlik...",
   "itemUserApplications": "Arizalar",
@@ -298,5 +299,15 @@
   "appDetailsLabel": "Ariza tafsilotlari",
   "appDetailsPlaceholder": "Tafsilotlari...",
   "expenseSampleMaterial": "Sklada qancha qolganini ko'rish uchun materialni tanlang",
-  "expenseStockMaterial": "Sklada qolganlar:"
+  "expenseStockMaterial": "Sklada qolganlar:",
+  "emptyModuleToast": "Sizda CRM sahifalarini ko'rish uchun hech qanday modul yo'q",
+  "reportsTitle": "Hisobotlar",
+  "reportsMaterial": "Material nomi",
+  "reportsQuantity": "Miqdori",
+  "reportsObyekt": "Obyekt nomi",
+  "reportsBlock": "Block nomi",
+  "reportsFloor": "Qavat",
+  "reportsBudget": "Byudjet",
+  "createButton": "Yaratish",
+  "downloadLink": "Yuklab olish"
 }

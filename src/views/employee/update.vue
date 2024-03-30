@@ -69,7 +69,7 @@ import {
     manualGetOrganizations,
     manualGetStates
 } from "@/services/manual.services.js"
-import { required } from "@/utils/i18n-validators.js"
+import { required, minLength } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
 import { clearState } from "@/utils/secondary-functions.js"
 import {
@@ -112,6 +112,7 @@ const rules = computed(() => ({
     id: { required },
     fullName: { required },
     userName: { required },
+    password: { minLength },
     phoneNumber: { required },
     organizationId: { required },
     updateRoleDto: { 
@@ -175,7 +176,8 @@ const fields = ref([
         model: "password", 
         label: "employeesPasswordLabel", 
         placeholder: "employeesPasswordPlaceholder", 
-        icon: "password"
+        icon: "password",
+        errorKey: "password",
     },
     { 
         id: 4, 

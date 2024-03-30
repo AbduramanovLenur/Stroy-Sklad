@@ -15,6 +15,7 @@
                     {{ $t(title.label) }}
                 </th>
                 <th 
+                    v-if="isShowState"
                     class="table-title" 
                     align="center" 
                 >
@@ -32,11 +33,20 @@
                 <td v-if="info.id" class="table-info" align="center">
                     {{ getId(index) }}
                 </td>
+                <td v-if="info.materialName" class="table-info" align="center">
+                    {{ info.materialName }}
+                </td>
                 <td v-if="info.material" class="table-info" align="center">
                     {{ info.material }}
                 </td>
                 <td v-if="info.quantity" class="table-info" align="center">
                     {{ info.quantity }}
+                </td>
+                <td v-if="info.object" class="table-info" align="center">
+                    {{ info.object }}
+                </td>
+                <td v-if="info.block" class="table-info" align="center">
+                    {{ info.block }}
                 </td>
                 <td v-if="info.quantityType" class="table-info" align="center">
                     {{ info.quantityType }}
@@ -68,8 +78,11 @@
                 <td v-if="info.buildingBlock" class="table-info" align="center">
                     {{ info.buildingBlock }}
                 </td>
-                <td v-if="info.floor" class="table-info" align="center">
+                <td v-if="info.floor" class="table-info" align="center" style="white-space: nowrap;">
                     {{ info.floor }}
+                </td>
+                <td v-if="+info.summa >= 0" class="table-info" align="center">
+                    {{ info.summa }}
                 </td>
                 <td v-if="info.constructionMaterial" class="table-info" align="center">
                     {{ info.constructionMaterial }}
@@ -165,6 +178,10 @@ const props = defineProps({
         default: () => true
     },
     isShowDelete: {
+        type: Boolean,
+        default: () => true
+    },
+    isShowState: {
         type: Boolean,
         default: () => true
     }
