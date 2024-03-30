@@ -276,10 +276,8 @@ const { mutate: createMutate, status } = useMutation({
         
         queryClient.invalidateQueries({ queryKey: ["expenses"] });
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
-        queryClient.invalidateQueries({ queryKey: ["warehouseById", filteredMaterial.value?.[0]?.warehouseId] });
+        queryClient.invalidateQueries({ queryKey: ["warehouseById", filteredMaterial.value?.[0]?.warehouseId.toString()] });
         queryClient.invalidateQueries({ queryKey: ["warehouseList"] });
-
-        console.log(filteredMaterial.value?.[0]?.warehouseId);
 
         state.value = clearState(state.value);
 
