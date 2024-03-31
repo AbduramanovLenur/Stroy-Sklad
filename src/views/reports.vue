@@ -5,14 +5,14 @@
                 <Title>
                     {{ $t('reportsTitle') }}
                 </Title>
-                <a class="reports__download" href="#">
+                <button class="reports__download hovered" type="button" @click="mutate">
                     <span class="reports__download-icon">
                         <Icon name="download" />
                     </span>
                     <span class="reports__download-value">
                         {{ $t("downloadLink") }}
                     </span>
-                </a>
+                </button>
             </div>
             <Table 
                 v-if="isSuccessReports && reports?.length"
@@ -35,14 +35,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { getReports } from "@/services/crud.services.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { useQuery } from "@tanstack/vue-query";
+import { exportWithExcel, getReports } from "@/services/crud.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { useMutation, useQuery } from "@tanstack/vue-query"
+import { storeToRefs } from "pinia"
+import { computed } from "vue"
+import { useI18n } from "vue-i18n"
+import { useToast } from "vue-toastification"
 
 const toast = useToast();
 const { t } = useI18n();
@@ -73,6 +73,25 @@ const {
     }],
     queryFn: () => getReports(),
     enabled: isShow
+});
+
+const { mutate } = useMutation({
+    mutationFn: () => exportWithExcel(),
+    onSuccess: (response) => {
+        if (!response?.success) return;
+
+        const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'filename.xlsx');
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+
+        setTimeout(() => toast.success(t("downloadToast")), 150);
+    }
 });
 </script>
 

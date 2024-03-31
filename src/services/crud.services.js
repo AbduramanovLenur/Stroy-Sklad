@@ -21,3 +21,5 @@ export const createWithExcel = (api, body) => request({ url: `${api}/ImportFromE
 export const createPositionRoles = (api, body) => request({ url: `${api}/CreateOrUpdate`, method: "POST", body });
 
 export const getReports = () => request({ url: "ExpenseReport/GetExpenseReportData", method: "GET" });
+
+export const exportWithExcel = () => request({ url: "ExpenseReport/ExpenseReportAsExcel", method: "POST", body: {}, headers: { responseType: 'blob' } });

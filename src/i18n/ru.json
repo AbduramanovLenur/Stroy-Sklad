@@ -309,5 +309,6 @@
   "reportsFloor": "Этаж",
   "reportsBudget": "Бюджет",
   "createButton": "Создать",
-  "downloadLink": "Скачать"
+  "downloadLink": "Скачать",
+  "downloadToast": "Скачано"
 }

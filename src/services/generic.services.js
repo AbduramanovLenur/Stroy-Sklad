@@ -13,11 +13,11 @@ const userStore = useUserStore();
 const { resetUser } = userStore;
 const { user } = storeToRefs(userStore);
 
-export const request = async ({ url, method, body = {} }) => {
+export const request = async ({ url, method, body = {}, headers }) => {
   try {
     axios.defaults.headers.common["Authorization"] = `Bearer ${user.value.token}`;
 
-    const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body);
+    const response = await axios[method.toLowerCase()](`${API_URL}/${url}`, body, headers);
 
     const { data, statusText, status } = response;
 

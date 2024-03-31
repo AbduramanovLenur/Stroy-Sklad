@@ -309,5 +309,6 @@
   "reportsFloor": "Qavat",
   "reportsBudget": "Byudjet",
   "createButton": "Yaratish",
-  "downloadLink": "Yuklab olish"
+  "downloadLink": "Yuklab olish",
+  "downloadToast": "Yuklab olingan"
 }
