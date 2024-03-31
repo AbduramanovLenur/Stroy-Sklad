@@ -48,7 +48,10 @@ import { useI18n } from "vue-i18n";
 const toast = useToast();
 const { t } = useI18n();
 
-const props = defineProps(["subFields", "blockId"]);
+const props = defineProps({
+    subFields: Array,
+    blockId: Number
+});
 
 const emit = defineEmits(["onAddTable", "onChangeBlock"]);
 

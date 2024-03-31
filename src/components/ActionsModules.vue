@@ -27,7 +27,9 @@
 </template>
 
 <script setup>
-defineProps(["actions"]);
+defineProps({
+    actions: Array
+});
 
 const model = defineModel();
 </script>

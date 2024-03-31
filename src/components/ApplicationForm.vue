@@ -48,7 +48,11 @@ import { useToast } from "vue-toastification"
 const toast = useToast();
 const { t } = useI18n();
 
-const props = defineProps(["subFields", "buildingBlockId", "isSubmit"]);
+const props = defineProps({
+    subFields: Array, 
+    buildingBlockId: Array, 
+    isSubmit: Boolean
+});
 
 const emit = defineEmits(["onAddTable"]);
 

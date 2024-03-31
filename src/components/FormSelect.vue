@@ -31,18 +31,18 @@ const multiselectRef = ref(null);
 
 const emit = defineEmits(["update:modelValue"]);
 
-const props = defineProps([
-    "width", 
-    "placeholder", 
-    "options", 
-    "error", 
-    "textError", 
-    "success", 
-    "loading",
-    "modelValue",
-    "isMultiSelect",
-    "isDisabled"
-]);
+const props = defineProps({
+    width: Number, 
+    placeholder: String, 
+    options: Array, 
+    error: Boolean, 
+    textError: String, 
+    success: Boolean, 
+    loading: Boolean,
+    modelValue: [String, Array, Number, Object],
+    isMultiSelect: Boolean,
+    isDisabled: Boolean
+});
 
 const changeValue = (event) => {
     const value = event.value;

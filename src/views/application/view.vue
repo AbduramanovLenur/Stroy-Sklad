@@ -27,7 +27,6 @@
                             :placeholder="field?.placeholder"
                             :success="field.success"
                             :loading="field.loading"
-                            :isMultiSelect="field?.multiple"
                             :isDisabled="true"
                         >
                             {{ $t(field.label) }}

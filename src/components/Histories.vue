@@ -38,7 +38,9 @@
 
 <script setup>
 import { computed } from "vue";
-defineProps(["histories"]);
+defineProps({
+    histories: Array
+});
 
 const date = computed(() => {
     return (value) => {

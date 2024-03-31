@@ -10,7 +10,10 @@
 </template>
 
 <script setup>
-defineProps(["title", "to"]);
+defineProps({
+    title: String, 
+    to: String
+});
 </script>
 
 <style lang="scss" scoped>

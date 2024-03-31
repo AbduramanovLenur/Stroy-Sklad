@@ -12,7 +12,9 @@
 import * as XLSX from "xlsx";
 import { ref } from "vue";
 
-defineProps(["width"]);
+defineProps({
+  width: Number
+});
 
 const emit = defineEmits(["onChangFile"]);
 

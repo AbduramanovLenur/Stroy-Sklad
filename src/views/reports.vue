@@ -18,7 +18,6 @@
                 v-if="isSuccessReports && reports?.length"
                 :headers="headers" 
                 :table="reports"
-                :options="{ page: 1, limit: 10 }"
                 :isShowUpdate="false"
                 :isShowDelete="false"
                 :isShowState="false"

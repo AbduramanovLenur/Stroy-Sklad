@@ -23,15 +23,18 @@
 </template>
 
 <script setup>
-defineProps([ 
-    "width", 
-    "name", 
-    "placeholder", 
-    "error", 
-    "textError",
-    "type",
-    "isDisabled"
-]);
+defineProps({
+    width: Number,
+    name: String,
+    placeholder: String,
+    error: Boolean,
+    textError: String,
+    type: String,
+    isDisabled: {
+        type: Boolean,
+        default: () => false
+    }
+});
 
 const model = defineModel();
 </script>

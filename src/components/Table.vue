@@ -168,7 +168,13 @@ const props = defineProps({
     headers: Array,
     table: Array,
     to: String,
-    options: Object,
+    options: {
+        type: Object,
+        default: () => ({
+            page: 1,
+            limit: 10
+        })
+    },
     isShowEye: {
         type: Boolean,
         default: () => false

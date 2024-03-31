@@ -287,6 +287,7 @@ const { mutate: updateMutate, status } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["blocks"] });
         queryClient.invalidateQueries({ queryKey: ["blocksById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["blocksList"] });
+        queryClient.invalidateQueries({ queryKey: ["floorsList"] });
 
         router.push(routes.BLOCK.path);
 

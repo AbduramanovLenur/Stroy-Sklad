@@ -17,7 +17,9 @@
 </template>
 
 <script setup>
-defineProps(["isOpen"]);
+defineProps({
+    isOpen: Boolean
+});
 </script>
 
 <style lang="scss" scoped>

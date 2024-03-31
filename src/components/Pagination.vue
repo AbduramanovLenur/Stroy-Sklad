@@ -28,7 +28,10 @@ import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useTableStore } from "@/store/tableStore";
 
-defineProps(["count", "isSucces"]);
+defineProps({
+    count: Number, 
+    isSucces: Boolean
+});
 
 const options = ref([
     { id: 1, number: 10 },

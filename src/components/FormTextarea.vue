@@ -19,16 +19,15 @@
 </template>
 
 <script setup>
-defineProps([
-    "modelValue", 
-    "width", 
-    "name", 
-    "placeholder", 
-    "error", 
-    "textError",
-    "type",
-    "isDisabled"
-]);
+defineProps({
+    modelValue: [String, Number, Object, Array], 
+    width: Number,
+    placeholder: String, 
+    error: Boolean, 
+    textError: String,
+    type: String,
+    isDisabled: Boolean
+});
 </script>
 
 <style lang="scss" scoped>

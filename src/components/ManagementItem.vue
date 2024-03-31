@@ -15,7 +15,9 @@
 </template>
 
 <script setup>
-defineProps(["menu"]);
+defineProps({
+    menu: Object
+});
 </script>
 
 <style lang="scss" scoped>
