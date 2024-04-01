@@ -38,7 +38,7 @@
                     :table="state.applicationTables"
                     :isShowFields="isShowManageField"
                     :isShowFileManage="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) && state.hasPermission"
-                    :isShowFile="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ)"
+                    :isShowFile="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ) && hasFile"
                     @onActionAdd="actionAddHandler"
                     @onDownload="downloadMutate"
                 />
@@ -515,6 +515,8 @@ const { isError } = await useQuery({
     },
     enabled: isShow
 });
+
+const hasFile = computed(() => state.value.applicationTables.every((elem) => elem.resourceId));
 
 const floorMap = computed(() => createIdMap(floors.value || []));
 const costMap = computed(() => createIdMap(costs.value || []));
