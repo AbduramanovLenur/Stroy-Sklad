@@ -50,7 +50,7 @@ const menu = ref([
     { id: 8, label: "itemUserProducts", icon: "brick", to: routes.PRODUCT.path, moduleId: actionModules.PRODUCT.READ },
     { id: 9, label: "itemUserWarehouse", icon: "warehouse", to: routes.WAREHOUSE.path, moduleId: actionModules.WAREHOUSE.READ },
     { id: 10, label: "itemUserExpenses", icon: "expens", to: routes.EXPENS.path, moduleId: actionModules.EXPENS.READ },
-    { id: 11, label: "itemUserReports", icon: "file", to: routes.REPORTS.path, moduleId: actionModules.EXPENS.READ },
+    { id: 11, label: "itemUserReports", icon: "file", to: routes.REPORTS.path, moduleId: actionModules.REPORTS.READ },
     // { id: 10, label: "itemUserRoles", icon: "roles", to: routes.ROLE.path, moduleId: actionModules.ROLE.READ },
     // { id: 11, label: "itemUserOrgEmployees", icon: "employees", to: routes.ORG_USER.path, moduleId: actionModules.ORG_USER.READ },
 ]);

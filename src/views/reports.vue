@@ -5,7 +5,12 @@
                 <Title>
                     {{ $t('reportsTitle') }}
                 </Title>
-                <button class="reports__download hovered" type="button" @click="mutate">
+                <button 
+                    v-if="user?.user?.modules?.includes(actionModules.REPORTS.DOWNLOAD)"
+                    class="reports__download hovered" 
+                    type="button" 
+                    @click="mutate"
+                >
                     <span class="reports__download-icon">
                         <Icon name="download" />
                     </span>
@@ -71,6 +76,15 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => getReports(),
+    select: (data) => {
+        return data.map((elem) => {
+            const object = { ...elem, quantityTypeValue: elem.quantityType };
+
+            delete object.quantityType;
+
+            return object;
+        })
+    },
     enabled: isShow
 });
 

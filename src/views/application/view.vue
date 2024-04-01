@@ -36,7 +36,22 @@
                 <SubTable
                     :headers="headers"
                     :table="state.applicationTables"
+                    :isShowFields="isShowManageField"
+                    :isShowFileManage="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) && state.hasPermission"
+                    :isShowFile="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ)"
+                    @onActionAdd="actionAddHandler"
+                    @onDownload="downloadMutate"
                 />
+                <CustomButton 
+                    v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) && state.hasPermission"
+                    type="button" 
+                    :width="200"
+                    className="margened"
+                    :isDisabled="updateStatus === 'pending'"
+                    @click="updateHandler"
+                >
+                    {{ $t("formButton") }}
+                </CustomButton>
                 <div class="manage__textareas">
                     <FormTextarea
                         v-model.trim="state.details"
@@ -62,6 +77,7 @@
                 >
                     <MyButton 
                         v-if="user?.user?.modules?.includes(actionModules.APPLICATION.CONFIRM)"
+                        className="not-margened"
                         icon="approve" 
                         type="submit" 
                         color="green" 
@@ -73,6 +89,7 @@
                     </MyButton>
                     <MyButton 
                         v-if="user?.user?.modules?.includes(actionModules.APPLICATION.REFUSAL)"
+                        className="not-margened"
                         icon="refusal" 
                         type="submit" 
                         color="red" 
@@ -85,9 +102,7 @@
                 </div>
                 <Histories :histories="state.histories" />
             </form>
-            <Spinner 
-                v-if="isLoading" 
-            />
+            <Spinner v-if="isLoading" />
         </div>
         <ConfirmationModal 
             :isOpen="isOpenAcceptedModal"
@@ -103,20 +118,126 @@
         >
             {{ $t("sureRefused") }}
         </ConfirmationModal>
+        <OverlayModal 
+            v-if="isShowManageField"
+            :isOpen="isOpenModal === 'fields'"
+            :width="1500"
+            @onCloseModal="closeModalHandler"
+        >
+            <div v-if="isShowManageField" class="modal__companies">
+                <div v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE)" class="modal__head">
+                    <template v-for="subField in subFields" :key="subField.id">
+                        <FormInput
+                            v-model="companiesState[subField.model]"
+                            :width="500"
+                            :placeholder="$t(subField.placeholder)"
+                            :name="subField.icon"
+                            :type="subField?.type"
+                            :isDisabled="!user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE)"
+                        >
+                            {{ $t(subField.label) }}
+                        </FormInput>
+                    </template>
+                </div>
+                <SubTable
+                    v-if="isShowManageField"
+                    :headers="subHeaders"
+                    :table="filteredAdditionallyState"
+                    :isShowDelete="true"
+                    @onActionDelete="deleteHandler"
+                />
+            </div>
+            <CustomButton 
+                v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) && state.hasPermission"
+                type="button" 
+                className="companies-add"
+                @click="addCompaniesHandler"
+            >
+                {{ $t("addButton") }}
+            </CustomButton>
+        </OverlayModal>
+        <OverlayModal 
+            v-if="isShowManageFile && state.hasPermission"
+            :isOpen="isOpenModal === 'upload'"
+            :width="500"
+            @onCloseModal="closeModalHandler"
+        >
+            <div class="modal__file-wrapper">
+                <FormFile
+                    v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
+                    :width="250" 
+                    accept="application/pdf"
+                    @onChangFile="handleFileUpload"
+                >
+                    {{ $t("fileUploadFile") }}
+                </FormFile>
+                <div v-if="invoiceState.uploadFile && isShowManageFile" class="modal__file-overlay">
+                    <div 
+                        v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
+                        class="modal__file-delete"
+                        @click="() => invoiceState.uploadFile = null"
+                    >
+                        <Icon name="circle-close" />
+                    </div>
+                    <div                           
+                        v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ)" 
+                        class="modal__file-download" 
+                        @click="downloadHandler"
+                    >
+                        <div class="modal__file-icon">
+                            <Icon name="file-download" />
+                        </div>
+                        <div class="modal__file-text">
+                            invoice.pdf
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <FormSelect 
+                v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
+                v-model.trim="invoiceState.MaterialFactoryId" 
+                :width="500" 
+                :options="materialFactories"
+                placeholder="companyNamePlaceholder"
+                :success="isSuccessMaterialFactories"
+                :loading="isLoadingMaterialFactories"
+            >
+                {{ $t("companyNameLabel") }}
+            </FormSelect>
+            <CustomButton 
+                v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
+                type="button" 
+                :isDisabled="uploadStatus === 'pending'"
+                @click="uploadHandler"
+            >
+                {{ $t("formButton") }}
+            </CustomButton>
+        </OverlayModal>
     </section>
 </template>
 
 <script setup>
+import { v4 as uuidv4 } from "uuid";
 import ConfirmationModal from "@/components/ConfirmationModal.vue"
+import OverlayModal from "@/components/OverlayModal.vue";
 import FormTextarea from "@/components/FormTextarea.vue"
 import Histories from "@/components/Histories.vue"
-import { acceptWithId, cancelWithId, getWithId } from "@/services/crud.services.js"
+import { 
+    acceptWithId, 
+    cancelWithId, 
+    getWithId, 
+    updateById, 
+    uploadInvoice,
+    downloadFile
+} from "@/services/crud.services.js"
 import {
     manualConstructionMaterial,
     manualGetBlocks,
     manualGetCost,
     manualGetFloors,
     manualGetObjects,
+    manualQuantityTypes,
+    manualGetMaterialFactory
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -128,6 +249,7 @@ import { computed, ref, watch, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "vue-toastification"
+import FormFile from "@/components/FormFile.vue";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -141,6 +263,14 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => user?.value.user?.modules?.includes(actionModules.APPLICATION.READ));
+const isShowManageField = computed(() => 
+    user?.value?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) || 
+    user?.value?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.READ)
+);
+const isShowManageFile = computed(() => 
+    user?.value?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) || 
+    user?.value?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ)
+);
 
 const isOpenAcceptedModal = ref(false);
 const isOpenRefusedModal = ref(false);
@@ -148,9 +278,16 @@ const isOpenRefusedModal = ref(false);
 const headers = ref([
     { id: 1, label: "appFloor", width: 20 },
     { id: 2, label: "appMaterial", width: 30 },
-    { id: 3, label: "appCount", width: 20 },
-    { id: 4, label: "appPrice", width: 30 },
+    // { id: 3, label: "appType", width: 10 },
+    { id: 4, label: "appCount", width: 20 },
+    { id: 5, label: "appPrice", width: 30 }
 ]);
+
+const subHeaders = ref([
+    { id: 1, label: "appCompanyLabel", width: 30 },
+    { id: 2, label: "appCount", width: 30 },
+    { id: 3, label: "priceAppLabel", width: 30 },
+])
 
 const state = ref({
     id: "",
@@ -164,6 +301,27 @@ const state = ref({
     hasPermission: [],
     histories: []
 });
+
+const companiesState = ref({
+    applicationTableId: "",
+    factoryName: "",
+    count: "",
+    price: ""
+});
+
+const invoiceState = ref({
+    applicationTableId: "",
+    MaterialFactoryId: "",
+    uploadFile: ""
+});
+
+const additionallyState = ref([]);
+
+const filteredAdditionallyState = computed(() => 
+    additionallyState.value.filter((elem) => elem.applicationTableId === companiesState.value.applicationTableId)
+);
+
+const isOpenModal = ref(false);
 
 const {
     data: objects,
@@ -240,6 +398,30 @@ const {
     enabled: isShow
 });
 
+const valueIdx = computed(() => invoiceState.value.applicationTableId);
+
+const isEnabledIdx = computed(() => !!valueIdx.value);
+
+const {
+    data: materialFactories,
+    isSuccess: isSuccessMaterialFactories,
+    isLoading: isLoadingMaterialFactories
+} = await useQuery({
+    queryKey: ["materialFactories", valueIdx],
+    queryFn: () => manualGetMaterialFactory(valueIdx.value),
+    enabled: isEnabledIdx
+});
+
+const {
+    data: quantityTypes,
+    isSuccess: isSuccessQunatityTypes,
+    isLoading: isLoadingQunatityTypes
+} = await useQuery({
+    queryKey: ["types"],
+    queryFn: () => manualQuantityTypes(),
+    enabled: isShow
+});
+
 const fields = ref([
     { 
         id: 1, 
@@ -274,6 +456,32 @@ const fields = ref([
     }
 ]);
 
+const subFields = ref([
+    { 
+        id: 1, 
+        model: "factoryName", 
+        label: "appCompanyLabel", 
+        placeholder: "appCompanyPlaceholder", 
+        icon: "input-company"
+    },
+    { 
+        id: 2, 
+        model: "count", 
+        label: "countAppLabel", 
+        placeholder: "countAppPlaceholder", 
+        icon: "list",
+        type: "number"
+    },
+    { 
+        id: 3, 
+        model: "price", 
+        label: "appBudgetLabel", 
+        placeholder: "appBudgetPlaceholder", 
+        icon: "money",
+        type: "number"
+    },
+]);
+
 const { isError } = await useQuery({
     queryKey: ["applicationsById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("application", slugId.value),
@@ -287,6 +495,23 @@ const { isError } = await useQuery({
         state.value.statusId = data.statusId;
         state.value.hasPermission = data.hasPermission;
         state.value.histories = data.applicationHistories;
+
+        additionallyState.value = [];
+
+        data.applicationTables.forEach((elem) => {
+            const { materialFactory } = elem;
+
+            materialFactory.forEach((element) => {
+                additionallyState.value.push({
+                    applicationTableId: elem.id,
+                    id: element.id,
+                    factoryName: element.factoryName,
+                    count: element.count,
+                    price: element.price,
+                    delId: uuidv4()
+                });
+            });
+        });
     },
     enabled: isShow
 });
@@ -294,40 +519,70 @@ const { isError } = await useQuery({
 const floorMap = computed(() => createIdMap(floors.value || []));
 const costMap = computed(() => createIdMap(costs.value || []));
 const materialMap = computed(() => createIdMap(materials.value || []));
+const typeMap = computed(() => createIdMap(quantityTypes.value || []));
 
 const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
+const getTypeIdValue = (elem) => typeMap.value[elem.quantityTypeId]?.name;
 
 const isSuccess = ref(false);
 const isLoading = ref(true);
+const isInitialRender = ref(true);
 
 watchEffect(() => {
     const keysFloor = Object.keys(floorMap.value)?.length;
     const keysCost = Object.keys(costMap.value)?.length;
     const keysMaterial =  Object.keys(materialMap.value)?.length;
+    const keysType =  Object.keys(typeMap.value)?.length;
     const applicationTables = state.value.applicationTables.length;
 
-    if (!!(keysFloor && keysCost && keysMaterial && applicationTables)) {
+    if (!!(keysFloor && keysCost && keysMaterial && keysType && applicationTables && isInitialRender)) {
         state.value.applicationTables = state.value.applicationTables.map((elem) => {
             const object = { 
                 ...elem,
                 floorValue: getFloorIdValue(elem),
                 costValue: getCostIdValue(elem),
-                constructionMaterialValue: getConstructionMaterialIdValue(elem)
+                constructionMaterialValue: getConstructionMaterialIdValue(elem),
+                // typeValue: getTypeIdValue(elem)
             };
+
+            delete object.price;
 
             return object;
         });
 
         isSuccess.value = true;
         isLoading.value = false;
+        isInitialRender.value = false;
     }
 });
 
 watch(isError, (value) => {
     if (value) {
         router.push(routes.APPLICATION.path);
+    }
+});
+
+const { mutate: updateMutate, status: updateStatus } = useMutation({
+    mutationFn: (body) => updateById("application", body),
+    onSuccess: (response) => {
+        if (!response?.success) return;
+
+        queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
+    }
+});
+
+const { mutate: uploadMutate, status: uploadStatus } = useMutation({
+    mutationFn: (body) => uploadInvoice(body),
+    onSuccess: (response) => {
+        if (!response?.success) return;
+
+        queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
+
+        setTimeout(() => toast.success(t("updateToast")), 150);
     }
 });
 
@@ -359,16 +614,169 @@ const { mutate: acceptMutate, status: approveStatus } = useMutation({
     }
 });
 
-const cancelHandler = () => {
-    cancelMutate(slugId.value);
+const { mutate: downloadMutate } = useMutation({
+    mutationFn: (idx) => downloadFile(idx),
+    onSuccess: (response) => {
+        if (!response?.success) return;
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'invoice.pdf');
+        document.body.appendChild(link);
+        link.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link);
+
+        setTimeout(() => toast.success(t("downloadToast")), 150);
+    }
+});
+
+const actionAddHandler = (idx, flag) => {
+    isOpenModal.value = flag;
+    document.body.style.overflowY = "hidden";
+
+    if (flag === 'fields') {
+        companiesState.value.applicationTableId = idx;
+        return;
+    }
+    
+    invoiceState.value.applicationTableId = idx;
 }
 
-const acceptHandler = () => {
-    acceptMutate(slugId.value);
+const addCompaniesHandler = () => {
+    const keys = Object.keys(companiesState.value);
+    const isExistValue = keys.every((key) => companiesState.value[key]);
+
+    if (!isExistValue) return;
+
+    additionallyState.value.push({ 
+        applicationTableId: companiesState.value.applicationTableId,
+        count: +companiesState.value.count,
+        price: +companiesState.value.price,
+        factoryName: companiesState.value.factoryName,
+        delId: uuidv4()
+    });
+
+    keys.forEach(elem => {
+        if (elem !== 'applicationTableId') companiesState.value[elem] = "";
+    });
 }
+
+const handleFileUpload = (file) => {
+    invoiceState.value.uploadFile = file;
+}
+
+const closeModalHandler = () => {
+    document.body.style.overflowY = "auto";
+    const stateToClear = isOpenModal.value === 'fields' ? companiesState.value : invoiceState.value;
+    
+    Object.keys(stateToClear).forEach(elem => {
+        stateToClear[elem] = "";
+    });
+
+    isOpenModal.value = false;
+}
+
+const downloadHandler = () => {
+    const file = invoiceState.value.uploadFile;
+
+    const blob = new Blob([file]);
+
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', "invoice.pdf");
+    document.body.appendChild(link);
+    link.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(link);
+    
+    setTimeout(() => toast.success(t("downloadToast")), 150);
+}
+
+const updateHandler = () => {
+    let materialFactoryDtos = [...additionallyState.value];
+
+    materialFactoryDtos = materialFactoryDtos.map((elem) => {
+        const object = { ...elem };
+
+        delete object.delId;
+
+        return object;
+    });
+
+    updateMutate({ materialFactoryDtos })
+}
+
+const uploadHandler = () => {
+    const formData = new FormData();
+
+    const keys = Object.keys(invoiceState.value);
+
+    const isExistValue = keys.every((key) => invoiceState.value[key]);
+
+    if (!isExistValue) return;
+
+    formData.append('MaterialFactoryId', invoiceState.value.MaterialFactoryId?.[0]);
+    formData.append('UploadFile', invoiceState.value.uploadFile);
+
+    uploadMutate(formData);
+}
+
+const deleteHandler = (idx) => additionallyState.value = additionallyState.value.filter((elem) => elem.delId !== idx);
+
+const cancelHandler = () => cancelMutate(slugId.value);
+
+const acceptHandler = () => acceptMutate(slugId.value);
 </script>
 
 <style lang="scss" scoped>
+.modal {
+    &__companies {
+        width: 100%;
+    }
+    &__head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 25px;
+        @media (max-width: 1024px) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 768px) {
+            grid-template-columns: repeat(1, 1fr);
+        }
+    }
+    &__file {
+        &-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            width: 100%;
+        }
+        &-overlay {
+            position: relative;
+        }
+        &-download {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid var(--black);
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+        &-delete {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+        }
+    }
+}
 .manage {
     &__overlay {
         display: grid;

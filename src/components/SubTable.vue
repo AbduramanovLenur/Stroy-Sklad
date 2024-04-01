@@ -21,6 +21,20 @@
                 >
                     {{ $t("subtableAction") }}
                 </th>
+                <th 
+                    v-if="isShowFields"
+                    class="subtable-title" 
+                    align="center"
+                >
+                    {{ $t("subtableCompanies") }}
+                </th>
+                <th 
+                    v-if="isShowFile || isShowFileManage"
+                    class="subtable-title" 
+                    align="center"
+                >
+                    {{ $t("subtableFile") }}
+                </th>
             </tr>
             <tr class="subtable-line" v-for="(info, index) in table" :key="info.id">
                 <td class="subtable-info" align="center">
@@ -35,16 +49,22 @@
                 <td v-if="info?.blockValue" class="subtable-info" align="center">
                     {{ info.blockValue }}
                 </td>
-                <td v-if="info?.floorValue" class="subtable-info" align="center">
+                <td v-if="info?.floorValue" class="subtable-info" align="center" style="white-space: nowrap;">
                     {{ info.floorValue }}
                 </td>
                 <td v-if="info?.constructionMaterialValue" class="subtable-info" align="center">
                     {{ info.constructionMaterialValue }}
                 </td>
+                <td v-if="info?.typeValue" class="subtable-info" align="center">
+                    {{ info.typeValue }}
+                </td>
                 <td v-if="info?.constructionMaterialIdsValue" class="subtable-info" align="center">
                     <div class="subtable-box">
                         {{ info.constructionMaterialIdsValue.map((elem) => elem.name).join(', ') }}
                     </div>
+                </td>
+                <td v-if="info?.factoryName" class="subtable-info" align="center">
+                    {{ info.factoryName }}
                 </td>
                 <td v-if="info?.count" class="subtable-info" align="center">
                     {{ info.count }}
@@ -63,6 +83,35 @@
                         <Icon name="delete" />
                     </span>
                 </td>
+                <td class="subtable-info" align="center" v-if="isShowFields">
+                    <span 
+                        class="subtable-add" 
+                        @click="() => $emit('onActionAdd', info?.id, 'fields')"
+                    >
+                        <Icon name="pen" />
+                    </span>
+                </td>
+                <td 
+                    v-if="isShowFileManage || isShowFile"
+                    class="subtable-info" 
+                    align="center" 
+                    style="display: flex; gap: 20px; align-items: center; justify-content: center;"
+                >
+                    <span 
+                        v-if="isShowFileManage"
+                        class="subtable-add" 
+                        @click="() => $emit('onActionAdd', info?.id, 'upload')"
+                    >
+                        <Icon name="upload" />
+                    </span>
+                    <span 
+                        v-if="isShowFile && info?.resourceId"
+                        class="subtable-add" 
+                        @click="() => $emit('onDownload', info?.resourceId)"
+                    >
+                        <Icon name="upload-up" />
+                    </span>
+                </td>
             </tr>
         </table>
     </div>
@@ -75,6 +124,18 @@ defineProps({
     headers: Array, 
     table: Array,
     isShowDelete: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowFields: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowFileManage: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowFile: {
         type: Boolean,
         default: () => false
     }

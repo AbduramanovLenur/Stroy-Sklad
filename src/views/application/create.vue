@@ -93,7 +93,8 @@ import {
     manualGetBlocks,
     manualGetCost,
     manualGetFloors,
-    manualGetObjects
+    manualGetObjects,
+    manualQuantityTypes
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -128,8 +129,9 @@ const isSubmit = ref(false);
 const headers = ref([
     { id: 1, label: "appFloor", width: 15 },
     { id: 2, label: "appMaterial", width: 30 },
-    { id: 3, label: "appCount", width: 15 },
-    { id: 4, label: "appPrice", width: 20 }
+    // { id: 3, label: "appType", width: 10 },
+    { id: 4, label: "appCount", width: 15 },
+    { id: 5, label: "appPrice", width: 20 },
 ]);
 
 const state = ref({
@@ -233,6 +235,16 @@ const {
     enabled: isShow 
 });
 
+const {
+    data: quantityTypes,
+    isSuccess: isSuccessQunatityTypes,
+    isLoading: isLoadingQunatityTypes
+} = await useQuery({
+    queryKey: ["types"],
+    queryFn: () => manualQuantityTypes(),
+    enabled: isShow
+});
+
 const fields = ref([
     { 
         id: 1, 
@@ -305,15 +317,27 @@ const subFields = ref([
         placeholder: "countAppPlaceholder", 
         icon: "list"
     },
+    // { 
+    //     id: 5, 
+    //     model: "quantityTypeId", 
+    //     label: "typesAppLabel", 
+    //     placeholder: "typesAppPlaceholder",
+    //     options: quantityTypes,
+    //     success: isSuccessQunatityTypes,
+    //     loading: isLoadingQunatityTypes,
+    //     select: true
+    // },
 ]);
 
 const floorMap = computed(() => createIdMap(floors.value));
 const costMap = computed(() => createIdMap(costs.value));
 const materialMap = computed(() => createIdMap(materials.value));
+const typeMap = computed(() => createIdMap(quantityTypes.value));
 
 const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
+const getTypeIdValue = (elem) => typeMap.value[elem.quantityTypeId]?.name;
 
 const addTableHandler = (object) => {
     state.value.createApplicationTables.push({ 
@@ -322,6 +346,7 @@ const addTableHandler = (object) => {
         floorValue: getFloorIdValue(object),
         costValue: getCostIdValue(object),
         constructionMaterialValue: getConstructionMaterialIdValue(object),
+        // typeValue: getTypeIdValue(object)
     });
 }
 
@@ -337,7 +362,15 @@ const { mutate: createMutate, status } = useMutation({
         body.buildingBlockId = body.buildingBlockId[0];
 
         body.createApplicationTables = body.createApplicationTables.map((elem) => {
-            const { delId, floorValue, costValue, constructionMaterialValue, ...rest } = elem;
+            const { 
+                delId, 
+                floorValue, 
+                costValue, 
+                constructionMaterialValue, 
+                typeValue, 
+                quantityTypeId, 
+                ...rest 
+            } = elem;
 
             return rest;
         });

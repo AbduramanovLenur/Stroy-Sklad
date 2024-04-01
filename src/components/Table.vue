@@ -40,7 +40,7 @@
                     {{ info.material }}
                 </td>
                 <td v-if="info.quantity" class="table-info" align="center">
-                    {{ info.quantity }}
+                    {{ info.quantity }} {{ info?.quantityTypeValue }}
                 </td>
                 <td v-if="info.object" class="table-info" align="center">
                     {{ info.object }}

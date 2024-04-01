@@ -27,3 +27,5 @@ export const manualGetModules = () => request({ url: "manual/ModuleSubGroupSelec
 export const manualGetPositionRoles = (body) => request({ url: "manual/RoleForPositionSelectList", method: "POST", body });
 
 export const manualGetWarehouse = () => request({ url: "manual/WarehouseSelectList", method: "GET" });
+
+export const manualGetMaterialFactory = (idx) => request({ url: `manual/MaterialFactorySelectList?applicationTableId=${idx}`, method: "GET" });

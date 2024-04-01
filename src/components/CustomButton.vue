@@ -1,5 +1,5 @@
 <template>
-    <button :class="`button hovered ${className}`" :type="type" :style="`max-width: ${width}px;`">
+    <button :class="`button hovered ${className}`" :type="type" :style="`max-width: ${width}px;`" :disabled="isDisabled">
         <slot />
     </button>
 </template>
@@ -17,6 +17,10 @@ defineProps({
     className: {
         type: String,
         default: () => ""
+    },
+    isDisabled: {
+        type: Boolean,
+        default: () => false
     }
 });
 </script>
@@ -40,6 +44,12 @@ defineProps({
         &.centered {
             margin: auto 0;
         }
+    }
+    &.margened {
+        margin-bottom: 20px;
+    }
+    &.companies-add {
+        padding: 12px;
     }
 }
 </style>

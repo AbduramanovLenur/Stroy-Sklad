@@ -23,3 +23,7 @@ export const createPositionRoles = (api, body) => request({ url: `${api}/CreateO
 export const getReports = () => request({ url: "ExpenseReport/GetExpenseReportData", method: "GET" });
 
 export const exportWithExcel = () => request({ url: "ExpenseReport/ExpenseReportAsExcel", method: "POST", body: {}, headers: { responseType: 'blob' } });
+
+export const uploadInvoice = (body) => request({ url: "application/UploadInvoiceDocument", method: "POST", body, headers: { "Content-Type": "multipart/form-data" } });
+
+export const downloadFile = (idx) => request({ url: `application/DownloadDocument?materialFactoryId=${idx}`, method: "POST", body: {}, headers: { responseType: 'blob' } });

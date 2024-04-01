@@ -7,7 +7,7 @@
             <slot />
         </span>
     </router-link>
-    <button v-else :type="type" class="add-button hovered" :style="`background-color: var(--${color}); max-width: ${width}px`">
+    <button v-else :type="type" :class="`add-button hovered ${className ? className : ''}`" :style="`background-color: var(--${color}); max-width: ${width}px`">
         <span class="add-button__icon">
             <Icon :name="icon" />
         </span>
@@ -47,6 +47,9 @@ defineProps({
 
     @media (max-width: 1152px) {
         margin-left: auto;
+        &.not-margened {
+            margin-left: initial;
+        }
     }
 
     @media (max-width: 768px) {

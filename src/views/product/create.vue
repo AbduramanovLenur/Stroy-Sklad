@@ -42,6 +42,7 @@
                 <div class="manage__file-head">
                     <FormFile
                         :width="240" 
+                        accept=".xlsx"
                         @onChangFile="handleFileUpload"
                     >
                         {{ $t("fileLabel") }}
@@ -68,6 +69,7 @@
 </template>
 
 <script setup>
+import * as XLSX from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
@@ -100,8 +102,8 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.PRODUCT.CREATE));
 
 const headers = ref([
-    { id: 1, label: "productName", width: 1000 },
-    { id: 2, label: "quantityName", width: 200 }
+    { id: 1, label: "productName", width: 70 },
+    { id: 2, label: "quantityName", width: 20 }
 ]);
 
 const state = ref({
@@ -154,13 +156,27 @@ const fields = ref([
 ]);
 
 const handleFileUpload = (value) => {
-    state.value.data = value.map((elem, index) => ({ 
-        id: index, 
-        delId: uuidv4(), 
-        fullname: elem[1], 
-        quantityTypeId: elem[2], 
-        quantityTypeValue: getTypesIdValue(elem[2])
-    })).slice(1);
+    const reader = new FileReader();
+
+    reader.readAsArrayBuffer(value);
+
+    reader.onload = (e) => {
+        let data = [];
+        const information = new Uint8Array(e.target.result);
+
+        const workbook = XLSX.read(information, { type: "array" });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+        data = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        state.value.data = data.map((elem, index) => ({ 
+            id: index, 
+            delId: uuidv4(), 
+            fullname: elem[1], 
+            quantityTypeId: elem[2], 
+            quantityTypeValue: getTypesIdValue(elem[2])
+        })).slice(1);
+    }
 };
 
 const deleteHandler = (idx) => {

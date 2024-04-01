@@ -60,7 +60,8 @@ const formData = ref({
     floorId: [],
     costId: [],
     constructionMaterialId: [],
-    count: ""
+    count: "",
+    // quantityTypeId: []
 });
 
 const valueBlock = computed(() => props.buildingBlockId);
@@ -81,7 +82,8 @@ const addHandler = () => {
         floorId: formData.value.floorId[0],
         costId: formData.value.costId[0],
         constructionMaterialId: formData.value.constructionMaterialId[0],
-        count: formData.value.count
+        count: formData.value.count,
+        // quantityTypeId: formData.value.quantityTypeId[0]
     }
 
     emit("onAddTable", formData.value);

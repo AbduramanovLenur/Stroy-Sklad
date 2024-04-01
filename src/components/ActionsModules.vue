@@ -70,18 +70,20 @@ const model = defineModel();
             }
         }
         &-list {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            // display: flex;
+            // justify-content: space-between;
+            // flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
             // width: 100%;
             @media (max-width: 1350px) {
                 gap: 10px;
             }
-            @media (max-width: 1024px) {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-            }
+            // @media (max-width: 1024px) {
+            //     display: grid;
+            //     grid-template-columns: repeat(4, 1fr);
+            // }
             @media (max-width: 864px) {
                 grid-template-columns: repeat(3, 1fr);
             }
