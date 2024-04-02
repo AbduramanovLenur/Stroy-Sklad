@@ -14,7 +14,7 @@
                 :table="applications?.applications"
                 :to="routes.VIEW_APPLICATION.name"
                 :options="{ page, limit }"
-                :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.UPDATE)"
+                :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.READ)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.APPLICATION.DELETE)"
                 :isShowEye="true"
                 @onActionDelete="deleteHandler"

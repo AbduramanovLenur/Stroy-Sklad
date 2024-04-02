@@ -2,7 +2,7 @@ export const actionModules = {
     APPLICATION: {
         READ: 1,
         CREATE: 2,
-        UPDATE: 3,
+        // UPDATE: 3,
         DELETE: 4,
         CONFIRM: 37,
         REFUSAL: 38

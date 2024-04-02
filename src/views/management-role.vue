@@ -121,11 +121,11 @@ const {
             let object = {};
 
             if (index === 0) {
-                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "creatorApp" }
+                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "creatorApp" }
             } else if (index + 1 === data.length) {
-                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "confirmApp" }
+                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "confirmApp" }
             } else {
-                object = { uuid: uuidv4(), roleIds: [...elem.roleIds], label: "inspectorApp" }
+                object = { id: elem.id, uuid: uuidv4(), roleIds: [...elem.roleIds], label: "inspectorApp" }
             }
 
             return object;
@@ -185,9 +185,11 @@ const submitHandler = () => {
     const isEmptyArray = state.value.some((value) => !value.roleIds.length)
 
     if (isEmptyArray) {
-        toast.error(t("isEmptyRole"))
+        toast.error(t("isEmptyRole"));
         return;
     }
+
+    console.log(state.value);
 
     createMutate(state.value);
 }
