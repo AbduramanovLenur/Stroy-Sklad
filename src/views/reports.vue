@@ -57,12 +57,12 @@ const { user } = storeToRefs(userStore);
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.REPORTS.READ));
 
 const headers = [
-    { id: 1, label: "reportsMaterial", width: 30 },
+    { id: 1, label: "reportsMaterial", width: 20 },
     { id: 2, label: "reportsQuantity", width: 10 },
     { id: 3, label: "reportsObyekt", width: 20 },
     { id: 4, label: "reportsBlock", width: 20 },
     { id: 5, label: "reportsFloor", width: 10 },
-    { id: 6, label: "reportsBudget", width: 10 }
+    { id: 6, label: "reportsBudget", width: 20 }
 ];
 
 const {

@@ -43,7 +43,7 @@ defineProps({
         align-items: center;
         gap: 20px;
         background-color: var(--white);
-        padding: 50px 20px;
+        padding: 70px 20px 20px;
         border-radius: 20px;
         width: 100%;
         max-height: 80vh;

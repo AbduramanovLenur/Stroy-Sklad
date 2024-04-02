@@ -324,5 +324,7 @@
   "subtableFile": "Договор",
   "fileUploadFile": "Выберите pdf файл",
   "companyNameLabel": "Название завода",
-  "companyNamePlaceholder": "Завод..."
+  "companyNamePlaceholder": "Завод...",
+  "reportsExpens": "Расходы",
+  "reportsWarehouse": "Склад"
 }

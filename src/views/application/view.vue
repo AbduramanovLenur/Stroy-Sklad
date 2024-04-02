@@ -607,6 +607,11 @@ const { mutate: acceptMutate, status: approveStatus } = useMutation({
     onSuccess: (response) => {
         if (!response?.success) return;
 
+        if (response.isRefresh) {
+            queryClient.invalidateQueries({ queryKey: ["warehouse"] });
+            queryClient.invalidateQueries({ queryKey: ["warehouseById"] });
+        }
+
         queryClient.invalidateQueries({ queryKey: ["applications"] });
         queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
 

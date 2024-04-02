@@ -324,5 +324,7 @@
   "subtableFile": "Shartnoma",
   "fileUploadFile": "Pdf faylni tanlang",
   "companyNameLabel": "Zavod nomi",
-  "companyNamePlaceholder": "Zavod..."
+  "companyNamePlaceholder": "Zavod...",
+  "reportsExpens": "Sarflar",
+  "reportsWarehouse": "Sklad"
 }

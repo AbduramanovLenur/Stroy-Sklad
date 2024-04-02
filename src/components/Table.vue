@@ -82,7 +82,7 @@
                     {{ info.floor }}
                 </td>
                 <td v-if="+info.summa >= 0" class="table-info" align="center">
-                    {{ info.summa }}
+                    {{ priceSeperator(info.summa) }}
                 </td>
                 <td v-if="info.constructionMaterial" class="table-info" align="center">
                     {{ info.constructionMaterial }}
@@ -121,7 +121,7 @@
                     {{ info.address }}
                 </td>
                 <td v-if="info.price" class="table-info no-wraped" align="center">
-                    {{ info.price }}
+                    {{ priceSeperator(info.price) }}
                 </td>
                 <td v-if="info.phoneNumber" class="table-info" align="center">
                     {{ info.phoneNumber }}
@@ -162,6 +162,7 @@
 </template>
 
 <script setup>
+import { priceSeperator } from "@/utils/secondary-functions.js";
 import { computed } from "vue";
 
 const props = defineProps({

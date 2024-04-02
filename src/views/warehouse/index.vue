@@ -69,8 +69,7 @@ const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
     { id: 1, label: "warehouseName", width: 35 },
-    { id: 2, label: "warehouseQuantity", width: 20 },
-    { id: 3, label: "warehouseQuantityType", width: 20 }
+    { id: 2, label: "warehouseQuantity", width: 20 }
 ]);
 
 const {
@@ -87,6 +86,19 @@ const {
         name: user.value.user.fullName 
     }],
     queryFn: () => getList("warehouse", page.value, limit.value, debouncedSearch.value),
+    select: (data) => {
+        const response = { ...data };
+
+        response.warehouse = response.warehouse.map((elem) => {
+            const object = { ...elem, quantityTypeValue: elem?.quantityType };
+
+            delete object.quantityType;
+
+            return object;
+        });
+
+        return response;
+    },
     enabled: isShowList
 });
 

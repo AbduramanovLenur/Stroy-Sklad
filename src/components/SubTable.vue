@@ -106,7 +106,7 @@
                     </span>
                     <span 
                         v-if="isShowFile"
-                        :class="subtable-add" 
+                        class="subtable-add" 
                         @click="() => $emit('onDownload', info?.resourceId)"
                     >
                         <Icon name="upload-up" />
