@@ -925,7 +925,7 @@ const routes = [
     meta: {
       layout: DefaultLayouts,
       roleId: roles.SUPERADMIN_ID,
-      module: actionModules.APPLICATION.UPDATE
+      module: actionModules.APPLICATION.READ
     },
     beforeEnter: (to, from, next) => {
       const userStore = useUserStore();
