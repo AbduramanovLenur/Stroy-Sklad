@@ -51,24 +51,24 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useUserStore } from "@/store/userStore";
-import { useVuelidate } from "@vuelidate/core";
-import { useToast } from "vue-toastification";
-import { useI18n } from "vue-i18n";
-import { required } from "@/utils/i18n-validators.js";
-import { 
-    useQueryClient, 
-    useQuery, 
-    useMutation 
-} from "@tanstack/vue-query";
-import { getWithId, updateById } from "@/services/crud.services.js";
-import { manualGetModules, manualGetStates } from "@/services/manual.services.js";
-import { routes } from "@/utils/routes.js";
-import { actionModules } from "@/utils/action-modules.js";
-import { clearState } from "@/utils/secondary-functions.js";
+import { getWithId, updateById } from "@/services/crud.services.js"
+import { manualGetModules, manualGetStates } from "@/services/manual.services.js"
+import { useUserStore } from "@/store/userStore"
+import { actionModules } from "@/utils/action-modules.js"
+import { required } from "@/utils/i18n-validators.js"
+import { routes } from "@/utils/routes.js"
+import { clearState } from "@/utils/secondary-functions.js"
+import {
+useMutation,
+useQuery,
+useQueryClient
+} from "@tanstack/vue-query"
+import { useVuelidate } from "@vuelidate/core"
+import { storeToRefs } from "pinia"
+import { computed, ref, watch } from "vue"
+import { useI18n } from "vue-i18n"
+import { useRoute, useRouter } from "vue-router"
+import { useToast } from "vue-toastification"
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -182,6 +182,7 @@ const { mutate: updateMutate, status } = useMutation({
         queryClient.invalidateQueries({ queryKey: ["roles"] });
         queryClient.invalidateQueries({ queryKey: ["rolesById", slugId] });
         queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+        queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
         
         router.push(routes.ROLE.path);
 

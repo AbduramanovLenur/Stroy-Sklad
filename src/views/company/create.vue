@@ -47,7 +47,7 @@
 <script setup>
 import { create } from "@/services/crud.services.js"
 import { manualGetDistricts, manualGetRegions } from "@/services/manual.services.js"
-import { required } from "@/utils/i18n-validators.js"
+import { required, minLength } from "@/utils/i18n-validators.js"
 import { routes } from "@/utils/routes.js"
 import { clearState } from "@/utils/secondary-functions.js"
 import {
@@ -80,7 +80,7 @@ const state = ref({
 
 const rules = computed(() => ({
     fullName: { required },
-    inn: { required },
+    inn: { required, minLength },
     address: { required },
     phoneNumber: { required },
     director: { required },

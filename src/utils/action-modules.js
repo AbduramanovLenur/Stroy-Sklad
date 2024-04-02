@@ -76,8 +76,7 @@ export const actionModules = {
         // DELETE: 48
     },
     MATERIAL_INVOICE: {
-        READ: 51,
-        CREATE: 52,
-        // DOWNLOAD: 53
+        READ: 53,
+        CREATE: 52
     }
 }

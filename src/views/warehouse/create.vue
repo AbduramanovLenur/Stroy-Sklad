@@ -131,6 +131,7 @@ const { mutate: createMutate, status } = useMutation({
         state.value = clearState(state.value);
 
         queryClient.invalidateQueries({ queryKey: ["warehouse"] });
+        queryClient.invalidateQueries({ queryKey: ["reports", "warehouse"] });
         
         router.push(routes.WAREHOUSE.path);
 

@@ -20,9 +20,9 @@ export const createWithExcel = (api, body) => request({ url: `${api}/ImportFromE
 
 export const createPositionRoles = (api, body) => request({ url: `${api}/CreateOrUpdate`, method: "POST", body });
 
-export const getReports = () => request({ url: "ExpenseReport/GetExpenseReportData", method: "GET" });
+export const getReports = (query) => request({ url: `Report/GetReportData?tableName=${query}`, method: "GET" });
 
-export const exportWithExcel = () => request({ url: "ExpenseReport/ExpenseReportAsExcel", method: "POST", body: {}, headers: { responseType: 'blob' } });
+export const exportWithExcel = (query) => request({ url: `Report/ReportAsExcel?tableName=${query}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
 
 export const uploadInvoice = (body) => request({ url: "application/UploadInvoiceDocument", method: "POST", body, headers: { "Content-Type": "multipart/form-data" } });
 

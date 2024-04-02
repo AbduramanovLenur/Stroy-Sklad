@@ -74,7 +74,7 @@
   "employeesPhonePlaceholder": "Телефон...",
   "validations": {
     "required": "Заполните поле",
-    "minLength": "Пароль должен иметь минимум 8 символов"
+    "minLength": "Нужно ввести минимум 9 символов"
   },
   "emptyTableTitle": "Таблица пуста",
   "createCompanyToast": "Организация создана",

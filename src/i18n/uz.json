@@ -74,7 +74,7 @@
   "employeesPhonePlaceholder": "Telefon...",
   "validations": {
     "required": "Maydonni to'ldiring",
-    "minLength": "Parol kamida 8 ta belgidan iborat bo'lishi kerak"
+    "minLength": "Siz kamida 9 ta belgi kiritishingiz kerak"
   },
   "emptyTableTitle": "Jadval bo'sh",
   "createCompanyToast": "Kompaniya yaratilgan",

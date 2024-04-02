@@ -5,11 +5,21 @@
                 <Title>
                     {{ $t('reportsTitle') }}
                 </Title>
+                <div class="reports__tabs">
+                    <div 
+                        v-for="tab in tabs" 
+                        :key="tab.id" 
+                        :class="`reports__tab ${flag === tab.query ? 'is-active' : ''}`"
+                        @click="() => flag = tab.query"
+                    >
+                        {{ $t(tab.label) }}
+                    </div>
+                </div>
                 <button 
                     v-if="user?.user?.modules?.includes(actionModules.REPORTS.DOWNLOAD)"
                     class="reports__download hovered" 
                     type="button" 
-                    @click="mutate"
+                    @click="() => mutate(flag)"
                 >
                     <span class="reports__download-icon">
                         <Icon name="download" />
@@ -21,7 +31,7 @@
             </div>
             <Table 
                 v-if="isSuccessReports && reports?.length"
-                :headers="headers" 
+                :headers="flag === 'expense' ? headersExpens : headersWarehouse" 
                 :table="reports"
                 :isShowUpdate="false"
                 :isShowDelete="false"
@@ -39,6 +49,7 @@
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { exportWithExcel, getReports } from "@/services/crud.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -56,7 +67,14 @@ const { user } = storeToRefs(userStore);
 
 const isShow = computed(() => !!user?.value.user?.modules?.includes(actionModules.REPORTS.READ));
 
-const headers = [
+const flag = ref("expense");
+
+const tabs = ref([
+    { id: 1, label: "reportsExpens", query: "expense" },
+    { id: 2, label: "reportsWarehouse", query: "warehouse" }
+]);
+
+const headersExpens = [
     { id: 1, label: "reportsMaterial", width: 20 },
     { id: 2, label: "reportsQuantity", width: 10 },
     { id: 3, label: "reportsObyekt", width: 20 },
@@ -65,17 +83,22 @@ const headers = [
     { id: 6, label: "reportsBudget", width: 20 }
 ];
 
+const headersWarehouse = [
+    { id: 1, label: "reportsMaterial", width: 70 },
+    { id: 2, label: "reportsQuantity", width: 30 },
+];
+
 const {
     data: reports,
     isLoading: isLoadingReports,
     isSuccess: isSuccessReports,
     isError
 } = await useQuery({
-    queryKey: ["reports", {
+    queryKey: ["reports", flag, {
         organizationId: user.value.user.organizationId, 
         name: user.value.user.fullName 
     }],
-    queryFn: () => getReports(),
+    queryFn: () => getReports(flag.value),
     select: (data) => {
         return data.map((elem) => {
             const object = { ...elem, quantityTypeValue: elem.quantityType };
@@ -89,7 +112,7 @@ const {
 });
 
 const { mutate } = useMutation({
-    mutationFn: () => exportWithExcel(),
+    mutationFn: (query) => exportWithExcel(query),
     onSuccess: (response) => {
         if (!response?.success) return;
 
@@ -116,7 +139,12 @@ const { mutate } = useMutation({
         justify-content: space-between;
         gap: 20px;
         margin-bottom: 20px;
-        @media (max-width: 640px) {
+        @media (max-width: 1024px) {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 480px) {
+            display: flex;
             flex-direction: column;
             align-items: flex-start;
         }
@@ -143,6 +171,35 @@ const { mutate } = useMutation({
             @media (max-width: 480px) {
                 font-size: 14px;
             }
+        }
+    }
+    &__tabs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        @media (max-width: 1024px) {
+            justify-content: flex-end;
+        }
+        @media (max-width: 480px) {
+            justify-content: flex-start;
+        }
+    }
+    &__tab {
+        font-size: 18px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 100px;
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+        border: 1px solid var(--black);
+        border-radius: 10px;
+        &.is-active {
+            background-color: var(--black);
+            color: var(--white);
         }
     }
 }
