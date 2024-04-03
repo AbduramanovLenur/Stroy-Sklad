@@ -113,7 +113,7 @@ const { mutate: deleteMutate } = useMutation({
         if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["orgUsers"] });
-        queryClient.invalidateQueries({ queryKey: ["orgUserById", employeesId] });
+        queryClient.invalidateQueries({ queryKey: ["orgUserById", employeesId.value.toString()] });
 
         setTimeout(() => toast.success(t("deleteToast")), 150);
     }

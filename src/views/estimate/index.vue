@@ -97,7 +97,7 @@ const { mutate: mutateDelete } = useMutation({
         if (!response?.success) return;
 
         queryClient.invalidateQueries({ queryKey: ["budgets"] });
-        queryClient.invalidateQueries({ queryKey: ["budgetById", budgetId] });
+        queryClient.invalidateQueries({ queryKey: ["budgetById", budgetId.value.toString()] });
         
         setTimeout(() => toast.success(t("deleteToast")), 150);
     }
