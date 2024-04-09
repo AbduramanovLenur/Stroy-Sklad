@@ -8,7 +8,6 @@
                 <FormInput 
                     v-if="!subField?.select"
                     v-model="formData[subField.model]"
-                    :width="500" 
                     :placeholder="$t(subField.placeholder)"
                     :name="subField.icon"
                     :type="subField?.type"
@@ -18,7 +17,6 @@
                 <FormSelect 
                     v-if="subField?.select"
                     v-model.trim="formData[subField.model]" 
-                    :width="500" 
                     :options="subField.options"
                     :placeholder="subField?.placeholder"
                     :success="subField.success"

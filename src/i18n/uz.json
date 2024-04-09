@@ -326,5 +326,15 @@
   "companyNameLabel": "Zavod nomi",
   "companyNamePlaceholder": "Zavod...",
   "reportsExpens": "Sarflar",
-  "reportsWarehouse": "Sklad"
+  "reportsWarehouse": "Sklad",
+  "filtLabel": "Filtr",
+  "materialLabel": "Material nomi",
+  "materialPlacehoder": "Material...",
+  "objectLabel": "Obyekt nomi",
+  "objectPlacehoder": "Obyekt...",
+  "blockLabel": "Blok nomi",
+  "blockPlacehoder": "Blok...",
+  "quantityTypeLabel": "Birlik",
+  "quantityTypePlaceholder": "Birlik...",
+  "totalAmount": "Jami:"
 }

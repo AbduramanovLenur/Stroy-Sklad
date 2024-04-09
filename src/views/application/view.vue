@@ -11,7 +11,6 @@
                         <FormInput 
                             v-if="!field?.select"
                             v-model="state[field.model]"
-                            :width="500"
                             :placeholder="$t(field.placeholder)"
                             :name="field.icon"
                             :type="field?.type"
@@ -22,7 +21,6 @@
                         <FormSelect 
                             v-if="field?.select"
                             v-model.trim="state[field.model]" 
-                            :width="500" 
                             :options="field.options"
                             :placeholder="field?.placeholder"
                             :success="field.success"
@@ -129,7 +127,6 @@
                     <template v-for="subField in subFields" :key="subField.id">
                         <FormInput
                             v-model="companiesState[subField.model]"
-                            :width="500"
                             :placeholder="$t(subField.placeholder)"
                             :name="subField.icon"
                             :type="subField?.type"
@@ -143,8 +140,11 @@
                     v-if="isShowManageField"
                     :headers="subHeaders"
                     :table="filteredAdditionallyState"
-                    :isShowDelete="true"
+                    className="subtable-action"
+                    :isShowDelete="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE)"
+                    :isShowSelected="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CONFIRM)"
                     @onActionDelete="deleteHandler"
+                    @onSelected="($event) => chooseMutate($event)"
                 />
             </div>
             <CustomButton 
@@ -171,16 +171,14 @@
                 >
                     {{ $t("fileUploadFile") }}
                 </FormFile>
-                <div v-if="invoiceState.uploadFile && isShowManageFile" class="modal__file-overlay">
+                <div v-if="invoiceState.uploadFile && user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)" class="modal__file-overlay">
                     <div 
-                        v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
                         class="modal__file-delete"
                         @click="() => invoiceState.uploadFile = null"
                     >
                         <Icon name="circle-close" />
                     </div>
                     <div                           
-                        v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ)" 
                         class="modal__file-download" 
                         @click="downloadHandler"
                     >
@@ -193,17 +191,16 @@
                     </div>
                 </div>
             </div>
-            <FormSelect 
+            <!-- <FormSelect 
                 v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
                 v-model.trim="invoiceState.MaterialFactoryId" 
-                :width="500" 
                 :options="materialFactories"
                 placeholder="companyNamePlaceholder"
                 :success="isSuccessMaterialFactories"
                 :loading="isLoadingMaterialFactories"
             >
                 {{ $t("companyNameLabel") }}
-            </FormSelect>
+            </FormSelect> -->
             <CustomButton 
                 v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
                 type="button" 
@@ -217,27 +214,27 @@
 </template>
 
 <script setup>
-import { v4 as uuidv4 } from "uuid";
 import ConfirmationModal from "@/components/ConfirmationModal.vue"
-import OverlayModal from "@/components/OverlayModal.vue";
+import FormFile from "@/components/FormFile.vue"
 import FormTextarea from "@/components/FormTextarea.vue"
 import Histories from "@/components/Histories.vue"
-import { 
-    acceptWithId, 
-    cancelWithId, 
-    getWithId, 
-    updateById, 
+import OverlayModal from "@/components/OverlayModal.vue"
+import {
+    acceptWithId,
+    cancelWithId,
+    downloadFile,
+    getWithId,
+    updateById,
     uploadInvoice,
-    downloadFile
+    chooseMaterialFactory
 } from "@/services/crud.services.js"
 import {
     manualConstructionMaterial,
     manualGetBlocks,
     manualGetCost,
     manualGetFloors,
-    manualGetObjects,
-    manualQuantityTypes,
-    manualGetMaterialFactory
+    manualGetMaterialFactory,
+    manualGetObjects
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -245,11 +242,11 @@ import { routes } from "@/utils/routes.js"
 import { createIdMap } from "@/utils/secondary-functions.js"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/vue-query"
 import { storeToRefs } from "pinia"
-import { computed, ref, watch, watchEffect } from "vue"
+import { v4 as uuidv4 } from "uuid"
+import { computed, onMounted, ref, watch, watchEffect } from "vue"
 import { useI18n } from "vue-i18n"
 import { useRoute, useRouter } from "vue-router"
 import { useToast } from "vue-toastification"
-import FormFile from "@/components/FormFile.vue";
 
 const queryClient = useQueryClient();
 const router = useRouter();
@@ -278,7 +275,7 @@ const isOpenRefusedModal = ref(false);
 const headers = ref([
     { id: 1, label: "appFloor", width: 20 },
     { id: 2, label: "appMaterial", width: 30 },
-    // { id: 3, label: "appType", width: 10 },
+    { id: 3, label: "appType", width: 10 },
     { id: 4, label: "appCount", width: 20 },
     { id: 5, label: "appPrice", width: 30 }
 ]);
@@ -398,29 +395,19 @@ const {
     enabled: isShow
 });
 
-const valueIdx = computed(() => invoiceState.value.applicationTableId);
+// const valueIdx = computed(() => invoiceState.value.applicationTableId);
 
-const isEnabledIdx = computed(() => !!valueIdx.value);
+// const isEnabledIdx = computed(() => !!valueIdx.value);
 
-const {
-    data: materialFactories,
-    isSuccess: isSuccessMaterialFactories,
-    isLoading: isLoadingMaterialFactories
-} = await useQuery({
-    queryKey: ["materialFactories", valueIdx],
-    queryFn: () => manualGetMaterialFactory(valueIdx.value),
-    enabled: isEnabledIdx
-});
-
-const {
-    data: quantityTypes,
-    isSuccess: isSuccessQunatityTypes,
-    isLoading: isLoadingQunatityTypes
-} = await useQuery({
-    queryKey: ["types"],
-    queryFn: () => manualQuantityTypes(),
-    enabled: isShow
-});
+// const {
+//     data: materialFactories,
+//     isSuccess: isSuccessMaterialFactories,
+//     isLoading: isLoadingMaterialFactories
+// } = await useQuery({
+//     queryKey: ["materialFactories", valueIdx],
+//     queryFn: () => manualGetMaterialFactory(valueIdx.value),
+//     enabled: isEnabledIdx
+// });
 
 const fields = ref([
     { 
@@ -486,6 +473,11 @@ const { isError } = await useQuery({
     queryKey: ["applicationsById", slugId, user.value.user.fullName],
     queryFn: () => getWithId("application", slugId.value),
     select: (data) => {
+        if (data.notViewed) {
+            queryClient.invalidateQueries({ queryKey: ["applications"] });
+            queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
+        }
+
         state.value.id = data.id;
         state.value.deadline = data.deadline;
         state.value.buildingObjectId = [data.buildingObjectId];
@@ -508,6 +500,7 @@ const { isError } = await useQuery({
                     factoryName: element.factoryName,
                     count: element.count,
                     price: element.price,
+                    isChoosed: element.isChoosed,
                     delId: uuidv4()
                 });
             });
@@ -521,12 +514,10 @@ const hasFile = computed(() => state.value.applicationTables.every((elem) => ele
 const floorMap = computed(() => createIdMap(floors.value || []));
 const costMap = computed(() => createIdMap(costs.value || []));
 const materialMap = computed(() => createIdMap(materials.value || []));
-const typeMap = computed(() => createIdMap(quantityTypes.value || []));
 
 const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
-const getTypeIdValue = (elem) => typeMap.value[elem.quantityTypeId]?.name;
 
 const isSuccess = ref(false);
 const isLoading = ref(true);
@@ -536,17 +527,16 @@ watchEffect(() => {
     const keysFloor = Object.keys(floorMap.value)?.length;
     const keysCost = Object.keys(costMap.value)?.length;
     const keysMaterial =  Object.keys(materialMap.value)?.length;
-    const keysType =  Object.keys(typeMap.value)?.length;
     const applicationTables = state.value.applicationTables.length;
 
-    if (!!(keysFloor && keysCost && keysMaterial && keysType && applicationTables && isInitialRender)) {
+    if (!!(keysFloor && keysCost && keysMaterial && applicationTables && isInitialRender)) {
         state.value.applicationTables = state.value.applicationTables.map((elem) => {
             const object = { 
                 ...elem,
                 floorValue: getFloorIdValue(elem),
                 costValue: getCostIdValue(elem),
                 constructionMaterialValue: getConstructionMaterialIdValue(elem),
-                // typeValue: getTypeIdValue(elem)
+                typeValue: materials.value?.filter((element) => element?.id === elem.constructionMaterialId)?.[0]?.quantityType
             };
 
             delete object.price;
@@ -641,6 +631,16 @@ const { mutate: downloadMutate } = useMutation({
     }
 });
 
+const { mutate: chooseMutate } = useMutation({
+    mutationFn: (idx) => chooseMaterialFactory(idx),
+    onSuccess: (response) => {
+        if (!response?.success) return;
+
+        queryClient.invalidateQueries({ queryKey: ["applications"] });
+        queryClient.invalidateQueries({ queryKey: ["applicationsById", slugId] });
+    }
+});
+
 const actionAddHandler = (idx, flag) => {
     isOpenModal.value = flag;
     document.body.style.overflowY = "hidden";
@@ -721,13 +721,13 @@ const updateHandler = () => {
 const uploadHandler = () => {
     const formData = new FormData();
 
-    const keys = Object.keys(invoiceState.value);
+    // const keys = Object.keys(invoiceState.value);
 
-    const isExistValue = keys.every((key) => invoiceState.value[key]);
+    // const isExistValue = keys.every((key) => invoiceState.value[key]);
 
-    if (!isExistValue) return;
+    // if (!isExistValue) return;
 
-    formData.append('MaterialFactoryId', invoiceState.value.MaterialFactoryId?.[0]);
+    formData.append('MaterialFactoryId', 50);
     formData.append('UploadFile', invoiceState.value.uploadFile);
 
     uploadMutate(formData);

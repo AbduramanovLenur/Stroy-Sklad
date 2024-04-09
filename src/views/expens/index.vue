@@ -95,9 +95,10 @@ const {
         let array = [...expenses];
 
         array = array.map((elem) => {
-            const expens = { ...elem, expensPrice: elem.price }
+            const expens = { ...elem, expensPrice: elem.price, quantityTypeValue: elem.quantityType }
 
             delete expens.price;
+            delete expens.quantityType;
 
             return expens;
         });

@@ -17,6 +17,7 @@
                 :isShowUpdate="user?.user?.modules?.includes(actionModules.APPLICATION.READ)"
                 :isShowDelete="user?.user?.modules?.includes(actionModules.APPLICATION.DELETE)"
                 :isShowEye="true"
+                className="table-action"
                 @onActionDelete="deleteHandler"
             />
             <Pagination

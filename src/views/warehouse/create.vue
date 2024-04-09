@@ -10,18 +10,16 @@
                     <FormInput 
                         v-if="!field?.select"
                         v-model="state[field.model]"
-                        :width="500" 
                         :placeholder="$t(field.placeholder)"
                         :name="field.icon"
                         :error="v$?.[field.errorKey]?.$error" 
                         :textError="v$?.[field.errorKey]?.$errors[0]?.$message"
                     >
-                        {{ $t(field.label) }}
+                        {{ $t(field.label) }} {{ quantityTypes?.[0].name }}
                     </FormInput>
                     <FormSelect 
                         v-if="field?.select"
                         v-model.trim="state[field.model]" 
-                        :width="500" 
                         :options="field.options"
                         :error="v$?.[field?.errorKey]?.$error" 
                         :placeholder="field?.placeholder"
@@ -45,7 +43,7 @@
 
 <script setup>
 import { create } from "@/services/crud.services.js"
-import { manualConstructionMaterial } from "@/services/manual.services.js"
+import { manualConstructionMaterial, manualQuantityTypes } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
 import { required } from "@/utils/i18n-validators.js"
@@ -96,6 +94,23 @@ const {
     }],
     queryFn: () => manualConstructionMaterial(),
     enabled: isShow
+});
+
+const valueMaterial = computed(() => state.value.materialId[0]);
+
+const isEnabled = computed(() => !!valueMaterial.value);
+
+const {
+    data: quantityTypes,
+    isSuccess: isSuccessQunatityTypes,
+    isLoading: isLoadingQunatityTypes
+} = await useQuery({
+    queryKey: ["types", valueMaterial, { 
+        organizationId: user.value.user.organizationId,
+        name: user.value.user.fullName
+    }],
+    queryFn: () => manualQuantityTypes(valueMaterial.value),
+    enabled: isEnabled
 });
 
 const fields = ref([

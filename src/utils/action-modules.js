@@ -73,7 +73,7 @@ export const actionModules = {
     MATERIAL_FACTORY: {
         READ: 46,
         CREATE: 47,
-        // DELETE: 48
+        CONFIRM: 56
     },
     MATERIAL_INVOICE: {
         READ: 53,

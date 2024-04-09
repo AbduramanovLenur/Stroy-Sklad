@@ -24,7 +24,6 @@
                         <div class="management-role__select-box">
                             <FormSelect 
                                 v-model.trim="select.roleIds" 
-                                :width="500" 
                                 :options="roles"
                                 placeholder="managementRolePlaceholder"
                                 :success="isSuccess"

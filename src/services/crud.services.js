@@ -20,10 +20,12 @@ export const createWithExcel = (api, body) => request({ url: `${api}/ImportFromE
 
 export const createPositionRoles = (api, body) => request({ url: `${api}/CreateOrUpdate`, method: "POST", body });
 
-export const getReports = (query) => request({ url: `Report/GetReportData?tableName=${query}`, method: "GET" });
+export const getReports = (query) => request({ url: `Report/GetReportData${query ? query : ''}`, method: "GET" });
 
-export const exportWithExcel = (query) => request({ url: `Report/ReportAsExcel?tableName=${query}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
+export const exportWithExcel = (query) => request({ url: `Report/ReportAsExcel${query ? query : ''}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
 
 export const uploadInvoice = (body) => request({ url: "application/UploadInvoiceDocument", method: "POST", body, headers: { "Content-Type": "multipart/form-data" } });
 
 export const downloadFile = (idx) => request({ url: `application/DownloadDocument?materialFactoryId=${idx}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
+
+export const chooseMaterialFactory = (idx) => request({ url: `application/ChooseMaterialFactory?materialFactoryId=${idx}`, method: "POST", body: {} });

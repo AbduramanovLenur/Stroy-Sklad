@@ -10,7 +10,6 @@
                     <FormInput 
                         v-if="!field?.select && field.model !== 'updateRoleDto.fullName'"
                         v-model="state[field.model]"
-                        :width="500" 
                         :placeholder="$t(field.placeholder)"
                         :name="field.icon"
                         :error="v$?.[field?.errorKey]?.$error" 
@@ -22,7 +21,6 @@
                     <FormInput 
                         v-if="!field?.select && field.model === 'updateRoleDto.fullName'"
                         v-model="state.updateRoleDto.fullName"
-                        :width="500" 
                         :placeholder="$t('employeesRolePlaceholder')"
                         name="person"
                         :error="v$?.updateRoleDto?.fullName?.$error"
@@ -33,7 +31,6 @@
                     <FormSelect 
                         v-if="field?.select"
                         v-model.trim="state[field.model]" 
-                        :width="500" 
                         :options="field.options"
                         :error="v$?.[field?.errorKey]?.$error" 
                         :placeholder="field?.placeholder"

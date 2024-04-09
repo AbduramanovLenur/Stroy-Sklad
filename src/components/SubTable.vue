@@ -15,7 +15,7 @@
                     {{ $t(title.label) }}
                 </th>
                 <th 
-                    v-if="isShowDelete"
+                    v-if="isShowDelete || isShowSelected"
                     class="subtable-title" 
                     align="center"
                 >
@@ -36,7 +36,7 @@
                     {{ $t("subtableFile") }}
                 </th>
             </tr>
-            <tr class="subtable-line" v-for="(info, index) in table" :key="info.id">
+            <tr v-for="(info, index) in table" :key="info.id" :class="`subtable-line ${className ? className : ''} ${info?.isChoosed ? 'is-choosed' : ''}`">
                 <td class="subtable-info" align="center">
                     {{ index + 1 }}
                 </td>
@@ -75,12 +75,20 @@
                 <td v-if="info?.costValue" class="subtable-info" align="center">
                     {{ info.costValue }}
                 </td>
-                <td class="subtable-info" align="center" v-if="isShowDelete">
+                <td v-if="isShowDelete || isShowSelected" class="subtable-info" align="center" style="display: flex; align-items: center; gap: 20px; justify-content: center;">
                     <span 
+                        v-if="isShowDelete"
                         class="subtable-delete" 
                         @click="() => $emit('onActionDelete', info?.delId)"
                     >
                         <Icon name="delete" />
+                    </span>
+                    <span 
+                        v-if="isShowSelected"
+                        class="subtable-add" 
+                        @click="() => $emit('onSelected', info?.id)"
+                    >
+                        <Icon name="check" />
                     </span>
                 </td>
                 <td class="subtable-info" align="center" v-if="isShowFields">
@@ -107,7 +115,7 @@
                     <span 
                         v-if="isShowFile"
                         class="subtable-add" 
-                        @click="() => $emit('onDownload', info?.resourceId)"
+                        @click="() => $emit('onDownload', info?.id)"
                     >
                         <Icon name="upload-up" />
                     </span>
@@ -123,6 +131,7 @@ import { priceSeperator } from "@/utils/secondary-functions.js";
 defineProps({
     headers: Array, 
     table: Array,
+    className: String,
     isShowDelete: {
         type: Boolean,
         default: () => false
@@ -136,6 +145,10 @@ defineProps({
         default: () => false
     },
     isShowFile: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowSelected: {
         type: Boolean,
         default: () => false
     }
@@ -170,6 +183,18 @@ defineProps({
             position: absolute;
             width: 4px;
             opacity: 0;
+        }
+        &.subtable-action {
+            &.is-choosed {
+                &::after {
+                    opacity: 1;
+                }
+            }
+            &.is-choosed {
+                &:after {
+                    background-color: var(--light-green);
+                }
+            }
         }
     }
 
@@ -244,8 +269,10 @@ tr {
             &:not(:first-child) {
                 &:hover {
                     background-color: rgba(var(--base-color-light-separators),.15);
-                    &::after {
-                        opacity: 1;
+                    &:not(.subtable-action) {
+                        &::after {
+                            opacity: 1;
+                        }
                     }
                 }
             }

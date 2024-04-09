@@ -1,5 +1,5 @@
 <template>
-    <div class="label" :style="`max-width: ${width}px;`">
+    <div class="label" :style="`max-width: ${width ? `${width}px` : 'initial'};`">
         <slot />
         <MultiSelect 
             ref="multiselectRef"
@@ -24,8 +24,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import MultiSelect from "primevue/multiselect";
+import MultiSelect from "primevue/multiselect"
+import { ref } from "vue"
 
 const multiselectRef = ref(null);
 

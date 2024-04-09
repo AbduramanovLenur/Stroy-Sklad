@@ -326,5 +326,15 @@
   "companyNameLabel": "Название завода",
   "companyNamePlaceholder": "Завод...",
   "reportsExpens": "Расходы",
-  "reportsWarehouse": "Склад"
+  "reportsWarehouse": "Склад",
+  "filtLabel": "Фильтр",
+  "materialLabel": "Название материала",
+  "materialPlacehoder": "Материал...",
+  "objectLabel": "Название объекта",
+  "objectPlacehoder": "Объект...",
+  "blockLabel": "Название блока",
+  "blockPlacehoder": "Блок...",
+  "quantityTypeLabel": "Величина",
+  "quantityTypePlaceholder": "Величина...",
+  "totalAmount": "Общий:"
 }

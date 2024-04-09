@@ -1,4 +1,4 @@
-import { request } from "./generic.services";
+import { request } from "./generic.services"
 
 export const manualGetRegions = () => request({ url: "manual/RegionSelectList", method: "GET" });
 
@@ -10,7 +10,7 @@ export const manualGetRoles = () => request({ url: "manual/RoleSelectList", meth
 
 export const manualGetStates = () => request({ url: "manual/StateSelectList", method: "GET" });
 
-export const manualQuantityTypes = () => request({ url: "manual/QuantityTypeSelectList", method: "GET" });
+export const manualQuantityTypes = (idx) => request({ url: `manual/QuantityTypeSelectList${idx ? `?materialId=${idx}` : ''}`, method: "GET" });
 
 export const manualGetFloors = (idx) => request({ url: `manual/FloorSelectList?buildingBlockId=${idx}`, method: "GET" });
 

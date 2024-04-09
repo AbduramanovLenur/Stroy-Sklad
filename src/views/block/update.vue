@@ -10,7 +10,6 @@
                     <FormInput 
                         v-if="!field?.select"
                         v-model="state[field.model]"
-                        :width="500" 
                         :placeholder="$t(field.placeholder)"
                         :name="field.icon"
                         :error="v$?.[field?.errorKey]?.$error" 
@@ -21,7 +20,6 @@
                     <FormSelect 
                         v-if="field?.select"
                         v-model.trim="state[field.model]" 
-                        :width="500" 
                         :options="field.options"
                         :error="v$?.[field?.errorKey]?.$error" 
                         :placeholder="field?.placeholder"

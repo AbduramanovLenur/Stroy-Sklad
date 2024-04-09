@@ -29,7 +29,8 @@
                     {{ $t("action") }}
                 </th>
             </tr>
-            <tr class="table-line" v-for="(info, index) in table" :key="info.id">
+            <tr></tr>
+            <tr v-for="(info, index) in table" :key="info.id" :class="`table-line ${className ? className : ''} ${!info?.notViewed ? 'is-viewed' : 'not-viewed'} ${info.hasBeenHandled ? 'is-handled' : ''}`">
                 <td v-if="info.id" class="table-info" align="center">
                     {{ getId(index) }}
                 </td>
@@ -88,7 +89,7 @@
                     {{ info.constructionMaterial }}
                 </td>
                 <td v-if="info.count" class="table-info" align="center">
-                    {{ info.count }}
+                    {{ info.count }} {{ info?.quantityTypeValue }}
                 </td>
                 <td v-if="info.objectName" class="table-info" align="center">
                     {{ info.objectName }}
@@ -162,13 +163,14 @@
 </template>
 
 <script setup>
-import { priceSeperator } from "@/utils/secondary-functions.js";
-import { computed } from "vue";
+import { priceSeperator } from "@/utils/secondary-functions.js"
+import { computed } from "vue"
 
 const props = defineProps({
     headers: Array,
     table: Array,
     to: String,
+    className: String,
     options: {
         type: Object,
         default: () => ({
@@ -226,6 +228,30 @@ const getId = computed(() => {
             position: absolute;
             width: 4px;
             opacity: 0;
+        }
+        &.table-action {
+            &.is-viewed,
+            &.not-viewed,
+            &.is-handled {
+                &::after {
+                    opacity: 1;
+                }
+            }
+            &.is-viewed {
+                &:after {
+                    background-color: var(--blue);
+                }
+            }
+            &.is-handled {
+                &::after {
+                    background-color: var(--light-green);
+                }
+            }
+            &.not-viewed {
+                &::after {
+                    background-color: var(--aqua);
+                }
+            }
         }
     }
 
@@ -301,8 +327,10 @@ tr {
             &:not(:first-child) {
                 &:hover {
                     background-color: rgba(var(--base-color-light-separators),.15);
-                    &::after {
-                        opacity: 1;
+                    &:not(.table-action) {
+                        &::after {
+                            opacity: 1;
+                        }
                     }
                 }
             }

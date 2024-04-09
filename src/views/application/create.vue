@@ -11,7 +11,6 @@
                         <FormInput 
                             v-if="!field?.select"
                             v-model="state[field.model]"
-                            :width="500" 
                             :placeholder="$t(field.placeholder)"
                             :name="field.icon"
                             :error="v$?.[field.errorKey]?.$error" 
@@ -23,7 +22,6 @@
                         <FormSelect 
                             v-if="field?.select"
                             v-model.trim="state[field.model]" 
-                            :width="500" 
                             :options="field.options"
                             :error="v$?.[field?.errorKey]?.$error" 
                             :placeholder="field?.placeholder"
@@ -93,8 +91,7 @@ import {
     manualGetBlocks,
     manualGetCost,
     manualGetFloors,
-    manualGetObjects,
-    manualQuantityTypes
+    manualGetObjects
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
 import { actionModules } from "@/utils/action-modules.js"
@@ -129,7 +126,7 @@ const isSubmit = ref(false);
 const headers = ref([
     { id: 1, label: "appFloor", width: 15 },
     { id: 2, label: "appMaterial", width: 30 },
-    // { id: 3, label: "appType", width: 10 },
+    { id: 3, label: "appType", width: 10 },
     { id: 4, label: "appCount", width: 15 },
     { id: 5, label: "appPrice", width: 20 },
 ]);
@@ -235,16 +232,6 @@ const {
     enabled: isShow 
 });
 
-const {
-    data: quantityTypes,
-    isSuccess: isSuccessQunatityTypes,
-    isLoading: isLoadingQunatityTypes
-} = await useQuery({
-    queryKey: ["types"],
-    queryFn: () => manualQuantityTypes(),
-    enabled: isShow
-});
-
 const fields = ref([
     { 
         id: 1, 
@@ -316,28 +303,16 @@ const subFields = ref([
         label: "countAppLabel", 
         placeholder: "countAppPlaceholder", 
         icon: "list"
-    },
-    // { 
-    //     id: 5, 
-    //     model: "quantityTypeId", 
-    //     label: "typesAppLabel", 
-    //     placeholder: "typesAppPlaceholder",
-    //     options: quantityTypes,
-    //     success: isSuccessQunatityTypes,
-    //     loading: isLoadingQunatityTypes,
-    //     select: true
-    // },
+    }
 ]);
 
 const floorMap = computed(() => createIdMap(floors.value));
 const costMap = computed(() => createIdMap(costs.value));
 const materialMap = computed(() => createIdMap(materials.value));
-const typeMap = computed(() => createIdMap(quantityTypes.value));
 
 const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
-const getTypeIdValue = (elem) => typeMap.value[elem.quantityTypeId]?.name;
 
 const addTableHandler = (object) => {
     state.value.createApplicationTables.push({ 
@@ -346,7 +321,7 @@ const addTableHandler = (object) => {
         floorValue: getFloorIdValue(object),
         costValue: getCostIdValue(object),
         constructionMaterialValue: getConstructionMaterialIdValue(object),
-        // typeValue: getTypeIdValue(object)
+        typeValue: materials.value?.filter((elem) => elem?.id === object.constructionMaterialId)?.[0]?.quantityType
     });
 }
 
@@ -367,8 +342,7 @@ const { mutate: createMutate, status } = useMutation({
                 floorValue, 
                 costValue, 
                 constructionMaterialValue, 
-                typeValue, 
-                quantityTypeId, 
+                typeValue,
                 ...rest 
             } = elem;
 
