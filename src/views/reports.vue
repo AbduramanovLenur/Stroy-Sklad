@@ -424,6 +424,8 @@ const { mutate } = useMutation({
         flex-direction: column;
         align-items: center;
         cursor: pointer;
+        width: 95px;
+        height: 95px;
         &-value {
             font-weight: 600;
         }
