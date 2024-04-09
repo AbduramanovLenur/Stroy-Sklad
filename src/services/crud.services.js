@@ -26,6 +26,6 @@ export const exportWithExcel = (query) => request({ url: `Report/ReportAsExcel${
 
 export const uploadInvoice = (body) => request({ url: "application/UploadInvoiceDocument", method: "POST", body, headers: { "Content-Type": "multipart/form-data" } });
 
-export const downloadFile = (idx) => request({ url: `application/DownloadDocument?materialFactoryId=${idx}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
+export const downloadFile = (idx) => request({ url: `application/DownloadDocument?applicationTableId=${idx}`, method: "POST", body: {}, headers: { responseType: 'blob' } });
 
 export const chooseMaterialFactory = (idx) => request({ url: `application/ChooseMaterialFactory?materialFactoryId=${idx}`, method: "POST", body: {} });

@@ -191,16 +191,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <FormSelect 
-                v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
-                v-model.trim="invoiceState.MaterialFactoryId" 
-                :options="materialFactories"
-                placeholder="companyNamePlaceholder"
-                :success="isSuccessMaterialFactories"
-                :loading="isLoadingMaterialFactories"
-            >
-                {{ $t("companyNameLabel") }}
-            </FormSelect> -->
             <CustomButton 
                 v-if="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE)"
                 type="button" 
@@ -233,7 +223,6 @@ import {
     manualGetBlocks,
     manualGetCost,
     manualGetFloors,
-    manualGetMaterialFactory,
     manualGetObjects
 } from "@/services/manual.services.js"
 import { useUserStore } from "@/store/userStore"
@@ -308,7 +297,6 @@ const companiesState = ref({
 
 const invoiceState = ref({
     applicationTableId: "",
-    MaterialFactoryId: "",
     uploadFile: ""
 });
 
@@ -394,20 +382,6 @@ const {
     queryFn: () => manualConstructionMaterial(),
     enabled: isShow
 });
-
-// const valueIdx = computed(() => invoiceState.value.applicationTableId);
-
-// const isEnabledIdx = computed(() => !!valueIdx.value);
-
-// const {
-//     data: materialFactories,
-//     isSuccess: isSuccessMaterialFactories,
-//     isLoading: isLoadingMaterialFactories
-// } = await useQuery({
-//     queryKey: ["materialFactories", valueIdx],
-//     queryFn: () => manualGetMaterialFactory(valueIdx.value),
-//     enabled: isEnabledIdx
-// });
 
 const fields = ref([
     { 
@@ -721,13 +695,7 @@ const updateHandler = () => {
 const uploadHandler = () => {
     const formData = new FormData();
 
-    // const keys = Object.keys(invoiceState.value);
-
-    // const isExistValue = keys.every((key) => invoiceState.value[key]);
-
-    // if (!isExistValue) return;
-
-    formData.append('MaterialFactoryId', 50);
+    formData.append('ApplicationTableId', invoiceState.value.applicationTableId);
     formData.append('UploadFile', invoiceState.value.uploadFile);
 
     uploadMutate(formData);
