@@ -422,6 +422,7 @@ const { mutate } = useMutation({
     &__filter {
         display: flex;
         flex-direction: column;
+        justify-content: center;
         align-items: center;
         cursor: pointer;
         width: 95px;
