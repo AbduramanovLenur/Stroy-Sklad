@@ -126,8 +126,8 @@ const isSubmit = ref(false);
 const headers = ref([
     { id: 1, label: "appFloor", width: 15 },
     { id: 2, label: "appMaterial", width: 30 },
-    { id: 3, label: "appType", width: 10 },
-    { id: 4, label: "appCount", width: 15 },
+    { id: 3, label: "appCount", width: 15 },
+    { id: 4, label: "appType", width: 10 },
     { id: 5, label: "appPrice", width: 20 },
 ]);
 

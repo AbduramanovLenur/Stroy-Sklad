@@ -55,9 +55,6 @@
                 <td v-if="info?.constructionMaterialValue" class="subtable-info" align="center">
                     {{ info.constructionMaterialValue }}
                 </td>
-                <td v-if="info?.typeValue" class="subtable-info" align="center">
-                    {{ info.typeValue }}
-                </td>
                 <td v-if="info?.constructionMaterialIdsValue" class="subtable-info" align="center">
                     <div class="subtable-box">
                         {{ info.constructionMaterialIdsValue.map((elem) => elem.name).join(', ') }}
@@ -68,6 +65,9 @@
                 </td>
                 <td v-if="info?.count" class="subtable-info" align="center">
                     {{ info.count }}
+                </td>
+                <td v-if="info?.typeValue" class="subtable-info" align="center">
+                    {{ info.typeValue }}
                 </td>
                 <td v-if="info?.price" class="subtable-info" align="center">
                     {{ priceSeperator(info.price) }}
