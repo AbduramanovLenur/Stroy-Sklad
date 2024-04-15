@@ -53,6 +53,9 @@
                     {{ info.quantityType }}
                 </td>
                 <td v-if="info.name" class="table-info" align="center">
+                    №123
+                </td>
+                <td v-if="info.name" class="table-info" align="center">
                     {{ info.name }}
                 </td>
                 <td v-if="info.company" class="table-info" align="center">

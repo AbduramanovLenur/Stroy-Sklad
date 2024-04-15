@@ -75,6 +75,9 @@
                 <td v-if="info?.costValue" class="subtable-info" align="center">
                     {{ info.costValue }}
                 </td>
+                <td v-if="info?.phone" class="subtable-info" align="center">
+                    {{ info.phone }}
+                </td>
                 <td v-if="isShowDelete || isShowSelected" class="subtable-info" align="center" style="display: flex; align-items: center; gap: 20px; justify-content: center;">
                     <span 
                         v-if="isShowDelete"

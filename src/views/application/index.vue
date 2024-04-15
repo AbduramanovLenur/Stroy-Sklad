@@ -70,11 +70,12 @@ const applicationId = ref("");
 const debouncedSearch = refDebounced(search, 500);
 
 const headers = ref([
-    { id: 1, label: "applicationUserName", width: 12 }, // 12
-    { id: 3, label: "applicationDocDate", width: 14.6 }, // 14.6
-    { id: 4, label: "applicationDedline", width: 14.6 }, // 14.6
-    { id: 5, label: "applicationObject", width: 16 },
-    { id: 6, label: "applicationBlock", width: 16 }
+    { id: 1, label: "applicationDocNumber", width: 12 },
+    { id: 2, label: "applicationUserName", width: 13 },
+    { id: 3, label: "applicationDocDate", width: 12 },
+    { id: 4, label: "applicationDedline", width: 12 },
+    { id: 5, label: "applicationObject", width: 14.6 },
+    { id: 6, label: "applicationBlock", width: 14.6 }
 ]);
 
 const {

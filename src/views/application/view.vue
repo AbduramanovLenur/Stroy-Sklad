@@ -270,9 +270,10 @@ const headers = ref([
 ]);
 
 const subHeaders = ref([
-    { id: 1, label: "appCompanyLabel", width: 30 },
-    { id: 2, label: "appCount", width: 30 },
-    { id: 3, label: "priceAppLabel", width: 30 },
+    { id: 1, label: "appCompanyLabel", width: 20 },
+    { id: 2, label: "appCount", width: 20 },
+    { id: 3, label: "priceAppLabel", width: 20 },
+    { id: 4, label: "appPhone", width: 20 }
 ])
 
 const state = ref({
@@ -292,6 +293,7 @@ const companiesState = ref({
     applicationTableId: "",
     factoryName: "",
     count: "",
+    phone: "",
     price: ""
 });
 
@@ -438,6 +440,14 @@ const subFields = ref([
         model: "price", 
         label: "appBudgetLabel", 
         placeholder: "appBudgetPlaceholder", 
+        icon: "money",
+        type: "number"
+    },
+    { 
+        id: 4, 
+        model: "phone", 
+        label: "appPhoneLabel", 
+        placeholder: "appPhonePlaceholder", 
         icon: "money",
         type: "number"
     },
@@ -637,6 +647,7 @@ const addCompaniesHandler = () => {
         applicationTableId: companiesState.value.applicationTableId,
         count: +companiesState.value.count,
         price: +companiesState.value.price,
+        phone: companiesState.value.phone,
         factoryName: companiesState.value.factoryName,
         delId: uuidv4()
     });
