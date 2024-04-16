@@ -29,11 +29,18 @@
                     {{ $t("subtableCompanies") }}
                 </th>
                 <th 
-                    v-if="isShowFile || isShowFileManage"
+                    v-if="isShowFileCompany || isShowUploadCompany"
                     class="subtable-title" 
                     align="center"
                 >
                     {{ $t("subtableFile") }}
+                </th>
+                <th 
+                    v-if="isShowFileKPP || isShowUploadKPP"
+                    class="subtable-title"
+                    align="center"
+                >
+                    KPP
                 </th>
             </tr>
             <tr v-for="(info, index) in table" :key="info.id" :class="`subtable-line ${className ? className : ''} ${info?.isChoosed ? 'is-choosed' : ''}`">
@@ -97,28 +104,49 @@
                 <td class="subtable-info" align="center" v-if="isShowFields">
                     <span 
                         class="subtable-add" 
-                        @click="() => $emit('onActionAdd', info?.id, 'fields')"
+                        @click="() => $emit('onCompany', info?.id, 'fields')"
                     >
                         <Icon name="pen" />
                     </span>
                 </td>
                 <td 
-                    v-if="isShowFileManage || isShowFile"
+                    v-if="isShowUploadCompany || isShowFileCompany"
                     class="subtable-info" 
                     align="center" 
-                    style="display: flex; gap: 20px; align-items: center; justify-content: center;"
                 >
                     <span 
-                        v-if="isShowFileManage"
+                        v-if="isShowUploadCompany"
                         class="subtable-add" 
-                        @click="() => $emit('onActionAdd', info?.id, 'upload')"
+                        @click="() => $emit('onCompany', info?.id, 'upload')"
                     >
                         <Icon name="upload" />
                     </span>
                     <span 
-                        v-if="isShowFile"
+                        v-if="isShowFileCompany"
                         class="subtable-add" 
-                        @click="() => $emit('onDownload', info?.id)"
+                        style='margin-left: 25px;'
+                        @click="() => $emit('onDownloadCompany', info?.id)"
+                    >
+                        <Icon name="upload-up" />
+                    </span>
+                </td>
+                <td 
+                    v-if="isShowUploadKPP || isShowFileKPP"
+                    class="subtable-info" 
+                    align="center" 
+                >
+                    <span 
+                        v-if="isShowUploadKPP"
+                        class="subtable-add" 
+                        @click="() => $emit('onUploadKPP', info?.id)"
+                    >
+                        <Icon name="upload" />
+                    </span>
+                    <span 
+                        v-if="isShowFileKPP"
+                        class="subtable-add" 
+                        style='margin-left: 25px;'
+                        @click="() => $emit('onDownloadKPP', info?.id)"
                     >
                         <Icon name="upload-up" />
                     </span>
@@ -143,11 +171,19 @@ defineProps({
         type: Boolean,
         default: () => false
     },
-    isShowFileManage: {
+    isShowUploadCompany: {
         type: Boolean,
         default: () => false
     },
-    isShowFile: {
+    isShowFileCompany: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowUploadKPP: {
+        type: Boolean,
+        default: () => false
+    },
+    isShowFileKPP: {
         type: Boolean,
         default: () => false
     },
@@ -212,7 +248,7 @@ defineProps({
         font-size: 16px;
         font-weight: 400;
         padding: 15px 10px;
-        white-space: pre-line;
+        white-space: nowrap;
         &:first-child {
             font-weight: 600;
         }

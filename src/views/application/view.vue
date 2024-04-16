@@ -35,10 +35,14 @@
                     :headers="headers"
                     :table="state.applicationTables"
                     :isShowFields="isShowManageField"
-                    :isShowFileManage="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) && state.hasPermission"
-                    :isShowFile="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ) && hasFile"
-                    @onActionAdd="actionAddHandler"
-                    @onDownload="downloadMutate"
+                    :isShowUploadCompany="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) && state.hasPermission"
+                    :isShowFileCompany="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ) && hasFile"
+                    :isShowUploadKPP="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.CREATE) && state.hasPermission"
+                    :isShowFileKPP="user?.user?.modules?.includes(actionModules.MATERIAL_INVOICE.READ) && hasFile"
+                    @onCompany="companyHandler"
+                    @onDownloadCompany="downloadCompanyMutate"
+                    @onUploadKPP=""
+                    @onDownloadKPP=""
                 />
                 <CustomButton 
                     v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) && state.hasPermission"
@@ -136,6 +140,15 @@
                         </FormInput>
                     </template>
                 </div>
+                <CustomButton 
+                    v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) && state.hasPermission"
+                    type="button" 
+                    :width="300"
+                    className="companies-add"
+                    @click="addCompaniesHandler"
+                >
+                    {{ $t("addButton") }}
+                </CustomButton>
                 <SubTable
                     v-if="isShowManageField"
                     :headers="subHeaders"
@@ -147,14 +160,6 @@
                     @onSelected="($event) => chooseMutate($event)"
                 />
             </div>
-            <CustomButton 
-                v-if="user?.user?.modules?.includes(actionModules.MATERIAL_FACTORY.CREATE) && state.hasPermission"
-                type="button" 
-                className="companies-add"
-                @click="addCompaniesHandler"
-            >
-                {{ $t("addButton") }}
-            </CustomButton>
         </OverlayModal>
         <OverlayModal 
             v-if="isShowManageFile && state.hasPermission"
@@ -262,11 +267,11 @@ const isOpenAcceptedModal = ref(false);
 const isOpenRefusedModal = ref(false);
 
 const headers = ref([
-    { id: 1, label: "appFloor", width: 20 },
-    { id: 2, label: "appMaterial", width: 30 },
+    { id: 1, label: "appFloor", width: 10 },
+    { id: 2, label: "appMaterial", width: 20 },
     { id: 3, label: "appType", width: 10 },
-    { id: 4, label: "appCount", width: 20 },
-    { id: 5, label: "appPrice", width: 30 }
+    { id: 4, label: "appCount", width: 10 },
+    { id: 5, label: "appPrice", width: 20 }
 ]);
 
 const subHeaders = ref([
@@ -274,7 +279,7 @@ const subHeaders = ref([
     { id: 2, label: "appCount", width: 20 },
     { id: 3, label: "priceAppLabel", width: 20 },
     { id: 4, label: "appPhone", width: 20 }
-])
+]);
 
 const state = ref({
     id: "",
@@ -596,7 +601,7 @@ const { mutate: acceptMutate, status: approveStatus } = useMutation({
     }
 });
 
-const { mutate: downloadMutate } = useMutation({
+const { mutate: downloadCompanyMutate } = useMutation({
     mutationFn: (idx) => downloadFile(idx),
     onSuccess: (response) => {
         if (!response?.success) return;
@@ -625,7 +630,7 @@ const { mutate: chooseMutate } = useMutation({
     }
 });
 
-const actionAddHandler = (idx, flag) => {
+const companyHandler = (idx, flag) => {
     isOpenModal.value = flag;
     document.body.style.overflowY = "hidden";
 

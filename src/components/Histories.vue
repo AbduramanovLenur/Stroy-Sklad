@@ -70,6 +70,9 @@ const date = computed(() => {
         max-width: max-content;
     }
     &__box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         position: relative;
         font-weight: 700;
         padding: 5px 25px;
@@ -123,7 +126,7 @@ const date = computed(() => {
         }
     }
     &__comment {
-        max-width: 800px;
+        max-width: max-content;
         white-space: pre-wrap;
     }
 }

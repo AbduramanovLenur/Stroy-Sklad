@@ -50,6 +50,9 @@ defineProps({
     }
     &.companies-add {
         padding: 12px;
+        margin-bottom: 25px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 </style>

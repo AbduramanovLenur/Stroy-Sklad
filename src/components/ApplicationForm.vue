@@ -12,7 +12,7 @@
                     :name="subField.icon"
                     :type="subField?.type"
                 >
-                    {{ $t(subField.label) }}
+                    <span>{{ $t(subField.label) }} <span v-if="subField?.quantityType">{{ quantityType }}</span></span>
                 </FormInput>
                 <FormSelect 
                     v-if="subField?.select"
@@ -49,10 +49,11 @@ const { t } = useI18n();
 const props = defineProps({
     subFields: Array, 
     buildingBlockId: Array, 
-    isSubmit: Boolean
+    isSubmit: Boolean,
+    quantityType: String
 });
 
-const emit = defineEmits(["onAddTable"]);
+const emit = defineEmits(["onAddTable", "onGetQuantityType"]);
 
 const formData = ref({
     floorId: [],
@@ -62,11 +63,17 @@ const formData = ref({
     // quantityTypeId: []
 });
 
+const valueMaterial = computed(() => formData.value.constructionMaterialId[0]);
+
+watch(valueMaterial, (value) => {
+    emit('onGetQuantityType', value);
+}, { immediate: true });
+
 const valueBlock = computed(() => props.buildingBlockId);
 
 watch(valueBlock, () => {
     formData.value.floorId = [];
-});
+}, { immediate: true });
 
 const addHandler = () => {
     const isEmpty = isFormDataEmpty(formData.value);

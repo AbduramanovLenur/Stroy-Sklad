@@ -38,6 +38,8 @@
                     :subFields="subFields"
                     :buildingBlockId="state.buildingBlockId"
                     :isSubmit="isSubmit"
+                    :quantityType="appFormQuantityType"
+                    @onGetQuantityType="($event) => appFormQuantityType = getQuantityType($event)"
                     @onAddTable="addTableHandler"
                 />
                 <span 
@@ -139,6 +141,8 @@ const state = ref({
     details: "",
     comment: ""
 });
+
+const appFormQuantityType = ref('');
 
 const rules = computed(() => ({
     deadline: { required },
@@ -302,7 +306,8 @@ const subFields = ref([
         model: "count", 
         label: "countAppLabel", 
         placeholder: "countAppPlaceholder", 
-        icon: "list"
+        icon: "list",
+        quantityType: true
     }
 ]);
 
@@ -313,6 +318,7 @@ const materialMap = computed(() => createIdMap(materials.value));
 const getFloorIdValue = (elem) => floorMap.value[elem.floorId]?.name;
 const getCostIdValue = (elem) => costMap.value[elem.costId]?.name;
 const getConstructionMaterialIdValue = (elem) => materialMap.value[elem?.constructionMaterialId]?.name;
+const getQuantityType = (id) => materials.value?.filter((elem) => elem?.id === id)?.[0]?.quantityType
 
 const addTableHandler = (object) => {
     state.value.createApplicationTables.push({ 
@@ -321,7 +327,7 @@ const addTableHandler = (object) => {
         floorValue: getFloorIdValue(object),
         costValue: getCostIdValue(object),
         constructionMaterialValue: getConstructionMaterialIdValue(object),
-        typeValue: materials.value?.filter((elem) => elem?.id === object.constructionMaterialId)?.[0]?.quantityType
+        typeValue: getQuantityType(object.constructionMaterialId)
     });
 }
 
